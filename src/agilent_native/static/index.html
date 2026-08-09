@@ -85,7 +85,7 @@
                 <!-- RAM Footprint Badge -->
                 <div class="hidden lg:flex items-center gap-1 bg-slate-900 text-slate-300 border border-slate-800 px-3 py-1.5 rounded-full">
                     <i data-lucide="hard-drive" class="w-3.5 h-3.5 text-indigo-400"></i>
-                    <span>RAM: &lt; 150 MB</span>
+                    <span id="text-ram">RAM: &lt; 150 MB</span>
                 </div>
             </div>
         </div>
@@ -364,10 +364,16 @@
                 const res = await fetch(`${API_BASE}/health`);
                 const data = await res.json();
                 const o = data.ollama || {};
+                const t = data.telemetry || {};
 
                 const badge = document.getElementById('badge-ollama');
                 const dot = document.getElementById('dot-ollama');
                 const txt = document.getElementById('text-ollama');
+                const ramTxt = document.getElementById('text-ram');
+
+                if (ramTxt && t.ram_usage) {
+                    ramTxt.innerText = `RAM: ${t.ram_usage}`;
+                }
 
                 if (o.online) {
                     badge.className = "flex items-center gap-1.5 bg-emerald-950/60 text-emerald-400 border border-emerald-800/60 px-3 py-1.5 rounded-full shadow-sm";

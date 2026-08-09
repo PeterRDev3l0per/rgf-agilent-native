@@ -164,6 +164,17 @@ class ChatRequest(BaseModel):
     question: str
 
 
+def get_realtime_ram_usage() -> str:
+    try:
+        import os
+        import psutil
+        process = psutil.Process(os.getpid())
+        ram_mb = process.memory_info().rss / (1024 * 1024)
+        return f"{ram_mb:.1f} MB RAM"
+    except Exception:
+        return "< 150 MB RAM"
+
+
 @app.get("/api/health")
 def health_check():
     import httpx
@@ -185,7 +196,7 @@ def health_check():
             "status_label": f"Ollama Online ({config.ollama_model})" if ollama_online else "Ollama Offline (Modo Resumen)",
         },
         "telemetry": {
-            "ram_usage": "< 150 MB RAM",
+            "ram_usage": get_realtime_ram_usage(),
             "fastmcp_footprint": "~300 tokens",
             "db_status": "SQLite WAL Connected",
         },

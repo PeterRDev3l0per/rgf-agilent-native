@@ -27,3 +27,11 @@
 - [x] 5.3 Update `src/agilent_native/static/index.html` header with live visual badges for Ollama status, model name, RAM, and token counter.
 - [x] 5.4 Run Pytest suite & QA verification via `sdd-qa-docs`.
 
+## Phase 6: Automated Playwright E2E Test Suite & Real-Time RAM Telemetry
+- [x] 6.1 Implement real-time RSS RAM calculation via `psutil` in `src/agilent_native/server.py`.
+- [x] 6.2 Update `src/agilent_native/static/index.html` loadTelemetry JS to dynamically render exact process RAM.
+- [x] 6.3 Document automated E2E testing use cases in `docs/E2E_USE_CASES.md`.
+- [x] 6.4 Implement Playwright E2E browser test suite in `tests/e2e/test_ui_playwright.py`.
+- [x] 6.5 Integrate Playwright E2E execution into `sdd-qa-docs` skill protocol.
+
+

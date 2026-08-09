@@ -1,0 +1,49 @@
+# Agilent Native Suite: End-to-End (E2E) Test Stages & Use Cases 🧪
+
+> **Automated Playwright E2E Quality Assurance Protocol for SDD Verification**
+
+This document defines the 4 core E2E user testing stages and use cases executed automatically by Playwright at the end of every SDD change.
+
+---
+
+## 🎯 Use Case 1: Kanban Board Navigation & Event Sync
+- **Goal**: Verify that work items tracked via FastMCP (`track_event`) appear immediately in the visual Kanban columns (`Backlog`, `In Progress`, `Verification`, `Done`).
+- **Playwright Assertion**:
+  - Load `http://127.0.0.1:8000/app/`.
+  - Verify Kanban columns are present and task count badges reflect active items.
+  - Verify card title, description HTML, and release tags render correctly.
+
+---
+
+## 🎯 Use Case 2: Gantt Timeline Chart Plotting
+- **Goal**: Verify that task start dates, completion target dates, and release tags plot correctly on the Timeline/Gantt chart.
+- **Playwright Assertion**:
+  - Click `Timeline / Gantt` tab button.
+  - Assert container displays task rows with formatted start and end date badges (`📅 Start: YYYY-MM-DD ➔ 🏁 End: YYYY-MM-DD`).
+
+---
+
+## 🎯 Use Case 3: Local RAG Chat Query Execution
+- **Goal**: Verify that the interactive RAG Chat interface submits user questions, queries project SQLite context, and displays responses (either online via Ollama or offline via Spanish summary fallback).
+- **Playwright Assertion**:
+  - Click `Local RAG Chat` tab button.
+  - Type query into chat input (`¿Cuál es el estado del proyecto?`) and press Enter / Click Send.
+  - Assert chat feed receives and displays assistant response text.
+
+---
+
+## 🎯 Use Case 4: Live Header Telemetry Badges
+- **Goal**: Verify that the top navigation header dynamically polls `/api/health` and displays live indicators for Ollama status, active model name, FastMCP schema token footprint (`~300 tokens`), and real-time RSS RAM consumption (`< 150 MB`).
+- **Playwright Assertion**:
+  - Assert `#badge-ollama` contains status text (`Ollama Online` or `Ollama Offline (Modo Resumen)`).
+  - Assert `#text-ram` displays live RAM usage (e.g. `RAM: 48.2 MB RAM`).
+
+---
+
+## 🚀 Execution & SDD Skill Integration
+
+The Playwright E2E test suite resides in `tests/e2e/test_ui_playwright.py` and is automatically invoked by `sdd-qa-docs` via:
+
+```bash
+.venv/Scripts/pytest tests/e2e/test_ui_playwright.py
+```
