@@ -1,0 +1,77 @@
+schema: spec-driven
+
+context: |
+  Tech stack: Python 3.10+ / FastAPI / SQLite / FastMCP / React + Vite / Ollama qwen3:14b
+  Architecture: Agilent Native Suite (Embedded REST API + Native MCP + Zero-Overhead Kanban/Gantt UI + Local RAG Chat)
+  Testing: pytest + pytest-asyncio
+  Style: Standard SDD Spec-Driven Architecture
+
+strict_tdd: false
+
+rules:
+  proposal:
+    - Include rollback plan for risky changes
+    - Identify affected modules/packages
+  specs:
+    - Use Given/When/Then format for scenarios
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+  design:
+    - Include sequence diagrams for complex flows
+    - Document architecture decisions with rationale
+  tasks:
+    - Group tasks by phase (infrastructure, implementation, testing)
+    - Use hierarchical numbering (1.1, 1.2, etc.)
+  apply:
+    - Follow existing code patterns and conventions
+  verify:
+    - Run tests if test infrastructure exists
+  archive:
+    - Warn before merging destructive deltas
+
+profiles:
+  orchestrator:
+    model: "gemini-3.6-flash-high"
+    context_window: 1000000
+    compaction_threshold: 750000
+    description: "Main orchestration thread, multi-agent delegation & DAG status synthesis."
+  
+  phases:
+    explore:
+      model: "gemini-3.1-pro"
+      fallback: "claude-opus"
+      context_window: 2000000
+      compaction_threshold: 1500000
+    propose:
+      model: "claude-opus"
+      fallback: "gemini-3.1-pro"
+      context_window: 200000
+      compaction_threshold: 150000
+    spec:
+      model: "gemini-3.6-flash-high"
+      fallback: "claude-sonnet-4.6"
+      context_window: 1000000
+      compaction_threshold: 750000
+    design:
+      model: "claude-opus"
+      fallback: "gemini-3.1-pro"
+      context_window: 200000
+      compaction_threshold: 150000
+    tasks:
+      model: "gemini-3.6-flash-high"
+      fallback: "claude-sonnet-4.6"
+      context_window: 1000000
+      compaction_threshold: 750000
+    apply:
+      model: "claude-sonnet-4.6"
+      fallback: "gemini-3.6-flash-high"
+      context_window: 200000
+      compaction_threshold: 150000
+    verify:
+      model: "claude-opus"
+      fallback: "gemini-3.1-pro"
+      context_window: 200000
+      compaction_threshold: 150000
+    archive:
+      model: "gemini-3.6-flash-high"
+      context_window: 1000000
+      compaction_threshold: 750000

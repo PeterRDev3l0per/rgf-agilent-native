@@ -1,0 +1,30 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# Node / UI
+node_modules/
+ui/dist/
+ui/node_modules/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+
+# Environment & Secrets
+.env
+.env.local
+
+# Database & Runtime Logs
+*.db
+*.db-journal
+*.sqlite
+.atl/
+.codegraph/
