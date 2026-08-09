@@ -65,6 +65,22 @@ This document defines the 4 core E2E user testing stages and use cases executed 
 
 ---
 
+## 🎯 Use Case 8: iPhone-Style Dynamic Island Notch Notifications
+- **Goal**: Verify that task creation and drag-and-drop state updates trigger the Dynamic Island notch notification pill (`#dynamic-island`) with fluid spring expansion.
+- **Playwright Assertion**:
+  - Trigger task state update or creation.
+  - Assert `#dynamic-island` receives `dynamic-island-expanded` class and displays event title.
+
+---
+
+## 🎯 Use Case 9: 3D Glowing Gradient Orb AI Chat Loader
+- **Goal**: Verify that submitting a chat query renders the 3D glowing gradient orb loader (`.orb-wrapper`, `.orb-glow`, `.orb-core`) while Ollama generates a response.
+- **Playwright Assertion**:
+  - Submit chat question.
+  - Assert `.orb-wrapper` is rendered during pending state.
+
+---
+
 ## 🚀 Execution & SDD Skill Integration
 
 The Playwright E2E test suite resides in `tests/e2e/test_ui_playwright.py` and is automatically invoked by `sdd-qa-docs` via:

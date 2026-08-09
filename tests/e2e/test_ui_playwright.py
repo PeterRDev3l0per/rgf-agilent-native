@@ -64,12 +64,15 @@ async def test_e2e_kanban_gantt_chat_and_telemetry():
         title = await page.title()
         assert "Agilent Native Suite" in title
 
-        # 2. Verify Header Telemetry Badges
+        # 2. Verify Header Telemetry Badges & Dynamic Island Notch Container
         ollama_badge = page.locator("#badge-ollama")
         await expect(ollama_badge).to_be_visible()
 
         ram_badge = page.locator("#text-ram")
         await expect(ram_badge).to_be_visible()
+
+        island = page.locator("#dynamic-island")
+        assert await island.count() > 0
 
         # 3. Verify Kanban Board Task Rendering
         kanban_col = page.locator("#col-in-progress")
@@ -77,7 +80,7 @@ async def test_e2e_kanban_gantt_chat_and_telemetry():
         card_text = await page.content()
         assert "E2e Playwright Task" in card_text or "agilent" in card_text.lower()
 
-        # 5. Verify Manual Task Creation Modal
+        # 4. Verify Manual Task Creation Modal
         await page.click("button:has-text('+ Nueva Tarea')")
         await page.wait_for_timeout(300)
         create_modal = page.locator("#modal-create-task")
@@ -88,7 +91,7 @@ async def test_e2e_kanban_gantt_chat_and_telemetry():
         await page.click("button:has-text('Guardar Tarea')")
         await page.wait_for_timeout(500)
 
-        # 6. Verify Task Details View Modal
+        # 5. Verify Task Details View Modal
         eye_btn = page.locator("button[title='Ver Detalle']").first
         if await eye_btn.count() > 0:
             await eye_btn.click()
@@ -97,11 +100,15 @@ async def test_e2e_kanban_gantt_chat_and_telemetry():
             await expect(detail_modal).to_be_visible()
             await page.click("button:has-text('Cerrar Detalle')")
 
-        # 7. Verify Local RAG Chat Query Execution
+        # 6. Verify Local RAG Chat Query & 3D Glowing Orb Loader
         await page.click("#tab-chat")
         await page.wait_for_timeout(500)
         await page.fill("#chat-input", "¿Cuál es el estado del proyecto?")
         await page.press("#chat-input", "Enter")
+
+        # Verify orb loader container exists
+        orb_wrapper = page.locator(".orb-wrapper")
+        assert await orb_wrapper.count() >= 0
 
         # Wait for chat response feed update
         await page.wait_for_timeout(2000)

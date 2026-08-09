@@ -60,4 +60,25 @@ Define the requirements for **Agilent Native Suite**, providing an embedded Fast
 - **When** `DatabaseManager` initializes default project `rgf-agilent-native`,
 - **Then** default SDLC seed tasks MUST be populated if the database is empty, rendering a rich Kanban and Timeline view out-of-the-box.
 
+### Scenario 11: Real-Time Board Updates & Event Stream Push
+- **Given** a new task insertion or state transition triggered via FastMCP tool or Web UI,
+- **When** the backend receives the event,
+- **Then** the UI MUST update the Kanban columns and Gantt timeline in real time without manual browser reloads.
+
+### Scenario 12: iPhone-Style Dynamic Island Notch Notification Alerts
+- **Given** a live event or system alert,
+- **When** the event occurs,
+- **Then** a dynamic island notch notification MUST expand at the top center of the screen with fluid spring animations.
+
+### Scenario 13: Animated Border Beam & Vanguard Aesthetics
+- **Given** Kanban cards and active workspace containers,
+- **When** hovering or dragging,
+- **Then** an animated glowing border-beam CSS gradient effect MUST highlight the active container.
+
+### Scenario 14: Glowing 3D Orb AI RAG Chat Loader
+- **Given** a user submitting a chat query to local Ollama RAG assistant,
+- **When** the model is generating a response,
+- **Then** an animated 3D glowing gradient orb loader MUST pulse gracefully until the response is rendered.
+
+
 

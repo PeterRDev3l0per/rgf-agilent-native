@@ -27,39 +27,122 @@
     </script>
     <style>
         .glass-panel {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
         .kanban-col {
-            min-height: 500px;
+            min-height: 520px;
         }
         .dragging {
-            opacity: 0.4;
+            opacity: 0.3;
+            transform: scale(0.98);
         }
+        /* Animated Border Beam Effect */
+        .border-beam-active {
+            position: relative;
+            background: linear-gradient(#0f172a, #0f172a) padding-box,
+                        linear-gradient(135deg, #38bdf8, #818cf8, #f43f5e, #38bdf8) border-box;
+            border: 1.5px solid transparent;
+            background-size: 200% 200%;
+            animation: border-beam-spin 4s linear infinite;
+        }
+        @keyframes border-beam-spin {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Dynamic Island Animations */
+        .dynamic-island-collapsed {
+            width: 140px;
+            height: 28px;
+            border-radius: 9999px;
+            opacity: 0;
+            transform: translateY(-20px) scale(0.8);
+            pointer-events: none;
+        }
+        .dynamic-island-expanded {
+            width: 380px;
+            min-height: 52px;
+            border-radius: 24px;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        /* 3D Glowing Orb AI Chat Loader (orbs.jakubatalik.com style) */
+        .orb-wrapper {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .orb-glow {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, #38bdf8, #818cf8, #c084fc, #f43f5e, #38bdf8);
+            filter: blur(10px);
+            opacity: 0.85;
+            animation: orb-spin 2.5s linear infinite, orb-pulse 1.8s ease-in-out infinite alternate;
+        }
+        .orb-core {
+            position: relative;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #ffffff 0%, #38bdf8 40%, #0369a1 100%);
+            box-shadow: inset -2px -2px 6px rgba(0, 0, 0, 0.6), inset 2px 2px 6px rgba(255, 255, 255, 0.8);
+            animation: orb-spin 4s linear infinite reverse;
+        }
+        @keyframes orb-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes orb-pulse {
+            0% { transform: scale(0.9); opacity: 0.7; }
+            100% { transform: scale(1.15); opacity: 1; }
+        }
+
         /* Custom scrollbars */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white">
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white relative">
+
+    <!-- DYNAMIC ISLAND NOTIFICATION NOTCH (iPhone Style) -->
+    <div class="fixed top-3 inset-x-0 z-50 flex justify-center pointer-events-none">
+        <div id="dynamic-island" class="dynamic-island-collapsed bg-slate-950/95 border border-sky-500/40 text-slate-100 shadow-2xl shadow-sky-500/20 transition-all duration-500 ease-out flex items-center px-4 py-2 gap-3 overflow-hidden backdrop-blur-xl">
+            <div id="island-icon" class="w-7 h-7 rounded-full bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center shrink-0 shadow">
+                <i data-lucide="bell" class="w-3.5 h-3.5 text-white"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+                <h5 id="island-title" class="text-xs font-bold text-slate-100 truncate">Notificación</h5>
+                <p id="island-text" class="text-[11px] text-slate-300 truncate leading-tight">Detalle del evento</p>
+            </div>
+        </div>
+    </div>
 
     <!-- Top Navigation Header -->
-    <header class="border-b border-slate-800 glass-panel sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+    <header class="border-b border-slate-800/80 glass-panel sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-sky-500/20">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 via-indigo-500 to-pink-500 flex items-center justify-center shadow-lg shadow-sky-500/25">
                     <i data-lucide="rocket" class="w-5 h-5 text-white"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-lg leading-tight bg-gradient-to-r from-sky-400 to-indigo-300 bg-clip-text text-transparent">Agilent Native Suite</h1>
+                    <h1 class="font-extrabold text-lg leading-tight bg-gradient-to-r from-sky-400 via-indigo-300 to-pink-400 bg-clip-text text-transparent">Agilent Native Suite</h1>
                     <p class="text-xs text-slate-400 font-medium">Zero-Overhead SDLC Workspace & Local RAG</p>
                 </div>
             </div>
 
             <!-- View Switcher Tabs -->
-            <nav class="flex items-center gap-1 bg-slate-900/80 p-1.5 rounded-xl border border-slate-800">
+            <nav class="flex items-center gap-1 bg-slate-900/90 p-1.5 rounded-xl border border-slate-800/90">
                 <button onclick="switchTab('kanban')" id="tab-kanban" class="px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center gap-2 bg-sky-600 text-white shadow">
                     <i data-lucide="kanban" class="w-4 h-4"></i> Kanban Board
                 </button>
@@ -96,15 +179,18 @@
         <section id="view-kanban" class="space-y-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <h2 class="text-xl font-bold text-slate-100">Project Backlog & SDD Lifecycle</h2>
-                    <p class="text-sm text-slate-400">Live FastMCP synced work items & drag-and-drop stages</p>
+                    <h2 class="text-xl font-bold text-slate-100 flex items-center gap-2">
+                        Project Backlog & SDD Lifecycle
+                        <span class="w-2 h-2 rounded-full bg-sky-400 animate-ping"></span>
+                    </h2>
+                    <p class="text-sm text-slate-400">Live FastMCP real-time synced work items & drag-and-drop stages</p>
                 </div>
                 <div class="flex items-center gap-2">
-                    <button onclick="openCreateModal()" class="px-3.5 py-1.5 text-xs font-semibold bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white rounded-lg flex items-center gap-1.5 shadow-md shadow-sky-500/20 transition">
+                    <button onclick="openCreateModal()" class="px-3.5 py-2 text-xs font-semibold bg-gradient-to-r from-sky-500 via-indigo-500 to-pink-500 hover:from-sky-400 hover:to-pink-400 text-white rounded-xl flex items-center gap-1.5 shadow-lg shadow-sky-500/20 transition">
                         <i data-lucide="plus" class="w-4 h-4"></i> + Nueva Tarea
                     </button>
-                    <button onclick="loadBoard()" class="px-3 py-1.5 text-xs font-medium bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-slate-200 flex items-center gap-2 transition">
-                        <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Refresh Board
+                    <button onclick="loadBoard()" class="px-3 py-2 text-xs font-medium bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl text-slate-300 flex items-center gap-2 transition">
+                        <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Actualizar
                     </button>
                 </div>
             </div>
@@ -165,33 +251,33 @@
             </div>
             <div class="glass-panel p-6 rounded-2xl space-y-4">
                 <div id="gantt-container" class="space-y-4 divide-y divide-slate-800/60">
-                    <p class="text-xs text-slate-400">Loading timeline data...</p>
+                    <p class="text-xs text-slate-400">Cargando datos del cronograma...</p>
                 </div>
             </div>
         </section>
 
-        <!-- VIEW 3: LOCAL RAG CHAT -->
+        <!-- VIEW 3: LOCAL RAG CHAT WITH 3D ORB LOADER -->
         <section id="view-chat" class="space-y-6 hidden">
             <div>
                 <h2 class="text-xl font-bold text-slate-100">Local RAG Project Assistant</h2>
                 <p class="text-sm text-slate-400">Query project context, task history & specs via local GPU Ollama ($0 cost)</p>
             </div>
 
-            <div class="glass-panel rounded-2xl flex flex-col h-[600px] overflow-hidden">
+            <div class="glass-panel rounded-2xl flex flex-col h-[600px] overflow-hidden border-beam-active">
                 <div id="chat-feed" class="flex-1 p-6 overflow-y-auto space-y-4">
                     <div class="flex items-start gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-sky-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold shrink-0 shadow">
                             <i data-lucide="bot" class="w-4 h-4"></i>
                         </div>
-                        <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/60 max-w-2xl text-sm leading-relaxed">
+                        <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800 max-w-2xl text-sm leading-relaxed">
                             ¡Hola! Soy tu asistente RAG local de <strong>Agilent Native Suite</strong>. Puedo responder preguntas sobre el avance de tus tareas, resultados de pruebas, fechas y arquitectura de tu proyecto sin consumir un solo token de pago. ¿En qué te puedo ayudar hoy?
                         </div>
                     </div>
                 </div>
 
-                <div class="p-4 bg-slate-900/90 border-t border-slate-800 flex items-center gap-3">
-                    <input type="text" id="chat-input" placeholder="Haz una pregunta sobre el estado del proyecto..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-sky-500 text-slate-100" onkeydown="if(event.key === 'Enter') sendChatMessage()">
-                    <button onclick="sendChatMessage()" class="px-5 py-3 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white rounded-xl text-sm font-semibold flex items-center gap-2 shadow-lg shadow-sky-500/20 transition">
+                <div class="p-4 bg-slate-950/90 border-t border-slate-800 flex items-center gap-3">
+                    <input type="text" id="chat-input" placeholder="Haz una pregunta sobre el estado del proyecto..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-sky-500 text-slate-100" onkeydown="if(event.key === 'Enter') sendChatMessage()">
+                    <button onclick="sendChatMessage()" class="px-5 py-3 bg-gradient-to-r from-sky-500 via-indigo-500 to-pink-500 hover:from-sky-400 hover:to-pink-400 text-white rounded-xl text-sm font-semibold flex items-center gap-2 shadow-lg shadow-sky-500/20 transition">
                         <span>Enviar</span> <i data-lucide="send" class="w-4 h-4"></i>
                     </button>
                 </div>
@@ -202,7 +288,7 @@
 
     <!-- MODAL 1: TASK DETAILS VIEW -->
     <div id="modal-task-detail" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
-        <div class="glass-panel bg-slate-900/95 border border-slate-700 max-w-2xl w-full rounded-2xl p-6 space-y-5 shadow-2xl relative">
+        <div class="glass-panel bg-slate-900/95 border border-slate-700 max-w-2xl w-full rounded-2xl p-6 space-y-5 shadow-2xl relative border-beam-active">
             <button onclick="closeDetailModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 transition">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
@@ -228,7 +314,7 @@
 
     <!-- MODAL 2: MANUAL TASK CREATION -->
     <div id="modal-create-task" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
-        <div class="glass-panel bg-slate-900/95 border border-slate-700 max-w-lg w-full rounded-2xl p-6 space-y-4 shadow-2xl relative">
+        <div class="glass-panel bg-slate-900/95 border border-slate-700 max-w-lg w-full rounded-2xl p-6 space-y-4 shadow-2xl relative border-beam-active">
             <button onclick="closeCreateModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 transition">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
@@ -282,6 +368,26 @@
         const API_BASE = "http://127.0.0.1:8000/api";
         const PROJECT_SLUG = "rgf-agilent-native";
         let boardStateData = {};
+        let boardStateHash = "";
+
+        // DYNAMIC ISLAND NOTIFICATION CONTROLLER
+        function triggerDynamicIsland(title, text, iconName = 'bell') {
+            const island = document.getElementById('dynamic-island');
+            const titleEl = document.getElementById('island-title');
+            const textEl = document.getElementById('island-text');
+            const iconEl = document.getElementById('island-icon');
+
+            titleEl.innerText = title;
+            textEl.innerText = text;
+            iconEl.innerHTML = `<i data-lucide="${iconName}" class="w-3.5 h-3.5 text-white"></i>`;
+            lucide.createIcons();
+
+            island.className = "dynamic-island-expanded bg-slate-950/95 border border-sky-500/50 text-slate-100 shadow-2xl shadow-sky-500/30 transition-all duration-500 ease-out flex items-center px-4 py-2 gap-3 overflow-hidden backdrop-blur-xl";
+
+            setTimeout(() => {
+                island.className = "dynamic-island-collapsed bg-slate-950/95 border border-sky-500/40 text-slate-100 shadow-2xl shadow-sky-500/20 transition-all duration-500 ease-out flex items-center px-4 py-2 gap-3 overflow-hidden backdrop-blur-xl";
+            }, 4000);
+        }
 
         function switchTab(tabName) {
             ['kanban', 'gantt', 'chat'].forEach(t => {
@@ -299,11 +405,20 @@
             lucide.createIcons();
         }
 
-        async function loadBoard() {
+        async function loadBoard(silent = false) {
             try {
                 const res = await fetch(`${API_BASE}/projects/${PROJECT_SLUG}/board`);
                 const data = await res.json();
                 const board = data.board || {};
+                
+                const newHash = JSON.stringify(board);
+                if (silent && newHash === boardStateHash) return;
+                
+                if (silent && boardStateHash !== "" && newHash !== boardStateHash) {
+                    triggerDynamicIsland("⚡ Tablero Sincronizado", "Evento FastMCP o cambio detectado", "sparkles");
+                }
+
+                boardStateHash = newHash;
                 boardStateData = board;
 
                 ['backlog', 'in-progress', 'verification', 'done'].forEach(col => {
@@ -325,7 +440,7 @@
 
                     items.forEach(item => {
                         const card = document.createElement('div');
-                        card.className = "bg-slate-900/90 border border-slate-800 p-4 rounded-xl space-y-3 hover:border-slate-700 transition shadow-sm cursor-grab active:cursor-grabbing";
+                        card.className = "bg-slate-900/90 border border-slate-800 p-4 rounded-xl space-y-3 hover:border-sky-500/50 transition shadow-sm cursor-grab active:cursor-grabbing hover:scale-[1.01] transition-all";
                         card.setAttribute('draggable', 'true');
                         card.setAttribute('ondragstart', `handleDragStart(event, '${item.id}')`);
                         card.setAttribute('ondblclick', `openDetailModal('${item.id}')`);
@@ -374,6 +489,7 @@
                     body: JSON.stringify({ state: targetState })
                 });
                 if (res.ok) {
+                    triggerDynamicIsland("🚀 Estado Actualizado", `Tarea movida a ${targetState}`, "check-circle-2");
                     loadBoard();
                     loadGantt();
                 }
@@ -445,6 +561,7 @@
                 });
 
                 if (res.ok) {
+                    triggerDynamicIsland("✨ Tarea Creada", `"${title}" agregada en ${state}`, "plus-circle");
                     closeCreateModal();
                     document.getElementById('create-title').value = "";
                     document.getElementById('create-description').value = "";
@@ -490,6 +607,7 @@
             }
         }
 
+        // CHAT WITH 3D GLOWING ORB LOADER
         async function sendChatMessage() {
             const input = document.getElementById('chat-input');
             const q = input.value.trim();
@@ -499,7 +617,7 @@
             
             feed.innerHTML += `
                 <div class="flex items-start gap-3 justify-end">
-                    <div class="bg-sky-600/90 text-white p-4 rounded-2xl max-w-2xl text-sm leading-relaxed shadow">
+                    <div class="bg-gradient-to-r from-sky-500 to-indigo-600 text-white p-4 rounded-2xl max-w-2xl text-sm leading-relaxed shadow-lg">
                         ${q}
                     </div>
                 </div>
@@ -509,11 +627,12 @@
 
             const loadId = `load-${Date.now()}`;
             feed.innerHTML += `
-                <div id="${loadId}" class="flex items-start gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-sky-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
-                        <i data-lucide="bot" class="w-4 h-4"></i>
+                <div id="${loadId}" class="flex items-center gap-4 py-2">
+                    <div class="orb-wrapper">
+                        <div class="orb-glow"></div>
+                        <div class="orb-core"></div>
                     </div>
-                    <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/60 max-w-2xl text-sm text-slate-400 animate-pulse">
+                    <div class="text-xs font-semibold bg-gradient-to-r from-sky-400 via-indigo-300 to-pink-400 bg-clip-text text-transparent animate-pulse">
                         Consultando modelo RAG local de Ollama...
                     </div>
                 </div>
@@ -532,10 +651,10 @@
                 document.getElementById(loadId).remove();
                 feed.innerHTML += `
                     <div class="flex items-start gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-sky-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold shrink-0 shadow">
                             <i data-lucide="bot" class="w-4 h-4"></i>
                         </div>
-                        <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/60 max-w-2xl text-sm leading-relaxed text-slate-200">
+                        <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800 max-w-2xl text-sm leading-relaxed text-slate-200 shadow-md">
                             ${data.answer.replace(/\n/g, '<br/>')}
                         </div>
                     </div>
@@ -583,6 +702,7 @@
             loadBoard();
             loadTelemetry();
             setInterval(loadTelemetry, 10000);
+            setInterval(() => loadBoard(true), 3000); // Live real-time silent sync
         });
     </script>
 </body>
