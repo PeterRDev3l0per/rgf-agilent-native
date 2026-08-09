@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es" class="dark" id="html-root">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,26 +26,60 @@
         }
     </script>
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #38bdf8, #818cf8, #f43f5e, #38bdf8);
+            --orb-conic: conic-gradient(from 0deg, #38bdf8, #818cf8, #c084fc, #f43f5e, #38bdf8);
+            --orb-core: radial-gradient(circle at 35% 35%, #ffffff 0%, #38bdf8 40%, #0369a1 100%);
+        }
+
+        /* 2026 TREND COLOR PALETTES */
+        .theme-cyber {
+            --primary-gradient: linear-gradient(135deg, #38bdf8, #818cf8, #f43f5e, #38bdf8);
+            --orb-conic: conic-gradient(from 0deg, #38bdf8, #818cf8, #c084fc, #f43f5e, #38bdf8);
+            --orb-core: radial-gradient(circle at 35% 35%, #ffffff 0%, #38bdf8 40%, #0369a1 100%);
+        }
+        .theme-emerald {
+            --primary-gradient: linear-gradient(135deg, #34d399, #14b8a6, #a3e635, #34d399);
+            --orb-conic: conic-gradient(from 0deg, #34d399, #14b8a6, #a3e635, #059669, #34d399);
+            --orb-core: radial-gradient(circle at 35% 35%, #ffffff 0%, #34d399 40%, #047857 100%);
+        }
+        .theme-nebula {
+            --primary-gradient: linear-gradient(135deg, #c084fc, #a855f7, #f43f5e, #c084fc);
+            --orb-conic: conic-gradient(from 0deg, #c084fc, #a855f7, #ec4899, #f43f5e, #c084fc);
+            --orb-core: radial-gradient(circle at 35% 35%, #ffffff 0%, #c084fc 40%, #7e22ce 100%);
+        }
+        .theme-aurora {
+            --primary-gradient: linear-gradient(135deg, #fbbf24, #f97316, #fb7185, #fbbf24);
+            --orb-conic: conic-gradient(from 0deg, #fbbf24, #f97316, #fb7185, #ea580c, #fbbf24);
+            --orb-core: radial-gradient(circle at 35% 35%, #ffffff 0%, #fbbf24 40%, #c2410c 100%);
+        }
+
         .glass-panel {
             background: rgba(15, 23, 42, 0.75);
             backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        .kanban-col {
-            min-height: 520px;
+        html:not(.dark) .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 0, 0, 0.08);
         }
-        .dragging {
-            opacity: 0.3;
-            transform: scale(0.98);
-        }
+
+        .kanban-col { min-height: 520px; }
+        .dragging { opacity: 0.3; transform: scale(0.98); }
+
         /* Animated Border Beam Effect */
         .border-beam-active {
             position: relative;
             background: linear-gradient(#0f172a, #0f172a) padding-box,
-                        linear-gradient(135deg, #38bdf8, #818cf8, #f43f5e, #38bdf8) border-box;
+                        var(--primary-gradient) border-box;
             border: 1.5px solid transparent;
             background-size: 200% 200%;
             animation: border-beam-spin 4s linear infinite;
+        }
+        html:not(.dark) .border-beam-active {
+            background: linear-gradient(#ffffff, #ffffff) padding-box,
+                        var(--primary-gradient) border-box;
         }
         @keyframes border-beam-spin {
             0% { background-position: 0% 50%; }
@@ -71,7 +105,7 @@
             pointer-events: auto;
         }
 
-        /* 3D Glowing Orb AI Chat Loader (orbs.jakubatalik.com style) */
+        /* 3D Glowing Orb AI Chat Loader */
         .orb-wrapper {
             position: relative;
             width: 44px;
@@ -84,7 +118,7 @@
             position: absolute;
             inset: 0;
             border-radius: 50%;
-            background: conic-gradient(from 0deg, #38bdf8, #818cf8, #c084fc, #f43f5e, #38bdf8);
+            background: var(--orb-conic);
             filter: blur(10px);
             opacity: 0.85;
             animation: orb-spin 2.5s linear infinite, orb-pulse 1.8s ease-in-out infinite alternate;
@@ -94,18 +128,12 @@
             width: 32px;
             height: 32px;
             border-radius: 50%;
-            background: radial-gradient(circle at 35% 35%, #ffffff 0%, #38bdf8 40%, #0369a1 100%);
+            background: var(--orb-core);
             box-shadow: inset -2px -2px 6px rgba(0, 0, 0, 0.6), inset 2px 2px 6px rgba(255, 255, 255, 0.8);
             animation: orb-spin 4s linear infinite reverse;
         }
-        @keyframes orb-spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        @keyframes orb-pulse {
-            0% { transform: scale(0.9); opacity: 0.7; }
-            100% { transform: scale(1.15); opacity: 1; }
-        }
+        @keyframes orb-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes orb-pulse { 0% { transform: scale(0.9); opacity: 0.7; } 100% { transform: scale(1.15); opacity: 1; } }
 
         /* Custom scrollbars */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -113,11 +141,11 @@
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white relative">
+<body class="bg-slate-950 text-slate-100 dark:bg-slate-950 dark:text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white transition-colors duration-300 relative theme-cyber" id="body-root">
 
     <!-- DYNAMIC ISLAND NOTIFICATION NOTCH (iPhone Style) -->
     <div class="fixed top-3 inset-x-0 z-50 flex justify-center pointer-events-none">
-        <div id="dynamic-island" class="dynamic-island-collapsed bg-slate-950/95 border border-sky-500/40 text-slate-100 shadow-2xl shadow-sky-500/20 transition-all duration-500 ease-out flex items-center px-4 py-2 gap-3 overflow-hidden backdrop-blur-xl">
+        <div id="dynamic-island" class="dynamic-island-collapsed bg-slate-950/95 dark:bg-slate-950/95 border border-sky-500/40 text-slate-100 shadow-2xl shadow-sky-500/20 transition-all duration-500 ease-out flex items-center px-4 py-2 gap-3 overflow-hidden backdrop-blur-xl">
             <div id="island-icon" class="w-7 h-7 rounded-full bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center shrink-0 shadow">
                 <i data-lucide="bell" class="w-3.5 h-3.5 text-white"></i>
             </div>
@@ -129,7 +157,7 @@
     </div>
 
     <!-- Top Navigation Header -->
-    <header class="border-b border-slate-800/80 glass-panel sticky top-0 z-40">
+    <header class="border-b border-slate-800/80 dark:border-slate-800/80 glass-panel sticky top-0 z-40 transition-colors">
         <div class="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 via-indigo-500 to-pink-500 flex items-center justify-center shadow-lg shadow-sky-500/25">
@@ -137,12 +165,12 @@
                 </div>
                 <div>
                     <h1 class="font-extrabold text-lg leading-tight bg-gradient-to-r from-sky-400 via-indigo-300 to-pink-400 bg-clip-text text-transparent">Agilent Native Suite</h1>
-                    <p class="text-xs text-slate-400 font-medium">Zero-Overhead SDLC Workspace & Local RAG</p>
+                    <p class="text-xs text-slate-400 dark:text-slate-400 font-medium">Zero-Overhead SDLC Workspace & Local RAG</p>
                 </div>
             </div>
 
             <!-- View Switcher Tabs -->
-            <nav class="flex items-center gap-1 bg-slate-900/90 p-1.5 rounded-xl border border-slate-800/90">
+            <nav class="flex items-center gap-1 bg-slate-900/90 dark:bg-slate-900/90 p-1.5 rounded-xl border border-slate-800/90">
                 <button onclick="switchTab('kanban')" id="tab-kanban" class="px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center gap-2 bg-sky-600 text-white shadow">
                     <i data-lucide="kanban" class="w-4 h-4"></i> Kanban Board
                 </button>
@@ -154,17 +182,33 @@
                 </button>
             </nav>
 
+            <!-- Theme Switcher & Dark/Light Toggle Controls -->
+            <div class="flex items-center gap-2">
+                <!-- 2026 Trend Color Palette Switcher -->
+                <div class="flex items-center gap-1 bg-slate-900/90 dark:bg-slate-900/90 p-1 rounded-xl border border-slate-800">
+                    <button onclick="changeTheme('theme-cyber')" title="Cyber Blue" class="w-5 h-5 rounded-full bg-gradient-to-tr from-sky-400 to-indigo-500 border border-white/20 hover:scale-110 transition shadow"></button>
+                    <button onclick="changeTheme('theme-emerald')" title="Neo Emerald (BioTech)" class="w-5 h-5 rounded-full bg-gradient-to-tr from-emerald-400 to-teal-500 border border-white/20 hover:scale-110 transition shadow"></button>
+                    <button onclick="changeTheme('theme-nebula')" title="Sunset Nebula (Amethyst)" class="w-5 h-5 rounded-full bg-gradient-to-tr from-purple-400 to-pink-500 border border-white/20 hover:scale-110 transition shadow"></button>
+                    <button onclick="changeTheme('theme-aurora')" title="Nordic Aurora (Amber)" class="w-5 h-5 rounded-full bg-gradient-to-tr from-amber-400 to-rose-500 border border-white/20 hover:scale-110 transition shadow"></button>
+                </div>
+
+                <!-- Dark / Light Mode Toggle Button -->
+                <button onclick="toggleDarkMode()" id="btn-dark-toggle" title="Cambiar Modo Claro/Oscuro" class="p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition flex items-center justify-center">
+                    <i id="icon-dark" data-lucide="moon" class="w-4 h-4 text-sky-400"></i>
+                </button>
+            </div>
+
             <!-- Live Telemetry Header Badges -->
-            <div class="flex items-center gap-2 font-medium text-xs">
+            <div class="hidden xl:flex items-center gap-2 font-medium text-xs">
                 <div id="badge-ollama" class="flex items-center gap-1.5 bg-emerald-950/60 text-emerald-400 border border-emerald-800/60 px-3 py-1.5 rounded-full shadow-sm">
                     <span id="dot-ollama" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                     <span id="text-ollama">Ollama Online (qwen3:14b)</span>
                 </div>
-                <div class="hidden md:flex items-center gap-1 bg-slate-900 text-slate-300 border border-slate-800 px-3 py-1.5 rounded-full">
+                <div class="flex items-center gap-1 bg-slate-900 text-slate-300 border border-slate-800 px-3 py-1.5 rounded-full">
                     <i data-lucide="cpu" class="w-3.5 h-3.5 text-sky-400"></i>
                     <span>FastMCP: ~300 tokens</span>
                 </div>
-                <div class="hidden lg:flex items-center gap-1 bg-slate-900 text-slate-300 border border-slate-800 px-3 py-1.5 rounded-full">
+                <div class="flex items-center gap-1 bg-slate-900 text-slate-300 border border-slate-800 px-3 py-1.5 rounded-full">
                     <i data-lucide="hard-drive" class="w-3.5 h-3.5 text-indigo-400"></i>
                     <span id="text-ram">RAM: &lt; 150 MB</span>
                 </div>
@@ -179,7 +223,7 @@
         <section id="view-kanban" class="space-y-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <h2 class="text-xl font-bold text-slate-100 flex items-center gap-2">
+                    <h2 class="text-xl font-bold text-slate-100 dark:text-slate-100 flex items-center gap-2">
                         Project Backlog & SDD Lifecycle
                         <span class="w-2 h-2 rounded-full bg-sky-400 animate-ping"></span>
                     </h2>
@@ -370,6 +414,54 @@
         let boardStateData = {};
         let boardStateHash = "";
 
+        // DARK MODE TOGGLE CONTROLLER
+        function toggleDarkMode() {
+            const html = document.getElementById('html-root');
+            const icon = document.getElementById('icon-dark');
+            const isDark = html.classList.contains('dark');
+
+            if (isDark) {
+                html.classList.remove('dark');
+                localStorage.setItem('agilent_mode', 'light');
+                icon.setAttribute('data-lucide', 'sun');
+                icon.className = "w-4 h-4 text-amber-400";
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('agilent_mode', 'dark');
+                icon.setAttribute('data-lucide', 'moon');
+                icon.className = "w-4 h-4 text-sky-400";
+            }
+            lucide.createIcons();
+        }
+
+        // 2026 TREND COLOR PALETTE SWITCHER
+        function changeTheme(themeClass) {
+            const body = document.getElementById('body-root');
+            body.className = body.className.replace(/theme-\w+/g, '').trim() + " " + themeClass;
+            localStorage.setItem('agilent_theme', themeClass);
+            triggerDynamicIsland("🎨 Tema Actualizado", `Paleta aplicada: ${themeClass.replace('theme-', '')}`, "palette");
+        }
+
+        function loadSavedPreferences() {
+            const savedMode = localStorage.getItem('agilent_mode');
+            const html = document.getElementById('html-root');
+            const icon = document.getElementById('icon-dark');
+
+            if (savedMode === 'light') {
+                html.classList.remove('dark');
+                if (icon) {
+                    icon.setAttribute('data-lucide', 'sun');
+                    icon.className = "w-4 h-4 text-amber-400";
+                }
+            }
+
+            const savedTheme = localStorage.getItem('agilent_theme');
+            if (savedTheme) {
+                const body = document.getElementById('body-root');
+                body.className = body.className.replace(/theme-\w+/g, '').trim() + " " + savedTheme;
+            }
+        }
+
         // DYNAMIC ISLAND NOTIFICATION CONTROLLER
         function triggerDynamicIsland(title, text, iconName = 'bell') {
             const island = document.getElementById('dynamic-island');
@@ -440,7 +532,7 @@
 
                     items.forEach(item => {
                         const card = document.createElement('div');
-                        card.className = "bg-slate-900/90 border border-slate-800 p-4 rounded-xl space-y-3 hover:border-sky-500/50 transition shadow-sm cursor-grab active:cursor-grabbing hover:scale-[1.01] transition-all";
+                        card.className = "bg-slate-900/90 dark:bg-slate-900/90 border border-slate-800 p-4 rounded-xl space-y-3 hover:border-sky-500/50 transition shadow-sm cursor-grab active:cursor-grabbing hover:scale-[1.01] transition-all";
                         card.setAttribute('draggable', 'true');
                         card.setAttribute('ondragstart', `handleDragStart(event, '${item.id}')`);
                         card.setAttribute('ondblclick', `openDetailModal('${item.id}')`);
@@ -468,14 +560,8 @@
         }
 
         // HTML5 Drag and Drop Handlers
-        function allowDrop(ev) {
-            ev.preventDefault();
-        }
-
-        function handleDragStart(ev, itemId) {
-            ev.dataTransfer.setData("text/plain", itemId);
-            ev.target.classList.add('dragging');
-        }
+        function allowDrop(ev) { ev.preventDefault(); }
+        function handleDragStart(ev, itemId) { ev.dataTransfer.setData("text/plain", itemId); ev.target.classList.add('dragging'); }
 
         async function handleDrop(ev, targetState) {
             ev.preventDefault();
@@ -520,17 +606,9 @@
             lucide.createIcons();
         }
 
-        function closeDetailModal() {
-            document.getElementById('modal-task-detail').classList.add('hidden');
-        }
-
-        function openCreateModal() {
-            document.getElementById('modal-create-task').classList.remove('hidden');
-        }
-
-        function closeCreateModal() {
-            document.getElementById('modal-create-task').classList.add('hidden');
-        }
+        function closeDetailModal() { document.getElementById('modal-task-detail').classList.add('hidden'); }
+        function openCreateModal() { document.getElementById('modal-create-task').classList.remove('hidden'); }
+        function closeCreateModal() { document.getElementById('modal-create-task').classList.add('hidden'); }
 
         async function submitManualTask() {
             const title = document.getElementById('create-title').value.trim();
@@ -698,11 +776,12 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            loadSavedPreferences();
             lucide.createIcons();
             loadBoard();
             loadTelemetry();
             setInterval(loadTelemetry, 10000);
-            setInterval(() => loadBoard(true), 3000); // Live real-time silent sync
+            setInterval(() => loadBoard(true), 3000);
         });
     </script>
 </body>

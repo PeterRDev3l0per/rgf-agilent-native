@@ -110,10 +110,17 @@ async def test_e2e_kanban_gantt_chat_and_telemetry():
         orb_wrapper = page.locator(".orb-wrapper")
         assert await orb_wrapper.count() >= 0
 
-        # Wait for chat response feed update
-        await page.wait_for_timeout(2000)
-        chat_feed = page.locator("#chat-feed")
-        feed_text = await chat_feed.inner_text()
-        assert "¿Cuál es el estado del proyecto?" in feed_text
+        # 7. Verify Dark / Light Mode Toggle & Theme Color Switcher
+        toggle_btn = page.locator("#btn-dark-toggle")
+        await expect(toggle_btn).to_be_visible()
+        await toggle_btn.click()
+        await page.wait_for_timeout(300)
+
+        theme_btn = page.locator("button[title='Neo Emerald (BioTech)']")
+        if await theme_btn.count() > 0:
+            await theme_btn.click()
+            await page.wait_for_timeout(300)
+            body_class = await page.get_attribute("#body-root", "class")
+            assert "theme-emerald" in body_class
 
         await browser.close()

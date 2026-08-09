@@ -42,11 +42,19 @@
 - [x] 7.5 Run Pytest suite & QA verification via `sdd-qa-docs`.
 
 ## Phase 8: Real-Time Board Sync, Dynamic Island Notch, Border Beam & Glowing Orb Loader
-- [ ] 8.1 Add real-time event broadcasting and automatic board polling in `src/agilent_native/server.py` and `static/index.html`.
-- [ ] 8.2 Implement iPhone-style Dynamic Island Notch notification component in `src/agilent_native/static/index.html`.
-- [ ] 8.3 Implement glowing border beam CSS animation effects for active cards and panels in `src/agilent_native/static/index.html`.
-- [ ] 8.4 Implement 3D Glowing Gradient Orb AI Chat Loader inspired by `orbs.jakubatalik.com` in `src/agilent_native/static/index.html`.
-- [ ] 8.5 Update Playwright E2E test suite in `tests/e2e/test_ui_playwright.py` and run QA verification via `sdd-qa-docs`.
+- [x] 8.1 Add real-time event broadcasting and automatic board polling in `src/agilent_native/server.py` and `static/index.html`.
+- [x] 8.2 Implement iPhone-style Dynamic Island Notch notification component in `src/agilent_native/static/index.html`.
+- [x] 8.3 Implement glowing border beam CSS animation effects for active cards and panels in `src/agilent_native/static/index.html`.
+- [x] 8.4 Implement 3D Glowing Gradient Orb AI Chat Loader inspired by `orbs.jakubatalik.com` in `src/agilent_native/static/index.html`.
+- [x] 8.5 Update Playwright E2E test suite in `tests/e2e/test_ui_playwright.py` and run QA verification via `sdd-qa-docs`.
+
+## Phase 9: Dark / Light Mode Toggle & 2026 Trend Color Palette Theme Switcher
+- [ ] 9.1 Implement Dark/Light mode toggle button and `localStorage` persistence in `src/agilent_native/static/index.html`.
+- [ ] 9.2 Implement 2026 Trend Color Palette Switcher (Cyber Blue, Neo Emerald, Sunset Nebula, Nordic Aurora) in `src/agilent_native/static/index.html`.
+- [ ] 9.3 Update `docs/E2E_USE_CASES.md` with Use Cases 10 & 11.
+- [ ] 9.4 Update Playwright E2E browser test suite in `tests/e2e/test_ui_playwright.py`.
+- [ ] 9.5 Run Pytest suite & QA verification via `sdd-qa-docs`.
+
 
 
 

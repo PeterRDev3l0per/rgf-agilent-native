@@ -80,5 +80,16 @@ Define the requirements for **Agilent Native Suite**, providing an embedded Fast
 - **When** the model is generating a response,
 - **Then** an animated 3D glowing gradient orb loader MUST pulse gracefully until the response is rendered.
 
+### Scenario 15: Dark / Light Mode Toggle & LocalStorage Persistence
+- **Given** a user clicking the Sun/Moon mode button in the header,
+- **When** toggled,
+- **Then** the UI MUST switch between dark and light background themes and persist the preference in `localStorage`.
+
+### Scenario 16: 2026 Trend Color Palette Theme Switcher
+- **Given** a user selecting a color theme palette (Cyber Blue, Neo Emerald, Sunset Nebula, Nordic Aurora),
+- **When** selected,
+- **Then** the UI MUST update accent gradients, border beams, and badges dynamically and persist the choice in `localStorage`.
+
+
 
 

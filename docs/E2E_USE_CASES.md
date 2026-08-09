@@ -81,6 +81,23 @@ This document defines the 4 core E2E user testing stages and use cases executed 
 
 ---
 
+## 🎯 Use Case 10: Dark / Light Mode Toggle & LocalStorage Persistence
+- **Goal**: Verify that clicking `#btn-dark-toggle` toggles between dark and light themes and updates `localStorage.agilent_mode`.
+- **Playwright Assertion**:
+  - Click `#btn-dark-toggle`.
+  - Assert `html` root class list toggles `dark`.
+
+---
+
+## 🎯 Use Case 11: 2026 Trend Color Palette Switcher
+- **Goal**: Verify that clicking a theme color pill (`theme-emerald`, `theme-nebula`, `theme-aurora`, `theme-cyber`) updates the body theme class and triggers a Dynamic Island notification.
+- **Playwright Assertion**:
+  - Click color pill button.
+  - Assert body contains chosen theme class.
+
+
+---
+
 ## 🚀 Execution & SDD Skill Integration
 
 The Playwright E2E test suite resides in `tests/e2e/test_ui_playwright.py` and is automatically invoked by `sdd-qa-docs` via:
