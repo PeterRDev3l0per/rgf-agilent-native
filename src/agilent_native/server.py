@@ -6,6 +6,8 @@ from datetime import datetime
 from typing import Optional, Dict, Any, List
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path
 from fastmcp import FastMCP
 from pydantic import BaseModel
 
@@ -59,6 +61,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+STATIC_DIR = Path(__file__).parent / "static"
+if STATIC_DIR.exists():
+    app.mount("/app", StaticFiles(directory=str(STATIC_DIR), html=True), name="static")
+
+@app.get("/")
+def root_redirect():
+    from fastapi.responses import RedirectResponse
+    return RedirectResponse(url="/app/")
+
 
 
 def format_card_title(change_name: str) -> str:
