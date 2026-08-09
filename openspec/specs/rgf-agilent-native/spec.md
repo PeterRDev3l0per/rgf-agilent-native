@@ -39,3 +39,25 @@ Define the requirements for **Agilent Native Suite**, providing an embedded Fast
 - **When** health status `/api/health` is polled,
 - **Then** the header MUST display live indicators for Ollama status, active model name, RAM footprint, and Orchestrator token usage.
 
+### Scenario 7: Task Details View Modal & HTML Render
+- **Given** a user interacting with a Kanban card,
+- **When** clicking the Eye icon or double-clicking the card,
+- **Then** a modal dialog MUST open displaying full task title, rendered HTML description, timeline dates, test status, release tag, and activity log.
+
+### Scenario 8: Native Drag-and-Drop Kanban State Transition
+- **Given** a user dragging a task card from one column to another,
+- **When** dropping the card into a new stage (`Backlog`, `In Progress`, `Verification`, `Done`),
+- **Then** the UI MUST trigger REST API `/api/work_items/{id}/state` to update SQLite state,
+- **And** update card count badges and Gantt timeline chart immediately.
+
+### Scenario 9: Manual Task Creation & Local RAG Synchronization
+- **Given** a user clicking the "+ Nueva Tarea" button in the Web UI,
+- **When** submitting title, description, initial stage, start/completion dates, and release tag,
+- **Then** the backend MUST save the work item in SQLite and index it immediately for local RAG chat queries.
+
+### Scenario 10: Rich SDLC Seed Data Initialization
+- **Given** fresh application startup,
+- **When** `DatabaseManager` initializes default project `rgf-agilent-native`,
+- **Then** default SDLC seed tasks MUST be populated if the database is empty, rendering a rich Kanban and Timeline view out-of-the-box.
+
+

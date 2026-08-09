@@ -164,6 +164,21 @@ class ChatRequest(BaseModel):
     question: str
 
 
+class StateUpdateRequest(BaseModel):
+    state: str
+
+
+class CreateTaskRequest(BaseModel):
+    project_slug: str = "rgf-agilent-native"
+    title: str
+    description: str = ""
+    state: str = "Backlog"
+    start_date: Optional[str] = None
+    target_date: Optional[str] = None
+    release_tag: Optional[str] = None
+    test_status: Optional[str] = None
+
+
 def get_realtime_ram_usage() -> str:
     try:
         import os
@@ -241,6 +256,45 @@ async def chat_with_project_rag(req: ChatRequest):
     proj = db.get_or_create_project(req.project_slug)
     result = await rag_engine.chat_query(proj["id"], req.question)
     return result
+
+
+@app.patch("/api/work_items/{item_id}/state")
+def update_work_item_state(item_id: str, req: StateUpdateRequest):
+    valid_states = {"Backlog", "In Progress", "Verification", "Done"}
+    if req.state not in valid_states:
+        raise HTTPException(status_code=400, detail=f"Invalid state '{req.state}'")
+    
+    updated = db.update_work_item(item_id, {"state": req.state})
+    if not updated:
+        raise HTTPException(status_code=404, detail=f"Work item '{item_id}' not found")
+    
+    db.add_comment(item_id, f"<p>State moved to <strong>{req.state}</strong> via UI drag and drop</p>")
+    return {"status": "success", "work_item": updated}
+
+
+@app.post("/api/work_items")
+def create_manual_work_item(req: CreateTaskRequest):
+    proj = db.get_or_create_project(req.project_slug)
+    desc_html = f"<p>{req.description or req.title}</p>"
+    item = db.create_work_item(proj["id"], req.title, desc_html)
+    
+    updates = {}
+    if req.state:
+        updates["state"] = req.state
+    if req.start_date:
+        updates["start_date"] = req.start_date
+    if req.target_date:
+        updates["target_date"] = req.target_date
+    if req.release_tag:
+        updates["release_tag"] = req.release_tag
+    if req.test_status:
+        updates["test_status"] = req.test_status
+        
+    if updates:
+        item = db.update_work_item(item["id"], updates)
+        
+    db.add_comment(item["id"], f"<p>Task created manually in stage <strong>{req.state}</strong></p>")
+    return {"status": "created", "work_item": item}
 
 
 def main():

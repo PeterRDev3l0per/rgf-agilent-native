@@ -25,6 +25,8 @@ ui/node_modules/
 # Database & Runtime Logs
 *.db
 *.db-journal
+*.db-shm
+*.db-wal
 *.sqlite
 .atl/
 .codegraph/

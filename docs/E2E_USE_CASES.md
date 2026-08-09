@@ -40,6 +40,31 @@ This document defines the 4 core E2E user testing stages and use cases executed 
 
 ---
 
+## 🎯 Use Case 5: Task Details View Modal
+- **Goal**: Verify that clicking the Eye icon or double-clicking a card opens `#modal-task-detail` showing full task title, rendered HTML description, timeline, test badge, and release tag.
+- **Playwright Assertion**:
+  - Click Eye button on a card.
+  - Assert `#modal-task-detail` becomes visible with matching `#detail-title`.
+
+---
+
+## 🎯 Use Case 6: HTML5 Drag & Drop Kanban State Transition
+- **Goal**: Verify that dragging a card to a new column sends `PATCH /api/work_items/{id}/state` and updates state in SQLite and Gantt timeline.
+- **Playwright Assertion**:
+  - Drag card from `#col-backlog` to `#col-in-progress`.
+  - Assert task count updates and card is positioned in destination column.
+
+---
+
+## 🎯 Use Case 7: Manual Task Creation & Local RAG Sync
+- **Goal**: Verify that clicking `+ Nueva Tarea` opens `#modal-create-task`, saves new item via `POST /api/work_items`, and updates Kanban and Gantt views.
+- **Playwright Assertion**:
+  - Click `+ Nueva Tarea`.
+  - Fill title (`Tarea Creada Manualmente`) and submit.
+  - Assert card appears on Kanban board.
+
+---
+
 ## 🚀 Execution & SDD Skill Integration
 
 The Playwright E2E test suite resides in `tests/e2e/test_ui_playwright.py` and is automatically invoked by `sdd-qa-docs` via:

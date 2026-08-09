@@ -34,4 +34,12 @@
 - [x] 6.4 Implement Playwright E2E browser test suite in `tests/e2e/test_ui_playwright.py`.
 - [x] 6.5 Integrate Playwright E2E execution into `sdd-qa-docs` skill protocol.
 
+## Phase 7: Task Details Modal, Drag & Drop, Manual Task Creation & Seed Data
+- [ ] 7.1 Implement SDLC seed data auto-population in `src/agilent_native/db.py`.
+- [ ] 7.2 Implement REST API endpoints `/api/work_items/{id}/state` and `/api/work_items` in `src/agilent_native/server.py`.
+- [ ] 7.3 Implement Task Details Modal (Eye icon + double-click), HTML5 Drag and Drop between columns, and Manual Task Creation form in `src/agilent_native/static/index.html`.
+- [ ] 7.4 Update `docs/E2E_USE_CASES.md` and Playwright E2E test suite in `tests/e2e/test_ui_playwright.py`.
+- [ ] 7.5 Run Pytest suite & QA verification via `sdd-qa-docs`.
+
+
 

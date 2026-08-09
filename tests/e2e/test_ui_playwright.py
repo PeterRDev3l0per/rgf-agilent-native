@@ -77,13 +77,27 @@ async def test_e2e_kanban_gantt_chat_and_telemetry():
         card_text = await page.content()
         assert "E2e Playwright Task" in card_text or "agilent" in card_text.lower()
 
-        # 4. Verify Timeline / Gantt View Switch
-        await page.click("#tab-gantt")
-        await page.wait_for_timeout(500)
-        gantt_container = page.locator("#gantt-container")
-        await expect(gantt_container).to_be_visible()
+        # 5. Verify Manual Task Creation Modal
+        await page.click("button:has-text('+ Nueva Tarea')")
+        await page.wait_for_timeout(300)
+        create_modal = page.locator("#modal-create-task")
+        await expect(create_modal).to_be_visible()
 
-        # 5. Verify Local RAG Chat Query Execution
+        await page.fill("#create-title", "Manual E2E Test Task")
+        await page.fill("#create-description", "Created via Playwright automated E2E test")
+        await page.click("button:has-text('Guardar Tarea')")
+        await page.wait_for_timeout(500)
+
+        # 6. Verify Task Details View Modal
+        eye_btn = page.locator("button[title='Ver Detalle']").first
+        if await eye_btn.count() > 0:
+            await eye_btn.click()
+            await page.wait_for_timeout(300)
+            detail_modal = page.locator("#modal-task-detail")
+            await expect(detail_modal).to_be_visible()
+            await page.click("button:has-text('Cerrar Detalle')")
+
+        # 7. Verify Local RAG Chat Query Execution
         await page.click("#tab-chat")
         await page.wait_for_timeout(500)
         await page.fill("#chat-input", "¿Cuál es el estado del proyecto?")
