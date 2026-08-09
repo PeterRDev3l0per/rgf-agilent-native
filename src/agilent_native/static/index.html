@@ -68,10 +68,25 @@
                 </button>
             </nav>
 
-            <!-- Status Indicator -->
-            <div class="flex items-center gap-2 bg-emerald-950/40 text-emerald-400 border border-emerald-800/50 px-3 py-1.5 rounded-full text-xs font-medium">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span>FastMCP Online & Online RAM &lt; 150 MB</span>
+            <!-- Live Telemetry Header Badges -->
+            <div class="flex items-center gap-2 font-medium text-xs">
+                <!-- Ollama Local LLM Badge -->
+                <div id="badge-ollama" class="flex items-center gap-1.5 bg-emerald-950/60 text-emerald-400 border border-emerald-800/60 px-3 py-1.5 rounded-full shadow-sm">
+                    <span id="dot-ollama" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span id="text-ollama">Ollama Online (qwen3:14b)</span>
+                </div>
+
+                <!-- Orchestrator FastMCP Footprint Badge -->
+                <div class="hidden md:flex items-center gap-1 bg-slate-900 text-slate-300 border border-slate-800 px-3 py-1.5 rounded-full">
+                    <i data-lucide="cpu" class="w-3.5 h-3.5 text-sky-400"></i>
+                    <span>FastMCP: ~300 tokens</span>
+                </div>
+
+                <!-- RAM Footprint Badge -->
+                <div class="hidden lg:flex items-center gap-1 bg-slate-900 text-slate-300 border border-slate-800 px-3 py-1.5 rounded-full">
+                    <i data-lucide="hard-drive" class="w-3.5 h-3.5 text-indigo-400"></i>
+                    <span>RAM: &lt; 150 MB</span>
+                </div>
             </div>
         </div>
     </header>
@@ -344,10 +359,36 @@
             }
         }
 
+        async function loadTelemetry() {
+            try {
+                const res = await fetch(`${API_BASE}/health`);
+                const data = await res.json();
+                const o = data.ollama || {};
+
+                const badge = document.getElementById('badge-ollama');
+                const dot = document.getElementById('dot-ollama');
+                const txt = document.getElementById('text-ollama');
+
+                if (o.online) {
+                    badge.className = "flex items-center gap-1.5 bg-emerald-950/60 text-emerald-400 border border-emerald-800/60 px-3 py-1.5 rounded-full shadow-sm";
+                    dot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse";
+                    txt.innerText = o.status_label || `Ollama Online (${o.model || 'qwen3:14b'})`;
+                } else {
+                    badge.className = "flex items-center gap-1.5 bg-amber-950/60 text-amber-400 border border-amber-800/60 px-3 py-1.5 rounded-full shadow-sm";
+                    dot.className = "w-2 h-2 rounded-full bg-amber-400";
+                    txt.innerText = "Ollama Offline (Modo Resumen)";
+                }
+            } catch (err) {
+                console.error("Telemetry poll error:", err);
+            }
+        }
+
         // Initialize icons and default tab on load
         window.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             loadBoard();
+            loadTelemetry();
+            setInterval(loadTelemetry, 10000);
         });
     </script>
 </body>

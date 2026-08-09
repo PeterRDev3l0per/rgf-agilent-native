@@ -34,11 +34,11 @@ class LocalRAGEngine:
         for item in items[:limit]:
             state = item.get("state", "Backlog")
             title = item.get("title", "")
-            dates = f"Start: {item.get('start_date') or 'N/A'} | End: {item.get('target_date') or 'N/A'}"
+            dates = f"Inicio: {item.get('start_date') or 'N/A'} | Término: {item.get('target_date') or 'N/A'}"
             tests = item.get("test_status") or "N/A"
-            relevant_parts.append(f"• Task: {title} | State: {state} | Timeline: {dates} | Tests: {tests}")
+            relevant_parts.append(f"• Tarea: {title} | Estado: {state} | Fechas: {dates} | Pruebas: {tests}")
 
-        return "\n".join(relevant_parts) if relevant_parts else "No project tasks found."
+        return "\n".join(relevant_parts) if relevant_parts else "No se encontraron tareas registradas en el proyecto."
 
     async def chat_query(self, project_id: str, user_question: str) -> Dict[str, Any]:
         """Execute RAG augmented query using local Ollama LLM at $0 token cost."""
@@ -50,7 +50,7 @@ Here is the active project context & task history from SQLite:
 
 User Question: {user_question}
 
-Provide a helpful, precise, and professional technical response based on the project context above.
+Provide a helpful, precise, and professional technical response in SPANISH based on the project context above.
 If the answer is present in the context, highlight task states, test results, or timelines clearly.
 Keep your response clean and concise (max 200 words)."""
 
@@ -73,7 +73,7 @@ Keep your response clean and concise (max 200 words)."""
                 logger.warning(f"Failed to connect to local Ollama: {e}")
 
         if not answer:
-            answer = f"**[Offline Summary Mode]** Based on project records:\n{context_summary}"
+            answer = f"**[Modo Resumen Offline]** Basado en los registros del proyecto en SQLite:\n{context_summary}"
 
         return {
             "question": user_question,

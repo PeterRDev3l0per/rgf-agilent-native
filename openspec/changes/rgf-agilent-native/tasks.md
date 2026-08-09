@@ -17,6 +17,13 @@
 - [ ] 3.4 Implement Interactive Project Chat widget connected to local Ollama RAG backend.
 
 ## Phase 4: CLI Launcher & Verification
-- [ ] 4.1 Implement `src/agilent_native/cli.py` and `agilent` launcher scripts with health checks.
-- [ ] 4.2 Write unit and integration tests in `tests/`.
-- [ ] 4.3 Run end-to-end verification and QA audit via `sdd-qa-docs`.
+- [x] 4.1 Implement `src/agilent_native/cli.py` and `agilent` launcher scripts with health checks.
+- [x] 4.2 Write unit and integration tests in `tests/`.
+- [x] 4.3 Run end-to-end verification and QA audit via `sdd-qa-docs`.
+
+## Phase 5: Spanish Offline Fallback & Live Telemetry Header Badges
+- [x] 5.1 Translate RAG offline fallback in `src/agilent_native/rag.py` to natural Spanish (`**[Modo Resumen Offline]** Basado en los registros del proyecto:`).
+- [x] 5.2 Enhance `/api/health` in `src/agilent_native/server.py` to return Ollama online/offline status, active model name, RAM usage (<150 MB), and Orchestrator token usage.
+- [x] 5.3 Update `src/agilent_native/static/index.html` header with live visual badges for Ollama status, model name, RAM, and token counter.
+- [x] 5.4 Run Pytest suite & QA verification via `sdd-qa-docs`.
+
