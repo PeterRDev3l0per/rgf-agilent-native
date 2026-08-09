@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -f "$SCRIPT_DIR/.venv/bin/agilent" ]; then
+    "$SCRIPT_DIR/.venv/bin/agilent" "$@"
+elif [ -f "$SCRIPT_DIR/.venv/Scripts/agilent.exe" ]; then
+    "$SCRIPT_DIR/.venv/Scripts/agilent.exe" "$@"
+else
+    python3 -m agilent_native.cli "$@"
+fi

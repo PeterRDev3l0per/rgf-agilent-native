@@ -8,7 +8,10 @@
 [![SQLite](https://img.shields.io/badge/Database-SQLite-blue.svg)](https://www.sqlite.org/)
 [![Ollama](https://img.shields.io/badge/Local--LLM-Ollama--qwen3:14b-orange.svg)](https://ollama.com/)
 
-**Agilent Native Suite** is a zero-overhead, self-hosted web application and FastMCP server designed specifically for AI-assisted SDLC development. It replaces heavy third-party software (Plane) with a single-process application consuming **<150 MB RAM** and booting in **<1 second**.
+[![CI/CD Pipeline](https://github.com/PeterRDev3l0per/rgf-agilent-native/actions/workflows/ci.yml/badge.svg)](https://github.com/PeterRDev3l0per/rgf-agilent-native/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+**Agilent Native Suite** is a zero-overhead, self-hosted open-source web application and FastMCP server designed specifically for AI-assisted SDLC development. It replaces heavy third-party software (Plane) with a single-process application consuming **<150 MB RAM** and booting in **<1 second**.
 
 ---
 
@@ -18,7 +21,8 @@
 - 📋 **Native SDD Kanban Board**: Interactive visual board with native columns (`Backlog`, `In Progress`, `Verification`, `Done`).
 - 📅 **Automatic Gantt Timeline**: Automatically plots task start dates, completion dates, and release milestones on a Gantt timeline chart.
 - 💬 **Built-in Local RAG Project Chat**: Ask questions about your project architecture, specs, and status directly in the UI using local Ollama (`qwen3:14b`) at **$0 paid token cost**.
-- 🗄️ **Embedded SQLite Database**: Single `.db` file for zero-configuration database storage.
+- 🗄️ **Embedded SQLite Database**: Single `.db` file for zero-configuration database storage (WAL mode).
+- 🔄 **Continuous Integration (CI/CD)**: Automated GitHub Actions pipeline verifying Python 3.10–3.13 compatibility, Ruff linting, and Pytest coverage on every push.
 - 🛠️ **1-Command CLI & Auto-Recovery**: Includes the `agilent` launcher with automatic retry-recovery health checks.
 
 ---
@@ -51,6 +55,29 @@
 
 ---
 
-## 📄 License
+## 🚀 Quickstart & Installation
 
-Distributed under the [MIT License](LICENSE).
+```bash
+git clone https://github.com/PeterRDev3l0per/rgf-agilent-native.git
+cd rgf-agilent-native
+python -m venv .venv
+.venv/Scripts/pip install -e .[dev]
+```
+
+### Run Health Checks
+
+```bash
+.\agilent.cmd status
+```
+
+### Run Pytest Suite
+
+```bash
+.venv/Scripts/pytest
+```
+
+---
+
+## 📄 Open Source License
+
+Distributed under the [MIT License](LICENSE). Open-source software built for the AI developer community.
