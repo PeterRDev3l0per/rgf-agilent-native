@@ -7,6 +7,21 @@ The project fully complies with **NIST SSDF (SP 800-218)**, **OWASP WSTG v4.2**,
 
 ---
 
+## 🚀 0. Shift-Left Proactive Threat Modeling & Continuous Refresh
+
+Under **SDD-STRICT Mode**, security audit is enforced at the earliest design phase (Phase 0) before any feature or MVP implementation begins.
+
+| Threat Category (STRIDE) | Attack Vector Considered | Proactive Design Control | Status |
+|---|---|---|---|
+| **Spoofing** | Unauthorized API requests | Parameterized endpoint validation & cryptographically strong UUID generation | 🛡️ Active |
+| **Tampering** | Stored XSS in tasks/comments, SQLi in queries | `sanitize_text()`, `sanitize_html_content()`, `validate_slug()`, SQLite parameterization | 🛡️ Active |
+| **Repudiation** | Unaudited state mutations | Append-only security event logger (`log_security_event`) with ISO timestamps | 🛡️ Active |
+| **Info Disclosure** | Stack trace leaks, prompt exfiltration | Exception shielding (generic HTTP 500), XML prompt isolation (`<project_context>`) | 🛡️ Active |
+| **Denial of Service** | Oversized JSON payloads | Middleware payload size limitation (**1 MB Cap**) with HTTP 413 responses | 🛡️ Active |
+| **Elevation of Privilege** | Path traversal, DB tampering | Strict regex validation (`^[a-zA-Z0-9_-]+$`) and WAL mode process isolation | 🛡️ Active |
+
+---
+
 ## 🏛️ Security Frameworks Compliance Matrix
 
 | Security Standard | Domain / Scope | Status & Controls Implemented | Verification Method |
