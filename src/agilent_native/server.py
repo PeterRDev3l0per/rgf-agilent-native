@@ -54,8 +54,22 @@ mcp = FastMCP("AgilentNativeGateway")
 # FastAPI App Instance
 app = FastAPI(title="Agilent Native Suite", version="0.1.0")
 
+MAX_PAYLOAD_BYTES = 1024 * 1024  # 1 MB Limit
+
+
+def log_security_event(event_type: str, details: str, client_ip: str = "127.0.0.1") -> None:
+    logger.info(f"[SECURITY AUDIT] [{datetime.now().isoformat()}] [{client_ip}] {event_type}: {details}")
+
+
 @app.middleware("http")
-async def add_security_headers(request: Request, call_next):
+async def add_security_headers_and_limit_payload(request: Request, call_next):
+    # Rule 6: Anti-DoS Payload Size Limitation (1 MB cap)
+    content_length = request.headers.get("content-length")
+    if content_length and int(content_length) > MAX_PAYLOAD_BYTES:
+        log_security_event("PAYLOAD_TOO_LARGE", f"Attempted payload size {content_length} bytes")
+        from fastapi.responses import JSONResponse
+        return JSONResponse(status_code=413, content={"detail": "Payload size exceeds 1 MB limit"})
+
     response = await call_next(request)
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
@@ -66,6 +80,18 @@ async def add_security_headers(request: Request, call_next):
         "img-src 'self' data:; font-src 'self' https://unpkg.com;"
     )
     return response
+
+
+# Rule 7: Exception Traceback Shielding
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    log_security_event("UNHANDLED_EXCEPTION", str(exc))
+    from fastapi.responses import JSONResponse
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal Server Error (Shielded)"}
+    )
+
 
 app.add_middleware(
     CORSMiddleware,

@@ -63,12 +63,19 @@
 - [x] 10.5 Run Pytest suite & QA verification via `sdd-qa-docs`.
 
 ## Phase 11: Comprehensive Security Hardening, Audit & Automated Vulnerability Testing
-- [ ] 11.1 Implement HTML input sanitization (bleach/html escape), slug validation, and OWASP HTTP security middleware in `src/agilent_native/server.py`.
-- [ ] 11.2 Implement LLM prompt injection guardrails, delimiter isolation, and context sanitization in `src/agilent_native/rag.py`.
-- [ ] 11.3 Add CSP meta tags, DOMPurify/text Escaping, and anti-XSS client-side defenses in `src/agilent_native/static/index.html`.
-- [ ] 11.4 Document threat model, vulnerability matrix, and hardening architecture in `docs/SECURITY_AUDIT_AND_HARDENING.md`.
-- [ ] 11.5 Implement automated security test suite `tests/security/test_security_hardening.py` covering XSS, SQLi, Path Traversal, and Prompt Injection attacks.
-- [ ] 11.6 Run Pytest suite & QA verification via `sdd-qa-docs`.
+- [x] 11.1 Implement HTML input sanitization (bleach/html escape), slug validation, and OWASP HTTP security middleware in `src/agilent_native/server.py`.
+- [x] 11.2 Implement LLM prompt injection guardrails, delimiter isolation, and context sanitization in `src/agilent_native/rag.py`.
+- [x] 11.3 Add CSP meta tags, DOMPurify/text Escaping, and anti-XSS client-side defenses in `src/agilent_native/static/index.html`.
+- [x] 11.4 Document threat model, vulnerability matrix, and hardening architecture in `docs/SECURITY_AUDIT_AND_HARDENING.md`.
+- [x] 11.5 Implement automated security test suite `tests/security/test_security_hardening.py` covering XSS, SQLi, Path Traversal, and Prompt Injection attacks.
+- [x] 11.6 Run Pytest suite & QA verification via `sdd-qa-docs`.
+
+## Phase 12: Advanced Bank-Grade Hardening & Security Protocol Expansion
+- [ ] 12.1 Expand global skill `bank-grade-security-hardening` with Rules 6–11 (Anti-DoS, Exception Sanitization, Audit Logging, Indirect Injection Defense).
+- [ ] 12.2 Implement payload size limits (1 MB cap), global exception handlers, and security audit logging in `src/agilent_native/server.py`.
+- [ ] 12.3 Update `tests/security/test_security_hardening.py` to cover payload limits, exception shielding, and indirect prompt injection.
+- [ ] 12.4 Run Pytest suite & QA verification via `sdd-qa-docs`.
+
 
 
 

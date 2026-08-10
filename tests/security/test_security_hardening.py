@@ -66,3 +66,12 @@ async def test_llm_prompt_injection_sanitization():
 
     res = await rag_engine.chat_query("rgf-agilent-native", jailbreak_query)
     assert "ignore all previous instructions" not in res["question"].lower()
+
+
+def test_payload_size_limitation():
+    """Verify HTTP requests exceeding 1 MB body payload size are rejected with HTTP 413."""
+    oversized_headers = {"Content-Length": "2000000", "Content-Type": "application/json"}
+    response = client.post("/api/work_items", content="a" * 100, headers=oversized_headers)
+    assert response.status_code == 413
+    assert "Payload size exceeds 1 MB limit" in response.json()["detail"]
+

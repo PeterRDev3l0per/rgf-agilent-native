@@ -110,6 +110,27 @@ Define the requirements for **Agilent Native Suite**, providing an embedded Fast
 - **When** processed by the local RAG engine,
 - **Then** system guardrails MUST isolate instructions from user inputs, sanitize context snippets, and prevent system instruction exfiltration.
 
+### Scenario 21: Payload Size Limitation & Anti-DoS Throttle
+- **Given** oversized HTTP POST/PATCH request payloads (>1 MB),
+- **When** sent to FastAPI endpoints,
+- **Then** the application MUST reject the request with HTTP 413 Payload Too Large to prevent buffer overflow DoS attacks.
+
+### Scenario 22: Exception Traceback Protection & Internal Error Hiding
+- **Given** unhandled backend exceptions or database errors,
+- **When** an error occurs,
+- **Then** generic HTTP 500 error messages MUST be returned without disclosing internal stack traces, system paths, or database schemas.
+
+### Scenario 23: Security Audit Logging & Anti-Tampering
+- **Given** sensitive operations (task creation, state change, security events),
+- **When** executed,
+- **Then** an append-only audit log entry MUST be generated with timestamping and source context.
+
+### Scenario 24: Indirect LLM Prompt Injection Defense & Output Sanitization
+- **Given** RAG documents containing embedded malicious instructions,
+- **When** retrieved for context generation,
+- **Then** document context MUST be sanitized before prompt construction and LLM outputs MUST be HTML-escaped before frontend rendering.
+
+
 
 
 
