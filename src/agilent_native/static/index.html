@@ -35,13 +35,23 @@
 
         /* COMPREHENSIVE LIGHT / DARK STYLING */
         body {
-            background-color: #090d16;
+            background-color: #0b0f17;
             color: #f8fafc;
             transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .bg-dot-matrix {
+            background-color: #0b0f17;
+            background-image: radial-gradient(#1e293b 1.2px, transparent 1.2px);
+            background-size: 18px 18px;
         }
         html:not(.dark) body {
             background-color: #f8fafc;
             color: #0f172a;
+        }
+        html:not(.dark) .bg-dot-matrix {
+            background-color: #f8fafc;
+            background-image: radial-gradient(#cbd5e1 1.2px, transparent 1.2px);
+            background-size: 18px 18px;
         }
 
         .glass-panel {
@@ -189,7 +199,7 @@
         html:not(.dark) ::-webkit-scrollbar-thumb { background: #cbd5e1; }
     </style>
 </head>
-<body class="font-sans min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white transition-colors duration-300 relative" id="body-root">
+<body class="bg-dot-matrix font-sans min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white transition-colors duration-300 relative" id="body-root">
 
     <!-- DYNAMIC ISLAND NOTIFICATION NOTCH (iPhone Style) -->
     <div class="fixed top-3 inset-x-0 z-50 flex justify-center pointer-events-none">
@@ -204,55 +214,54 @@
         </div>
     </div>
 
-    <!-- Top Navigation Header -->
-    <header class="border-b border-slate-800/80 dark:border-slate-800/80 glass-panel sticky top-0 z-40 transition-colors">
-        <div class="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
+    <!-- ClientOS Top Navigation Header -->
+    <header class="border-b border-slate-800/80 glass-panel sticky top-0 z-40 transition-colors py-3">
+        <div class="max-w-7xl mx-auto px-4 md:px-6 flex items-center justify-between gap-4">
+            
+            <!-- Left: Project Selector Dropdown -->
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 via-indigo-500 to-pink-500 flex items-center justify-center shadow-lg shadow-sky-500/25">
-                    <i data-lucide="rocket" class="w-5 h-5 text-white"></i>
-                </div>
-                <div>
-                    <h1 class="font-extrabold text-lg leading-tight bg-gradient-to-r from-sky-500 via-indigo-500 to-pink-500 bg-clip-text text-transparent">Agilent Native Suite</h1>
-                    <p class="text-xs text-slate-400 dark:text-slate-400 font-medium">Zero-Overhead SDLC Workspace & Local RAG</p>
-                </div>
+                <button class="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-800 text-xs font-bold text-slate-100 shadow-lg backdrop-blur-md transition-all">
+                    <div class="w-5 h-5 rounded-md bg-gradient-to-tr from-sky-500 via-indigo-500 to-pink-500 flex items-center justify-center text-white text-[10px] font-extrabold shadow">⚛</div>
+                    <span class="tracking-tight">Hooli / Agilent Suite</span>
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+                </button>
             </div>
 
-            <!-- View Switcher Tabs -->
-            <nav class="flex items-center gap-1 bg-slate-900/90 dark:bg-slate-900/90 p-1.5 rounded-xl border border-slate-800/90">
-                <button onclick="switchTab('kanban')" id="tab-kanban" class="px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center gap-2 bg-sky-600 text-white shadow">
-                    <i data-lucide="kanban" class="w-4 h-4"></i> Kanban Board
+            <!-- Center: ClientOS Segmented Navigation Control -->
+            <nav class="flex items-center gap-1 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800/90 shadow-xl backdrop-blur-md">
+                <button onclick="switchTab('kanban')" id="tab-kanban" class="px-4 py-1.5 text-xs font-semibold rounded-xl transition-all flex items-center gap-2 bg-slate-800 text-white shadow">
+                    <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 text-sky-400"></i> Home / Kanban
                 </button>
-                <button onclick="switchTab('gantt')" id="tab-gantt" class="px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center gap-2 nav-btn-inactive text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
-                    <i data-lucide="gantt-chart" class="w-4 h-4"></i> Timeline / Gantt
+                <button onclick="switchTab('gantt')" id="tab-gantt" class="px-4 py-1.5 text-xs font-semibold rounded-xl transition-all flex items-center gap-2 nav-btn-inactive text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
+                    <i data-lucide="gantt-chart" class="w-3.5 h-3.5 text-indigo-400"></i> Timeline
                 </button>
-                <button onclick="switchTab('chat')" id="tab-chat" class="px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center gap-2 nav-btn-inactive text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
-                    <i data-lucide="bot" class="w-4 h-4"></i> Local RAG Chat
+                <button onclick="switchTab('chat')" id="tab-chat" class="px-4 py-1.5 text-xs font-semibold rounded-xl transition-all flex items-center gap-2 nav-btn-inactive text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
+                    <i data-lucide="bot" class="w-3.5 h-3.5 text-pink-400"></i> Ollama AI Chat
+                </button>
+                <div class="h-4 w-px bg-slate-800 mx-1"></div>
+                <button onclick="toggleDarkMode()" id="btn-dark-toggle" title="Cambiar Modo Claro/Oscuro" class="p-1.5 rounded-lg text-slate-400 hover:text-white transition">
+                    <i id="icon-dark" data-lucide="moon" class="w-3.5 h-3.5 text-sky-400"></i>
                 </button>
             </nav>
 
-            <!-- Header Controls: Dark/Light Mode Toggle Button & Telemetry -->
-            <div class="flex items-center gap-3">
-                <!-- Dark / Light Mode Toggle Button -->
-                <button onclick="toggleDarkMode()" id="btn-dark-toggle" title="Cambiar Modo Claro/Oscuro" class="p-2.5 rounded-xl bg-slate-900 dark:bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition flex items-center justify-center shadow-sm">
-                    <i id="icon-dark" data-lucide="moon" class="w-4 h-4 text-sky-400"></i>
+            <!-- Right: Action Cluster (Share, + New Task, Settings) -->
+            <div class="flex items-center gap-2.5">
+                <!-- Telemetry Badges (Desktop) -->
+                <div id="badge-ollama" class="hidden xl:flex items-center gap-1.5 bg-emerald-950/60 text-emerald-400 border border-emerald-800/60 px-3 py-1.5 rounded-full text-[11px] font-semibold">
+                    <span id="dot-ollama" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span id="text-ollama">Ollama Online</span>
+                    <span id="text-ram" class="text-slate-400 border-l border-emerald-800/80 pl-1.5 ml-1">RAM: &lt; 150 MB</span>
+                </div>
+
+                <button onclick="openCreateModal()" class="px-4 py-2 bg-slate-100 hover:bg-white text-slate-950 rounded-xl text-xs font-bold shadow-lg shadow-white/10 flex items-center gap-1.5 transition-all hover:scale-105">
+                    <i data-lucide="plus-circle" class="w-4 h-4 text-slate-950"></i> + New Task
                 </button>
 
-                <!-- Live Telemetry Badges -->
-                <div class="hidden lg:flex items-center gap-2 font-medium text-xs">
-                    <div id="badge-ollama" class="flex items-center gap-1.5 bg-emerald-950/60 dark:bg-emerald-950/60 text-emerald-400 border border-emerald-800/60 px-3 py-1.5 rounded-full shadow-sm">
-                        <span id="dot-ollama" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                        <span id="text-ollama">Ollama Online (qwen3:14b)</span>
-                    </div>
-                    <div class="flex items-center gap-1 bg-slate-900 dark:bg-slate-900 text-slate-300 dark:text-slate-300 border border-slate-800 px-3 py-1.5 rounded-full">
-                        <i data-lucide="cpu" class="w-3.5 h-3.5 text-sky-400"></i>
-                        <span>FastMCP: ~300 tokens</span>
-                    </div>
-                    <div class="flex items-center gap-1 bg-slate-900 dark:bg-slate-900 text-slate-300 dark:text-slate-300 border border-slate-800 px-3 py-1.5 rounded-full">
-                        <i data-lucide="hard-drive" class="w-3.5 h-3.5 text-indigo-400"></i>
-                        <span id="text-ram">RAM: &lt; 150 MB</span>
-                    </div>
-                </div>
+                <button title="Settings" class="p-2 bg-slate-900/90 hover:bg-slate-800/90 border border-slate-800 text-slate-400 hover:text-slate-200 rounded-xl transition">
+                    <i data-lucide="settings" class="w-4 h-4"></i>
+                </button>
             </div>
+
         </div>
     </header>
 
@@ -279,50 +288,62 @@
                 </div>
             </div>
 
-            <!-- Kanban Columns Grid -->
+            <!-- Kanban Columns Grid (ClientOS Style) -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <!-- Column 1: Backlog -->
-                <div class="glass-panel p-4 rounded-2xl flex flex-col gap-3" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'Backlog')">
-                    <div class="flex items-center justify-between pb-2 border-b border-slate-800 dark:border-slate-800">
-                        <div class="flex items-center gap-2 font-semibold text-xs text-slate-400 uppercase tracking-wider">
-                            <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span> Backlog
+                <!-- Column 1: To do (Backlog) -->
+                <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 flex flex-col gap-3 backdrop-blur-md shadow-xl" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'Backlog')">
+                    <div class="flex items-center justify-between pb-2">
+                        <div class="flex items-center gap-2 font-bold text-xs text-slate-100 pl-2 border-l-4 border-emerald-500">
+                            To do
                         </div>
-                        <span id="count-backlog" class="text-xs px-2 py-0.5 rounded-full bg-slate-800 font-bold text-slate-300">0</span>
+                        <span id="count-backlog" class="text-[11px] px-2 py-0.5 rounded-full bg-slate-800 font-bold text-slate-300">0</span>
                     </div>
-                    <div id="col-backlog" class="kanban-col flex flex-col gap-3"></div>
+                    <div id="col-backlog" class="kanban-col flex flex-col gap-3 min-h-[480px]"></div>
+                    <button onclick="openCreateModal()" class="w-full py-2 rounded-xl border border-dashed border-slate-800 hover:border-slate-700 bg-slate-950/40 hover:bg-slate-900/60 text-slate-500 hover:text-slate-300 transition text-xs flex items-center justify-center gap-1 font-semibold">
+                        <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add task
+                    </button>
                 </div>
 
                 <!-- Column 2: In Progress -->
-                <div class="glass-panel p-4 rounded-2xl flex flex-col gap-3" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'In Progress')">
-                    <div class="flex items-center justify-between pb-2 border-b border-slate-800 dark:border-slate-800">
-                        <div class="flex items-center gap-2 font-semibold text-xs text-sky-400 uppercase tracking-wider">
-                            <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span> In Progress
+                <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 flex flex-col gap-3 backdrop-blur-md shadow-xl" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'In Progress')">
+                    <div class="flex items-center justify-between pb-2">
+                        <div class="flex items-center gap-2 font-bold text-xs text-slate-100 pl-2 border-l-4 border-amber-500">
+                            In Progress
                         </div>
-                        <span id="count-in-progress" class="text-xs px-2 py-0.5 rounded-full bg-sky-950/80 border border-sky-800 text-sky-300 font-bold">0</span>
+                        <span id="count-in-progress" class="text-[11px] px-2 py-0.5 rounded-full bg-slate-800 font-bold text-amber-300">0</span>
                     </div>
-                    <div id="col-in-progress" class="kanban-col flex flex-col gap-3"></div>
+                    <div id="col-in-progress" class="kanban-col flex flex-col gap-3 min-h-[480px]"></div>
+                    <button onclick="openCreateModal()" class="w-full py-2 rounded-xl border border-dashed border-slate-800 hover:border-slate-700 bg-slate-950/40 hover:bg-slate-900/60 text-slate-500 hover:text-slate-300 transition text-xs flex items-center justify-center gap-1 font-semibold">
+                        <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add task
+                    </button>
                 </div>
 
-                <!-- Column 3: Verification -->
-                <div class="glass-panel p-4 rounded-2xl flex flex-col gap-3" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'Verification')">
-                    <div class="flex items-center justify-between pb-2 border-b border-slate-800 dark:border-slate-800">
-                        <div class="flex items-center gap-2 font-semibold text-xs text-amber-400 uppercase tracking-wider">
-                            <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Verification (QA)
+                <!-- Column 3: Client Approval / Verification -->
+                <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 flex flex-col gap-3 backdrop-blur-md shadow-xl" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'Verification')">
+                    <div class="flex items-center justify-between pb-2">
+                        <div class="flex items-center gap-2 font-bold text-xs text-slate-100 pl-2 border-l-4 border-sky-500">
+                            Client Approval / Verification
                         </div>
-                        <span id="count-verification" class="text-xs px-2 py-0.5 rounded-full bg-amber-950/80 border border-amber-800 text-amber-300 font-bold">0</span>
+                        <span id="count-verification" class="text-[11px] px-2 py-0.5 rounded-full bg-slate-800 font-bold text-sky-300">0</span>
                     </div>
-                    <div id="col-verification" class="kanban-col flex flex-col gap-3"></div>
+                    <div id="col-verification" class="kanban-col flex flex-col gap-3 min-h-[480px]"></div>
+                    <button onclick="openCreateModal()" class="w-full py-2 rounded-xl border border-dashed border-slate-800 hover:border-slate-700 bg-slate-950/40 hover:bg-slate-900/60 text-slate-500 hover:text-slate-300 transition text-xs flex items-center justify-center gap-1 font-semibold">
+                        <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add task
+                    </button>
                 </div>
 
                 <!-- Column 4: Done -->
-                <div class="glass-panel p-4 rounded-2xl flex flex-col gap-3" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'Done')">
-                    <div class="flex items-center justify-between pb-2 border-b border-slate-800 dark:border-slate-800">
-                        <div class="flex items-center gap-2 font-semibold text-xs text-emerald-400 uppercase tracking-wider">
-                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span> Done / Archived
+                <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 flex flex-col gap-3 backdrop-blur-md shadow-xl" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'Done')">
+                    <div class="flex items-center justify-between pb-2">
+                        <div class="flex items-center gap-2 font-bold text-xs text-slate-100 pl-2 border-l-4 border-teal-500">
+                            Done
                         </div>
-                        <span id="count-done" class="text-xs px-2 py-0.5 rounded-full bg-emerald-950/80 border border-emerald-800 text-emerald-300 font-bold">0</span>
+                        <span id="count-done" class="text-[11px] px-2 py-0.5 rounded-full bg-slate-800 font-bold text-emerald-300">0</span>
                     </div>
-                    <div id="col-done" class="kanban-col flex flex-col gap-3"></div>
+                    <div id="col-done" class="kanban-col flex flex-col gap-3 min-h-[480px]"></div>
+                    <button onclick="openCreateModal()" class="w-full py-2 rounded-xl border border-dashed border-slate-800 hover:border-slate-700 bg-slate-950/40 hover:bg-slate-900/60 text-slate-500 hover:text-slate-300 transition text-xs flex items-center justify-center gap-1 font-semibold">
+                        <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add task
+                    </button>
                 </div>
             </div>
         </section>
@@ -547,6 +568,30 @@
             }, 4000);
         }
 
+        function getCategoryTagStyle(item) {
+            const t = ((item.title || '') + ' ' + (item.release_tag || '')).toLowerCase();
+            if (t.includes('bug') || t.includes('fix') || t.includes('safari')) {
+                return { label: 'Bug', class: 'bg-rose-500/10 text-rose-400 border-rose-500/20' };
+            }
+            if (t.includes('auth') || t.includes('backend') || t.includes('api') || t.includes('db')) {
+                return { label: 'Backend', class: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' };
+            }
+            if (t.includes('ui') || t.includes('front') || t.includes('dark') || t.includes('light')) {
+                return { label: 'Frontend', class: 'bg-sky-500/10 text-sky-400 border-sky-500/20' };
+            }
+            if (t.includes('security') || t.includes('audit') || t.includes('owasp') || t.includes('shield')) {
+                return { label: 'Design / Security', class: 'bg-purple-500/10 text-purple-400 border-purple-500/20' };
+            }
+            return { label: 'Feature', class: 'bg-amber-500/10 text-amber-400 border-amber-500/20' };
+        }
+
+        function getStatusDotClass(state) {
+            if (state === 'Done') return 'bg-teal-400';
+            if (state === 'Verification') return 'bg-sky-400';
+            if (state === 'In Progress') return 'bg-amber-400';
+            return 'bg-emerald-400';
+        }
+
         function switchTab(tabName) {
             ['kanban', 'gantt', 'chat'].forEach(t => {
                 document.getElementById(`view-${t}`).classList.add('hidden');
@@ -600,25 +645,32 @@
                         return;
                     }
 
-                    items.forEach(item => {
+                    items.forEach((item, idx) => {
+                        const tag = getCategoryTagStyle(item);
                         const card = document.createElement('div');
-                        card.className = "card-item bg-slate-900/90 dark:bg-slate-900/90 border border-slate-800 p-4 rounded-xl space-y-3 hover:border-sky-500/50 transition shadow-sm cursor-grab active:cursor-grabbing hover:scale-[1.01] transition-all";
+                        card.className = "clientos-card bg-slate-950/80 hover:bg-slate-900/90 border border-slate-800/90 hover:border-slate-700/90 rounded-2xl p-4 space-y-3 cursor-grab active:cursor-grabbing transition-all duration-200 shadow-md hover:shadow-xl hover:scale-[1.015] group relative overflow-hidden";
                         card.setAttribute('draggable', 'true');
                         card.setAttribute('ondragstart', `handleDragStart(event, '${item.id}')`);
                         card.setAttribute('ondblclick', `openDetailModal('${item.id}')`);
                         
                         card.innerHTML = `
-                            <div class="flex items-start justify-between gap-2">
-                                <h4 class="font-bold text-sm leading-snug">${item.title}</h4>
-                                <button onclick="openDetailModal('${item.id}')" title="Ver Detalle" class="p-1 text-slate-400 hover:text-sky-400 rounded-lg hover:bg-slate-800 transition shrink-0">
-                                    <i data-lucide="eye" class="w-4 h-4"></i>
-                                </button>
+                            <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium">
+                                <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-3 h-3 text-slate-500"></i> ${item.start_date || 'No due date'}</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-mono text-[10px] text-slate-500 font-bold">TSK ${idx + 1}</span>
+                                    <span class="w-2 h-2 rounded-full ${getStatusDotClass(item.state)} shadow-sm"></span>
+                                </div>
                             </div>
-                            <div class="card-desc text-xs text-slate-300 leading-relaxed border-t border-slate-800/80 pt-2 line-clamp-2">
-                                ${item.description_html || '<p class="text-slate-500 italic">No details available</p>'}
+                            <h4 class="font-bold text-sm text-slate-100 group-hover:text-sky-300 transition-colors leading-snug pt-0.5">${item.title}</h4>
+                            <div class="flex items-center justify-between pt-1 border-t border-slate-800/60">
+                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${tag.class}">${tag.label}</span>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="openDetailModal('${item.id}')" title="Ver Detalle" class="p-1 text-slate-400 hover:text-sky-400 rounded-lg hover:bg-slate-800 transition">
+                                        <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                                    </button>
+                                    <div class="w-5 h-5 rounded-full bg-rose-600 text-white font-extrabold text-[10px] flex items-center justify-center shadow">D</div>
+                                </div>
                             </div>
-                            ${item.test_status ? `<div class="text-[11px] font-semibold text-emerald-400 bg-emerald-950/60 px-2.5 py-1 rounded-md border border-emerald-800/50 flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-3 h-3"></i> ${item.test_status}</div>` : ''}
-                            ${item.release_tag ? `<div class="text-[11px] font-semibold text-sky-400 bg-sky-950/60 px-2.5 py-1 rounded-md border border-sky-800/50 inline-block">🚀 Release: ${item.release_tag}</div>` : ''}
                         `;
                         container.appendChild(card);
                     });

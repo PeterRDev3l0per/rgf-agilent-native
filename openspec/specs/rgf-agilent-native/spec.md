@@ -150,6 +150,27 @@ Define the requirements for **Agilent Native Suite**, providing an embedded Fast
 - **When** hovered or active,
 - **Then** smooth glassmorphism scale transitions, border beam glowing highlights, and micro-interactions MUST render responsively.
 
+### Scenario 29: ClientOS Header Bar & Segmented Pill Navigation
+- **Given** the web application top navigation,
+- **When** rendered,
+- **Then** a ClientOS header bar with project dropdown, center segmented pill controls, telemetry badges, and primary `+ New Task` pill button MUST display cleanly.
+
+### Scenario 30: Dot Grid Matrix Background & Colored Column Accents
+- **Given** the Kanban workspace viewport,
+- **When** rendered,
+- **Then** a dot-grid matrix background pattern and vertical color bar accents (Green, Yellow, Blue, Emerald) MUST frame the Kanban columns.
+
+### Scenario 31: ClientOS Micro-Card Component Design & Tags
+- **Given** Kanban work items,
+- **When** rendered,
+- **Then** top row due date badges, task code IDs (`TSK-XX`), crisp title typography, colored category pill tags (`Feature`, `Bug`, `Frontend`, `Backend`, `Security`), and assignee avatar circles MUST render for each card.
+
+### Scenario 32: ClientOS Glassmorphism Modals & E2E Validation Pass
+- **Given** modals and automated verification suites,
+- **When** executed,
+- **Then** ClientOS dark glassmorphism modals MUST display properly and all 13 pytest & Playwright E2E tests MUST pass in green.
+
+
 
 
 

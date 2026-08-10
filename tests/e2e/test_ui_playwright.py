@@ -81,7 +81,7 @@ async def test_e2e_kanban_gantt_chat_and_telemetry():
         assert "E2e Playwright Task" in card_text or "agilent" in card_text.lower()
 
         # 4. Verify Manual Task Creation Modal
-        await page.click("button:has-text('+ Nueva Tarea')")
+        await page.click("button:has-text('New Task')")
         await page.wait_for_timeout(300)
         create_modal = page.locator("#modal-create-task")
         await expect(create_modal).to_be_visible()

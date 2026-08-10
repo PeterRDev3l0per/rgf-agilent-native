@@ -82,10 +82,25 @@
 - [x] 13.3 Run Pytest suite & QA verification via `sdd-qa-docs`.
 
 ## Phase 14: Vanguard UI/UX Micro-Interactions, Glassmorphism & Activity Audit Log
-- [ ] 14.1 Enhance task detail API endpoint in `src/agilent_native/server.py` to return activity audit log events.
-- [ ] 14.2 Refactor task detail modal in `src/agilent_native/static/index.html` to render glassmorphism panels, tags, priority badges, and activity audit feed.
-- [ ] 14.3 Add CSS micro-interactions, card hover scale effects, and drop-zone visual indicators in `src/agilent_native/static/index.html`.
-- [ ] 14.4 Run Pytest suite, Playwright E2E browser tests, and QA verification via `sdd-qa-docs`.
+- [x] 14.1 Enhance task detail API endpoint in `src/agilent_native/server.py` to return activity audit log events.
+- [x] 14.2 Refactor task detail modal in `src/agilent_native/static/index.html` to render glassmorphism panels, tags, priority badges, and activity audit feed.
+- [x] 14.3 Add CSS micro-interactions, card hover scale effects, and drop-zone visual indicators in `src/agilent_native/static/index.html`.
+- [x] 14.4 Run Pytest suite, Playwright E2E browser tests, and QA verification via `sdd-qa-docs`.
+
+## Phase 15: ClientOS Header Bar & Segmented Control Architecture
+- [ ] 15.1 Refactor top bar in `src/agilent_native/static/index.html` into ClientOS header layout with project switcher dropdown, segmented pill navigation, telemetry badges, and primary `+ New Task` pill button.
+
+## Phase 16: Dot Matrix Canvas & Column Accent Containers
+- [ ] 16.1 Implement dot grid matrix SVG background pattern and vertical color bar accents for Kanban columns (`To do`, `In Progress`, `Verification`, `Done`).
+- [ ] 16.2 Add bottom `+` card quick-add buttons to each column.
+
+## Phase 17: ClientOS Micro-Card Component Design
+- [ ] 17.1 Implement ClientOS micro-card rendering template with top row due date badges, `TSK-XX` code IDs, status dots, middle title typography, category pill tags (`Feature`, `Bug`, `Frontend`, `Backend`, `Security`), and assignee avatars.
+
+## Phase 18: ClientOS Glassmorphism Modals & E2E Validation Pass
+- [ ] 18.1 Align task detail and creation modals with ClientOS glassmorphism aesthetics.
+- [ ] 18.2 Run Pytest suite, Playwright E2E browser tests, security tests, and QA verification via `sdd-qa-docs`.
+
 
 
 
