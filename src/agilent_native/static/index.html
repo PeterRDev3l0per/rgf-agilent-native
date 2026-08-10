@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com; img-src 'self' data:; font-src 'self' https://unpkg.com;">
     <title>Agilent Native Suite 🚀</title>
-    <!-- Tailwind CSS CDN -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -14,6 +16,9 @@
             darkMode: 'class',
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['"Inter Tight"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                    },
                     colors: {
                         brand: {
                             50: '#f0f9ff',
@@ -33,11 +38,12 @@
             --orb-core: radial-gradient(circle at 35% 35%, #ffffff 0%, #0284c7 40%, #0369a1 100%);
         }
 
-        /* COMPREHENSIVE LIGHT / DARK STYLING */
+        /* CLIENTOS DESIGN SYSTEM - LIGHT & DARK MODE PARITY */
         body {
+            font-family: 'Inter Tight', ui-sans-serif, system-ui, sans-serif;
             background-color: #0b0f17;
             color: #f8fafc;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.25s ease, color 0.25s ease;
         }
         .bg-dot-matrix {
             background-color: #0b0f17;
@@ -45,12 +51,12 @@
             background-size: 18px 18px;
         }
         html:not(.dark) body {
-            background-color: #f8fafc;
-            color: #0f172a;
+            background-color: #f4f4f5;
+            color: #09090b;
         }
         html:not(.dark) .bg-dot-matrix {
-            background-color: #f8fafc;
-            background-image: radial-gradient(#cbd5e1 1.2px, transparent 1.2px);
+            background-color: #f4f4f5;
+            background-image: radial-gradient(#d4d4d8 1.2px, transparent 1.2px);
             background-size: 18px 18px;
         }
 
@@ -60,6 +66,12 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
         html:not(.dark) .glass-panel {
+            background: rgba(255, 255, 255, 0.90);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+        }
+        html:not(.dark) .glass-panel {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(16px);
             border: 1px solid rgba(15, 23, 42, 0.08);
@@ -67,6 +79,19 @@
         }
 
         /* Light Mode Explicit Component Overrides */
+        html:not(.dark) .clientos-card {
+            background-color: #ffffff !important;
+            border-color: rgba(0, 0, 0, 0.1) !important;
+            color: #09090b !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+        }
+        html:not(.dark) .clientos-card h4 {
+            color: #09090b !important;
+        }
+        html:not(.dark) .clientos-card:hover {
+            border-color: rgba(0, 0, 0, 0.2) !important;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08) !important;
+        }
         html:not(.dark) .card-item {
             background-color: #ffffff !important;
             border-color: #e2e8f0 !important;
@@ -687,6 +712,13 @@
             return 'bg-emerald-400';
         }
 
+        function getAssigneeAvatar(assignee) {
+            const name = assignee || 'Pedro';
+            const initial = name.charAt(0).toUpperCase();
+            const color = name === 'Pedro' ? 'bg-sky-600' : name === 'Desarrollador' ? 'bg-rose-600' : 'bg-emerald-600';
+            return `<div class="w-5 h-5 rounded-full ${color} text-white font-extrabold text-[10px] flex items-center justify-center shadow" title="${name}">${initial}</div>`;
+        }
+
         function switchTab(tabName) {
             ['kanban', 'gantt', 'chat'].forEach(t => {
                 document.getElementById(`view-${t}`).classList.add('hidden');
@@ -752,7 +784,7 @@
                             <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium">
                                 <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-3 h-3 text-slate-500"></i> ${item.start_date || 'No due date'}</span>
                                 <div class="flex items-center gap-2">
-                                    <span class="font-mono text-[10px] text-slate-500 font-bold">TSK ${idx + 1}</span>
+                                    <span class="font-mono text-[10px] text-slate-500 font-bold">TSK-${idx + 1}</span>
                                     <span class="w-2 h-2 rounded-full ${getStatusDotClass(item.state)} shadow-sm"></span>
                                 </div>
                             </div>
@@ -763,7 +795,7 @@
                                     <button onclick="openDetailModal('${item.id}')" title="Ver Detalle" class="p-1 text-slate-400 hover:text-sky-400 rounded-lg hover:bg-slate-800 transition">
                                         <i data-lucide="eye" class="w-3.5 h-3.5"></i>
                                     </button>
-                                    <div class="w-5 h-5 rounded-full bg-rose-600 text-white font-extrabold text-[10px] flex items-center justify-center shadow">D</div>
+                                    ${getAssigneeAvatar(item.assignee)}
                                 </div>
                             </div>
                         `;
