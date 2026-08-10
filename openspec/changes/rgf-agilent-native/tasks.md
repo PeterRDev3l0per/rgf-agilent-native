@@ -71,10 +71,16 @@
 - [x] 11.6 Run Pytest suite & QA verification via `sdd-qa-docs`.
 
 ## Phase 12: Advanced Bank-Grade Hardening & Security Protocol Expansion
-- [ ] 12.1 Expand global skill `bank-grade-security-hardening` with Rules 6–11 (Anti-DoS, Exception Sanitization, Audit Logging, Indirect Injection Defense).
-- [ ] 12.2 Implement payload size limits (1 MB cap), global exception handlers, and security audit logging in `src/agilent_native/server.py`.
-- [ ] 12.3 Update `tests/security/test_security_hardening.py` to cover payload limits, exception shielding, and indirect prompt injection.
-- [ ] 12.4 Run Pytest suite & QA verification via `sdd-qa-docs`.
+- [x] 12.1 Expand global skill `bank-grade-security-hardening` with Rules 6–11 (Anti-DoS, Exception Sanitization, Audit Logging, Indirect Injection Defense).
+- [x] 12.2 Implement payload size limits (1 MB cap), global exception handlers, and security audit logging in `src/agilent_native/server.py`.
+- [x] 12.3 Update `tests/security/test_security_hardening.py` to cover payload limits, exception shielding, and indirect prompt injection.
+- [x] 12.4 Run Pytest suite & QA verification via `sdd-qa-docs`.
+
+## Phase 13: Global Security Framework Integration (NIST SSDF, OWASP WSTG, CIS & SHIELD)
+- [x] 13.1 Update global skill `bank-grade-security-hardening` with OWASP WSTG, NIST SSDF, CIS Benchmarks, OWASP Top 10 for LLMs, SHIELD methodology, and AI Secure Prompting directives.
+- [x] 13.2 Update `docs/SECURITY_AUDIT_AND_HARDENING.md` with SHIELD methodology and compliance matrix.
+- [x] 13.3 Run Pytest suite & QA verification via `sdd-qa-docs`.
+
 
 
 

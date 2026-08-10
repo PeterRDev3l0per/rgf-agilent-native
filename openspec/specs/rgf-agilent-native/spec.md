@@ -130,6 +130,17 @@ Define the requirements for **Agilent Native Suite**, providing an embedded Fast
 - **When** retrieved for context generation,
 - **Then** document context MUST be sanitized before prompt construction and LLM outputs MUST be HTML-escaped before frontend rendering.
 
+### Scenario 25: NIST SSDF & OWASP WSTG Compliance Validation
+- **Given** source code and dependency changes,
+- **When** audited during SDD `verify` phase,
+- **Then** SAST analysis and dependency CVE checks MUST validate zero critical vulnerabilities.
+
+### Scenario 26: SHIELD Methodology Full Adoption
+- **Given** application operations across all tiers,
+- **When** executed,
+- **Then** Scope, Harden, Inspect, Exercise, Log, and Defend controls MUST operate continuously in production.
+
+
 
 
 
