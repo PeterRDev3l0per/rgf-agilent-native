@@ -81,7 +81,7 @@ async def test_e2e_kanban_gantt_chat_and_telemetry():
         assert "E2e Playwright Task" in card_text or "agilent" in card_text.lower()
 
         # 4. Verify Manual Task Creation Modal
-        await page.click("button:has-text('New Task')")
+        await page.click("#lbl-new-task")
         await page.wait_for_timeout(300)
         create_modal = page.locator("#modal-create-task")
         await expect(create_modal).to_be_visible()
@@ -102,7 +102,7 @@ async def test_e2e_kanban_gantt_chat_and_telemetry():
             await page.wait_for_timeout(300)
             detail_modal = page.locator("#modal-task-detail")
             await expect(detail_modal).to_be_visible()
-            await page.click("button:has-text('Cerrar Detalle')")
+            await page.click("#modal-task-detail button:has-text('Cancelar')")
 
         # 6. Verify Local RAG Chat Query & 3D Glowing Orb Loader
         await page.click("#tab-chat")

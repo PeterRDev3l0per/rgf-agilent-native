@@ -170,6 +170,27 @@ Define the requirements for **Agilent Native Suite**, providing an embedded Fast
 - **When** executed,
 - **Then** ClientOS dark glassmorphism modals MUST display properly and all 13 pytest & Playwright E2E tests MUST pass in green.
 
+### Scenario 33: Deep Task Editing & Database Persistence
+- **Given** a user editing task attributes (priority, category, assignee, start/target dates, title, description) in the detail modal,
+- **When** saved via `PATCH /api/work_items/{id}`,
+- **Then** all updated task fields MUST persist permanently in the SQLite database and refresh in real time.
+
+### Scenario 34: Share Dashboard Token Link Generation & Verification
+- **Given** a user clicking the "Compartir" button in the header bar,
+- **When** generated,
+- **Then** a cryptographically secure share link with token (`share_token`) MUST be generated and copied to clipboard for read-only/shared dashboard access.
+
+### Scenario 35: Mexican Spanish & English Internationalization (i18n ES-MX / EN)
+- **Given** the language selector (ES 🇲🇽 / EN 🇺🇸) in Settings or footer,
+- **When** toggled,
+- **Then** 100% of UI labels, buttons, tooltips, column titles, and LLM assistant prompts MUST update to the selected language.
+
+### Scenario 36: Settings Gear Dropdown & Header Cleanup
+- **Given** the Header Bar,
+- **When** rendered,
+- **Then** redundant column buttons MUST be cleaned up, leaving a single primary `+ Nueva Tarea` button and a functional Settings gear dropdown menu.
+
+
 
 
 

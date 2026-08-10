@@ -98,8 +98,23 @@
 - [ ] 17.1 Implement ClientOS micro-card rendering template with top row due date badges, `TSK-XX` code IDs, status dots, middle title typography, category pill tags (`Feature`, `Bug`, `Frontend`, `Backend`, `Security`), and assignee avatars.
 
 ## Phase 18: ClientOS Glassmorphism Modals & E2E Validation Pass
-- [ ] 18.1 Align task detail and creation modals with ClientOS glassmorphism aesthetics.
-- [ ] 18.2 Run Pytest suite, Playwright E2E browser tests, security tests, and QA verification via `sdd-qa-docs`.
+- [x] 18.1 Align task detail and creation modals with ClientOS glassmorphism aesthetics.
+- [x] 18.2 Run Pytest suite, Playwright E2E browser tests, security tests, and QA verification via `sdd-qa-docs`.
+
+## Phase 19: Database Model Expansion & Deep Task Editing
+- [x] 19.1 Extend SQLite database schema in `src/agilent_native/db.py` to support `priority`, `category`, `assignee`, and deep attribute updates.
+- [x] 19.2 Update `PATCH /api/work_items/{id}` in `src/agilent_native/server.py` to accept and persist all task fields.
+- [x] 19.3 Upgrade Task Detail Modal in `src/agilent_native/static/index.html` to an editable deep form with instant SQLite persistence.
+
+## Phase 20: Share Dashboard Link with Secure Tokens
+- [x] 20.1 Add share token table & endpoint `POST /api/projects/{slug}/share_token` in `src/agilent_native/server.py`.
+- [x] 20.2 Add "Compartir" modal with one-click link copying in `src/agilent_native/static/index.html`.
+
+## Phase 21: Internationalization (ES-MX / EN) & Settings Dropdown
+- [x] 21.1 Implement i18n language dictionary (ES 🇲🇽 / EN 🇺🇸) and selector in Settings gear menu & footer.
+- [x] 21.2 Set default LLM response tone to warm professional Mexican Spanish in `src/agilent_native/rag.py`.
+- [x] 21.3 Clean up redundant column buttons and run full Pytest & Playwright test pass.
+
 
 
 

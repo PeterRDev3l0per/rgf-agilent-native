@@ -253,11 +253,15 @@
                     <span id="text-ram" class="text-slate-400 border-l border-emerald-800/80 pl-1.5 ml-1">RAM: &lt; 150 MB</span>
                 </div>
 
-                <button onclick="openCreateModal()" class="px-4 py-2 bg-slate-100 hover:bg-white text-slate-950 rounded-xl text-xs font-bold shadow-lg shadow-white/10 flex items-center gap-1.5 transition-all hover:scale-105">
-                    <i data-lucide="plus-circle" class="w-4 h-4 text-slate-950"></i> + New Task
+                <button onclick="openShareModal()" class="px-3 py-2 bg-slate-900/90 hover:bg-slate-800/90 border border-slate-800 text-slate-300 hover:text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
+                    <i data-lucide="share-2" class="w-3.5 h-3.5 text-sky-400"></i> <span id="lbl-share">Compartir</span>
                 </button>
 
-                <button title="Settings" class="p-2 bg-slate-900/90 hover:bg-slate-800/90 border border-slate-800 text-slate-400 hover:text-slate-200 rounded-xl transition">
+                <button onclick="openCreateModal()" class="px-4 py-2 bg-slate-100 hover:bg-white text-slate-950 rounded-xl text-xs font-bold shadow-lg shadow-white/10 flex items-center gap-1.5 transition-all hover:scale-105">
+                    <i data-lucide="plus-circle" class="w-4 h-4 text-slate-950"></i> <span id="lbl-new-task">+ Nueva Tarea</span>
+                </button>
+
+                <button onclick="openSettingsModal()" title="Configuración / Settings" class="p-2 bg-slate-900/90 hover:bg-slate-800/90 border border-slate-800 text-slate-400 hover:text-slate-200 rounded-xl transition">
                     <i data-lucide="settings" class="w-4 h-4"></i>
                 </button>
             </div>
@@ -290,60 +294,48 @@
 
             <!-- Kanban Columns Grid (ClientOS Style) -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <!-- Column 1: To do (Backlog) -->
+                <!-- Column 1: Por Hacer (Backlog) -->
                 <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 flex flex-col gap-3 backdrop-blur-md shadow-xl" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'Backlog')">
                     <div class="flex items-center justify-between pb-2">
-                        <div class="flex items-center gap-2 font-bold text-xs text-slate-100 pl-2 border-l-4 border-emerald-500">
-                            To do
+                        <div id="col-title-backlog" class="flex items-center gap-2 font-bold text-xs text-slate-100 pl-2 border-l-4 border-emerald-500">
+                            Por Hacer
                         </div>
                         <span id="count-backlog" class="text-[11px] px-2 py-0.5 rounded-full bg-slate-800 font-bold text-slate-300">0</span>
                     </div>
                     <div id="col-backlog" class="kanban-col flex flex-col gap-3 min-h-[480px]"></div>
-                    <button onclick="openCreateModal()" class="w-full py-2 rounded-xl border border-dashed border-slate-800 hover:border-slate-700 bg-slate-950/40 hover:bg-slate-900/60 text-slate-500 hover:text-slate-300 transition text-xs flex items-center justify-center gap-1 font-semibold">
-                        <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add task
-                    </button>
                 </div>
 
-                <!-- Column 2: In Progress -->
+                <!-- Column 2: En Progreso -->
                 <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 flex flex-col gap-3 backdrop-blur-md shadow-xl" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'In Progress')">
                     <div class="flex items-center justify-between pb-2">
-                        <div class="flex items-center gap-2 font-bold text-xs text-slate-100 pl-2 border-l-4 border-amber-500">
-                            In Progress
+                        <div id="col-title-in-progress" class="flex items-center gap-2 font-bold text-xs text-slate-100 pl-2 border-l-4 border-amber-500">
+                            En Progreso
                         </div>
                         <span id="count-in-progress" class="text-[11px] px-2 py-0.5 rounded-full bg-slate-800 font-bold text-amber-300">0</span>
                     </div>
                     <div id="col-in-progress" class="kanban-col flex flex-col gap-3 min-h-[480px]"></div>
-                    <button onclick="openCreateModal()" class="w-full py-2 rounded-xl border border-dashed border-slate-800 hover:border-slate-700 bg-slate-950/40 hover:bg-slate-900/60 text-slate-500 hover:text-slate-300 transition text-xs flex items-center justify-center gap-1 font-semibold">
-                        <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add task
-                    </button>
                 </div>
 
-                <!-- Column 3: Client Approval / Verification -->
+                <!-- Column 3: Aprobación Cliente / QA -->
                 <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 flex flex-col gap-3 backdrop-blur-md shadow-xl" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'Verification')">
                     <div class="flex items-center justify-between pb-2">
-                        <div class="flex items-center gap-2 font-bold text-xs text-slate-100 pl-2 border-l-4 border-sky-500">
-                            Client Approval / Verification
+                        <div id="col-title-verification" class="flex items-center gap-2 font-bold text-xs text-slate-100 pl-2 border-l-4 border-sky-500">
+                            Aprobación Cliente / Verificación
                         </div>
                         <span id="count-verification" class="text-[11px] px-2 py-0.5 rounded-full bg-slate-800 font-bold text-sky-300">0</span>
                     </div>
                     <div id="col-verification" class="kanban-col flex flex-col gap-3 min-h-[480px]"></div>
-                    <button onclick="openCreateModal()" class="w-full py-2 rounded-xl border border-dashed border-slate-800 hover:border-slate-700 bg-slate-950/40 hover:bg-slate-900/60 text-slate-500 hover:text-slate-300 transition text-xs flex items-center justify-center gap-1 font-semibold">
-                        <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add task
-                    </button>
                 </div>
 
-                <!-- Column 4: Done -->
+                <!-- Column 4: Completado -->
                 <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 flex flex-col gap-3 backdrop-blur-md shadow-xl" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'Done')">
                     <div class="flex items-center justify-between pb-2">
-                        <div class="flex items-center gap-2 font-bold text-xs text-slate-100 pl-2 border-l-4 border-teal-500">
-                            Done
+                        <div id="col-title-done" class="flex items-center gap-2 font-bold text-xs text-slate-100 pl-2 border-l-4 border-teal-500">
+                            Completado
                         </div>
                         <span id="count-done" class="text-[11px] px-2 py-0.5 rounded-full bg-slate-800 font-bold text-emerald-300">0</span>
                     </div>
                     <div id="col-done" class="kanban-col flex flex-col gap-3 min-h-[480px]"></div>
-                    <button onclick="openCreateModal()" class="w-full py-2 rounded-xl border border-dashed border-slate-800 hover:border-slate-700 bg-slate-950/40 hover:bg-slate-900/60 text-slate-500 hover:text-slate-300 transition text-xs flex items-center justify-center gap-1 font-semibold">
-                        <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add task
-                    </button>
                 </div>
             </div>
         </section>
@@ -391,27 +383,72 @@
 
     </main>
 
-    <!-- MODAL 1: TASK DETAILS VIEW -->
+    <!-- MODAL 1: DEEP TASK DETAILS & EDIT FORM -->
     <div id="modal-task-detail" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
         <div class="modal-box glass-panel bg-slate-900/95 border border-slate-700 max-w-2xl w-full rounded-2xl p-6 space-y-4 shadow-2xl relative border-beam-active max-h-[90vh] overflow-y-auto">
             <button onclick="closeDetailModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 transition">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
-            <div class="flex items-center gap-2">
-                <span id="detail-stage" class="text-xs px-3 py-1 rounded-full font-bold uppercase bg-sky-950 text-sky-400 border border-sky-800 tracking-wider">Stage</span>
-                <span id="detail-release" class="text-xs px-2.5 py-0.5 rounded-md font-semibold bg-indigo-950 text-indigo-300 border border-indigo-800"></span>
-            </div>
-            <h3 id="detail-title" class="text-xl font-bold pt-1 text-slate-100">Task Title</h3>
             
-            <div class="flex items-center gap-4 border-y border-slate-800/80 py-3 text-xs text-slate-300">
-                <span id="detail-start">📅 Inicio: N/A</span>
-                <span>➔</span>
-                <span id="detail-target">🏁 Término: N/A</span>
+            <div class="flex items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <span id="detail-stage-badge" class="text-xs px-3 py-1 rounded-full font-bold uppercase bg-sky-950 text-sky-400 border border-sky-800 tracking-wider">Etapa</span>
+                    <span id="detail-release-badge" class="text-xs px-2.5 py-0.5 rounded-md font-semibold bg-indigo-950 text-indigo-300 border border-indigo-800"></span>
+                </div>
+                <span class="text-xs text-slate-400 font-mono" id="detail-task-code">TSK-0</span>
             </div>
-            
-            <div class="space-y-1.5">
-                <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Descripción del Trabajo</h4>
-                <div id="detail-description" class="input-box bg-slate-950 p-4 rounded-xl border border-slate-800 text-sm leading-relaxed overflow-y-auto max-h-40"></div>
+
+            <!-- Deep Edit Form Fields -->
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">Título de la Tarea</label>
+                    <input type="text" id="detail-edit-title" class="input-box w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-sky-500 font-bold">
+                </div>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1">Prioridad</label>
+                        <select id="detail-edit-priority" class="input-box w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none">
+                            <option value="Alta">🔴 Alta</option>
+                            <option value="Media">🟡 Media</option>
+                            <option value="Baja">🟢 Baja</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1">Categoría</label>
+                        <select id="detail-edit-category" class="input-box w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none">
+                            <option value="Backend">Backend</option>
+                            <option value="Frontend">Frontend</option>
+                            <option value="Bug">Bug</option>
+                            <option value="Seguridad">Seguridad</option>
+                            <option value="Funcionalidad">Funcionalidad</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1">Asignado</label>
+                        <select id="detail-edit-assignee" class="input-box w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none">
+                            <option value="Pedro">Pedro (Admin)</option>
+                            <option value="Desarrollador">Desarrollador</option>
+                            <option value="Cliente">Cliente</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1">Fecha Inicio</label>
+                        <input type="date" id="detail-edit-start" class="input-box w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1">Fecha Término</label>
+                        <input type="date" id="detail-edit-target" class="input-box w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">Descripción / Objetivos</label>
+                    <textarea id="detail-edit-description" rows="3" class="input-box w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none"></textarea>
+                </div>
             </div>
 
             <!-- ACTIVITY AUDIT LOG FEED -->
@@ -419,13 +456,71 @@
                 <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
                     <i data-lucide="history" class="w-3.5 h-3.5 text-sky-400"></i> Historial & Audit Log de Eventos
                 </h4>
-                <div id="detail-audit-log" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                <div id="detail-audit-log" class="space-y-2 max-h-36 overflow-y-auto pr-1">
                     <p class="text-xs text-slate-500 italic">Cargando eventos de auditoría...</p>
                 </div>
             </div>
 
+            <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
+                <button onclick="closeDetailModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-medium">Cancelar</button>
+                <button onclick="saveTaskDetailChanges()" class="px-4 py-2 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white rounded-xl text-xs font-bold shadow-lg flex items-center gap-1.5">
+                    <i data-lucide="save" class="w-4 h-4"></i> Guardar Cambios
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL SHARE DASHBOARD -->
+    <div id="modal-share-dashboard" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+        <div class="modal-box glass-panel bg-slate-900/95 border border-slate-700 max-w-md w-full rounded-2xl p-6 space-y-4 shadow-2xl relative border-beam-active">
+            <button onclick="closeShareModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 transition">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <h3 class="text-lg font-bold flex items-center gap-2 text-slate-100">
+                <i data-lucide="share-2" class="w-5 h-5 text-sky-400"></i> Compartir Tablero de Proyecto
+            </h3>
+            <p class="text-xs text-slate-400 leading-relaxed">Genera un enlace con token seguro criptográfico para compartir acceso de lectura a tu tablero con clientes o desarrolladores.</p>
+            
+            <div class="space-y-2 pt-2">
+                <label class="block text-xs font-semibold text-slate-300">Enlace de Acceso Seguro</label>
+                <div class="flex items-center gap-2">
+                    <input type="text" id="share-link-input" readonly class="input-box flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-mono text-slate-300 focus:outline-none">
+                    <button onclick="copyShareLink()" class="px-3.5 py-2 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-xl shadow flex items-center gap-1">
+                        <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copiar
+                    </button>
+                </div>
+            </div>
+
             <div class="flex justify-end pt-2">
-                <button onclick="closeDetailModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-xs font-medium text-slate-200 shadow hover:shadow-sky-500/20 transition-all">Cerrar Detalle</button>
+                <button onclick="closeShareModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-medium">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL SETTINGS & LANGUAGE SELECTOR -->
+    <div id="modal-settings" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+        <div class="modal-box glass-panel bg-slate-900/95 border border-slate-700 max-w-sm w-full rounded-2xl p-6 space-y-4 shadow-2xl relative border-beam-active">
+            <button onclick="closeSettingsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 transition">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <h3 class="text-lg font-bold flex items-center gap-2 text-slate-100">
+                <i data-lucide="settings" class="w-5 h-5 text-sky-400"></i> Configuración de la Aplicación
+            </h3>
+
+            <div class="space-y-3 text-xs pt-2">
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                        <i data-lucide="globe" class="w-4 h-4 text-sky-400"></i> Idioma de la Interfaz / UI Language
+                    </label>
+                    <select id="select-language" onchange="changeLanguage(this.value)" class="input-box w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold text-slate-100 focus:outline-none">
+                        <option value="es">🇲🇽 Español (México)</option>
+                        <option value="en">🇺🇸 English (United States)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-2 border-t border-slate-800">
+                <button onclick="closeSettingsModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-medium">Aceptar</button>
             </div>
         </div>
     </div>
@@ -706,8 +801,79 @@
             }
         }
 
-        // Modal Handlers
+        // Internationalization (i18n ES-MX / EN)
+        const i18n = {
+            es: {
+                share: "Compartir",
+                newTask: "+ Nueva Tarea",
+                todo: "Por Hacer",
+                inProgress: "En Progreso",
+                verification: "Aprobación Cliente / Verificación",
+                done: "Completado"
+            },
+            en: {
+                share: "Share",
+                newTask: "+ New Task",
+                todo: "To do",
+                inProgress: "In Progress",
+                verification: "Client Approval / Verification",
+                done: "Done"
+            }
+        };
+
+        let currentLanguage = localStorage.getItem('agilent_lang') || 'es';
+
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('agilent_lang', lang);
+            const dict = i18n[lang] || i18n.es;
+            
+            document.getElementById('lbl-share').innerText = dict.share;
+            document.getElementById('lbl-new-task').innerText = dict.newTask;
+            document.getElementById('col-title-backlog').innerText = dict.todo;
+            document.getElementById('col-title-in-progress').innerText = dict.inProgress;
+            document.getElementById('col-title-verification').innerText = dict.verification;
+            document.getElementById('col-title-done').innerText = dict.done;
+            
+            document.getElementById('select-language').value = lang;
+            triggerDynamicIsland(lang === 'es' ? "🇲🇽 Español Mexicano Activo" : "🇺🇸 English Active", lang === 'es' ? "Interfaz en Español de México" : "UI translated to English", "globe");
+        }
+
+        // Share Dashboard Modal Handlers
+        async function openShareModal() {
+            try {
+                const res = await fetch(`${API_BASE}/projects/${PROJECT_SLUG}/share_token`, { method: 'POST' });
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('share-link-input').value = data.share_url;
+                    document.getElementById('modal-share-dashboard').classList.remove('hidden');
+                    lucide.createIcons();
+                }
+            } catch (err) {
+                console.error("Failed to generate share link:", err);
+            }
+        }
+        function closeShareModal() { document.getElementById('modal-share-dashboard').classList.add('hidden'); }
+        function copyShareLink() {
+            const input = document.getElementById('share-link-input');
+            input.select();
+            navigator.clipboard.writeText(input.value);
+            triggerDynamicIsland("✨ Enlace Copiado", "El enlace seguro del tablero fue copiado al portapapeles", "copy");
+        }
+
+        // Settings Modal Handlers
+        function openSettingsModal() {
+            document.getElementById('select-language').value = currentLanguage;
+            document.getElementById('modal-settings').classList.remove('hidden');
+            lucide.createIcons();
+        }
+        function closeSettingsModal() { document.getElementById('modal-settings').classList.add('hidden'); }
+
+        // Deep Task Detail Modal Handlers
+        let activeItemId = null;
+
         async function openDetailModal(itemId) {
+            activeItemId = itemId;
             let found = null;
             Object.values(boardStateData).forEach(col => {
                 col.forEach(item => {
@@ -717,12 +883,19 @@
 
             if (!found) return;
 
-            document.getElementById('detail-stage').innerText = found.state;
-            document.getElementById('detail-title').innerText = found.title;
-            document.getElementById('detail-start').innerText = `📅 Inicio: ${found.start_date || 'N/A'}`;
-            document.getElementById('detail-target').innerText = `🏁 Término: ${found.target_date || 'N/A'}`;
-            document.getElementById('detail-release').innerText = found.release_tag ? `🚀 Tag: ${found.release_tag}` : '';
-            document.getElementById('detail-description').innerHTML = found.description_html || '<p>Sin descripción.</p>';
+            document.getElementById('detail-stage-badge').innerText = found.state;
+            document.getElementById('detail-task-code').innerText = `TSK-${found.id.slice(0, 4).toUpperCase()}`;
+            document.getElementById('detail-release-badge').innerText = found.release_tag ? `🚀 ${found.release_tag}` : 'Release v1.0';
+            
+            document.getElementById('detail-edit-title').value = found.title || '';
+            document.getElementById('detail-edit-priority').value = found.priority || 'Media';
+            document.getElementById('detail-edit-category').value = found.category || 'Funcionalidad';
+            document.getElementById('detail-edit-assignee').value = found.assignee || 'Pedro';
+            document.getElementById('detail-edit-start').value = found.start_date || '';
+            document.getElementById('detail-edit-target').value = found.target_date || '';
+            
+            let descText = found.description_html ? found.description_html.replace(/<[^>]*>/g, '') : '';
+            document.getElementById('detail-edit-description').value = descText;
 
             const auditContainer = document.getElementById('detail-audit-log');
             auditContainer.innerHTML = `<p class="text-xs text-slate-500 italic">Cargando eventos de auditoría...</p>`;
@@ -739,8 +912,8 @@
                         auditContainer.innerHTML = `<p class="text-xs text-slate-500 italic">Sin eventos registrados aún.</p>`;
                     } else {
                         auditContainer.innerHTML = comments.map(c => `
-                            <div class="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800 text-xs flex flex-col gap-1 shadow-sm">
-                                <div class="flex items-center justify-between text-[11px] text-slate-400">
+                            <div class="p-2 rounded-lg bg-slate-950 border border-slate-800 text-xs flex flex-col gap-0.5 shadow-sm">
+                                <div class="flex items-center justify-between text-[10px] text-slate-400">
                                     <span class="font-semibold text-sky-400">⚡ Auditoría FastMCP</span>
                                     <span>${c.created_at ? new Date(c.created_at).toLocaleString() : 'Reciente'}</span>
                                 </div>
@@ -752,6 +925,47 @@
             } catch (err) {
                 console.error("Failed to load audit log:", err);
                 auditContainer.innerHTML = `<p class="text-xs text-slate-400">No se pudieron cargar los eventos de auditoría.</p>`;
+            }
+        }
+
+        async function saveTaskDetailChanges() {
+            if (!activeItemId) return;
+            const title = document.getElementById('detail-edit-title').value.trim();
+            const priority = document.getElementById('detail-edit-priority').value;
+            const category = document.getElementById('detail-edit-category').value;
+            const assignee = document.getElementById('detail-edit-assignee').value;
+            const start_date = document.getElementById('detail-edit-start').value;
+            const target_date = document.getElementById('detail-edit-target').value;
+            const desc = document.getElementById('detail-edit-description').value.trim();
+
+            if (!title) {
+                alert("Por favor ingresa un título.");
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_BASE}/work_items/${activeItemId}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title,
+                        priority,
+                        category,
+                        assignee,
+                        start_date,
+                        target_date,
+                        description_html: `<p>${desc || title}</p>`
+                    })
+                });
+
+                if (res.ok) {
+                    triggerDynamicIsland("✨ Tarea Actualizada", "Los detalles fueron guardados permanentemente en la BD", "check-circle-2");
+                    closeDetailModal();
+                    loadBoard();
+                    loadGantt();
+                }
+            } catch (err) {
+                console.error("Failed to save task detail changes:", err);
             }
         }
 

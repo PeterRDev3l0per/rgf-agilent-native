@@ -306,6 +306,41 @@ def get_work_item_detail(item_id: str):
     return {"status": "success", "work_item": item, "comments": comments}
 
 
+class DeepTaskUpdateRequest(BaseModel):
+    title: Optional[str] = None
+    description_html: Optional[str] = None
+    state: Optional[str] = None
+    priority: Optional[str] = None
+    category: Optional[str] = None
+    assignee: Optional[str] = None
+    start_date: Optional[str] = None
+    target_date: Optional[str] = None
+    release_tag: Optional[str] = None
+
+
+@app.post("/api/projects/{slug}/share_token")
+def generate_project_share_token(slug: str):
+    proj = db.get_or_create_project(slug)
+    token = db.create_share_token(proj["id"])
+    share_url = f"http://{config.server_host}:{config.server_port}/app/?share_token={token}"
+    return {"status": "success", "token": token, "share_url": share_url}
+
+
+@app.patch("/api/work_items/{item_id}")
+def deep_update_work_item(item_id: str, req: DeepTaskUpdateRequest):
+    updates = {k: v for k, v in req.model_dump().items() if v is not None}
+    if not updates:
+        return {"status": "no_changes", "work_item": db.get_work_item(item_id)}
+
+    updated = db.update_work_item(item_id, updates)
+    if not updated:
+        raise HTTPException(status_code=404, detail=f"Work item '{item_id}' not found")
+
+    changes_summary = ", ".join(f"<strong>{k}</strong>: {v}" for k, v in updates.items())
+    db.add_comment(item_id, f"<p>Task details updated: {changes_summary}</p>")
+    return {"status": "success", "work_item": updated}
+
+
 @app.patch("/api/work_items/{item_id}/state")
 def update_work_item_state(item_id: str, req: StateUpdateRequest):
     valid_states = {"Backlog", "In Progress", "Verification", "Done"}

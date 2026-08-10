@@ -134,12 +134,23 @@ class DatabaseManager:
                     title TEXT NOT NULL,
                     description_html TEXT NOT NULL DEFAULT '',
                     state TEXT NOT NULL DEFAULT 'Backlog',
+                    priority TEXT DEFAULT 'Media',
+                    category TEXT DEFAULT 'Funcionalidad',
+                    assignee TEXT DEFAULT 'Pedro',
                     start_date TEXT,
                     target_date TEXT,
                     release_tag TEXT,
                     test_status TEXT,
                     created_at TEXT NOT NULL,
                     updated_at TEXT NOT NULL,
+                    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
+                );
+
+                CREATE TABLE IF NOT EXISTS share_tokens (
+                    id TEXT PRIMARY KEY,
+                    project_id TEXT NOT NULL,
+                    token TEXT UNIQUE NOT NULL,
+                    created_at TEXT NOT NULL,
                     FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
                 );
 
@@ -160,6 +171,11 @@ class DatabaseManager:
                     FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
                 );
             """)
+            for col, col_def in [("priority", "TEXT DEFAULT 'Media'"), ("category", "TEXT DEFAULT 'Funcionalidad'"), ("assignee", "TEXT DEFAULT 'Pedro'")]:
+                try:
+                    conn.execute(f"ALTER TABLE work_items ADD COLUMN {col} {col_def}")
+                except Exception:
+                    pass
 
     def get_or_create_project(self, name: str) -> Dict[str, Any]:
         """Get or create project by name."""
@@ -275,7 +291,7 @@ class DatabaseManager:
         if not updates:
             return self.get_work_item(item_id)
 
-        valid_keys = {"title", "description_html", "state", "start_date", "target_date", "release_tag", "test_status"}
+        valid_keys = {"title", "description_html", "state", "start_date", "target_date", "release_tag", "test_status", "priority", "category", "assignee"}
         filtered = {k: v for k, v in updates.items() if k in valid_keys}
         if not filtered:
             return self.get_work_item(item_id)
@@ -287,6 +303,27 @@ class DatabaseManager:
         with self.get_connection() as conn:
             conn.execute(f"UPDATE work_items SET {set_clause} WHERE id = ?", values)
         return self.get_work_item(item_id)
+
+    def create_share_token(self, project_id: str) -> str:
+        """Generate cryptographically strong share token for project dashboard access."""
+        import secrets
+        token = secrets.token_urlsafe(16)
+        token_id = str(uuid.uuid4())
+        now = datetime.now().isoformat()
+        with self.get_connection() as conn:
+            conn.execute(
+                "INSERT INTO share_tokens (id, project_id, token, created_at) VALUES (?, ?, ?, ?)",
+                (token_id, project_id, token, now)
+            )
+        return token
+
+    def validate_share_token(self, token: str) -> Optional[Dict[str, Any]]:
+        """Validate share token and return matching project."""
+        with self.get_connection() as conn:
+            row = conn.execute("SELECT * FROM share_tokens WHERE token = ?", (token,)).fetchone()
+            if not row:
+                return None
+            return dict(conn.execute("SELECT * FROM projects WHERE id = ?", (row["project_id"],)).fetchone() or {})
 
     def add_comment(self, item_id: str, content_html: str) -> Dict[str, Any]:
         """Add an activity comment to a work item."""
