@@ -56,11 +56,20 @@
 - [x] 9.5 Run Pytest suite & QA verification via `sdd-qa-docs`.
 
 ## Phase 10: 100% Comprehensive Light Mode, Skeleton Loaders & Palette Cleanup
-- [ ] 10.1 Remove color palette switcher buttons completely from `src/agilent_native/static/index.html`.
-- [ ] 10.2 Implement 100% comprehensive Light Mode CSS & Tailwind classes across all headers, panels, cards, text, inputs, modals, and Gantt charts.
-- [ ] 10.3 Implement animated Skeleton Loaders for Kanban columns, Gantt timeline, and header telemetry in `src/agilent_native/static/index.html`.
-- [ ] 10.4 Update `docs/E2E_USE_CASES.md` and Playwright E2E browser test suite in `tests/e2e/test_ui_playwright.py`.
-- [ ] 10.5 Run Pytest suite & QA verification via `sdd-qa-docs`.
+- [x] 10.1 Remove color palette switcher buttons completely from `src/agilent_native/static/index.html`.
+- [x] 10.2 Implement 100% comprehensive Light Mode CSS & Tailwind classes across all headers, panels, cards, text, inputs, modals, and Gantt charts.
+- [x] 10.3 Implement animated Skeleton Loaders for Kanban columns, Gantt timeline, and header telemetry in `src/agilent_native/static/index.html`.
+- [x] 10.4 Update `docs/E2E_USE_CASES.md` and Playwright E2E browser test suite in `tests/e2e/test_ui_playwright.py`.
+- [x] 10.5 Run Pytest suite & QA verification via `sdd-qa-docs`.
+
+## Phase 11: Comprehensive Security Hardening, Audit & Automated Vulnerability Testing
+- [ ] 11.1 Implement HTML input sanitization (bleach/html escape), slug validation, and OWASP HTTP security middleware in `src/agilent_native/server.py`.
+- [ ] 11.2 Implement LLM prompt injection guardrails, delimiter isolation, and context sanitization in `src/agilent_native/rag.py`.
+- [ ] 11.3 Add CSP meta tags, DOMPurify/text Escaping, and anti-XSS client-side defenses in `src/agilent_native/static/index.html`.
+- [ ] 11.4 Document threat model, vulnerability matrix, and hardening architecture in `docs/SECURITY_AUDIT_AND_HARDENING.md`.
+- [ ] 11.5 Implement automated security test suite `tests/security/test_security_hardening.py` covering XSS, SQLi, Path Traversal, and Prompt Injection attacks.
+- [ ] 11.6 Run Pytest suite & QA verification via `sdd-qa-docs`.
+
 
 
 

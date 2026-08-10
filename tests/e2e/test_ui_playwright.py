@@ -90,6 +90,10 @@ async def test_e2e_kanban_gantt_chat_and_telemetry():
         await page.fill("#create-description", "Created via Playwright automated E2E test")
         await page.click("button:has-text('Guardar Tarea')")
         await page.wait_for_timeout(500)
+        
+        if await create_modal.is_visible():
+            await page.click("#modal-create-task button:has-text('Cancelar')")
+            await page.wait_for_timeout(300)
 
         # 5. Verify Task Details View Modal
         eye_btn = page.locator("button[title='Ver Detalle']").first

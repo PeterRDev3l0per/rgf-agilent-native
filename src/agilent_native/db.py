@@ -71,9 +71,100 @@ class DatabaseManager:
                 );
             """)
 
+import html
+import re
+
+def sanitize_text(text: str) -> str:
+    if not text:
+        return ""
+    cleaned = re.sub(r'<script.*?>.*?</script>', '', text, flags=re.DOTALL | re.IGNORECASE)
+    cleaned = re.sub(r'javascript:', '', cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r'on\w+=".*?"', '', cleaned, flags=re.IGNORECASE)
+    return html.escape(cleaned.strip())
+
+
+def sanitize_html_content(content_html: str) -> str:
+    if not content_html:
+        return ""
+    cleaned = re.sub(r'<script.*?>.*?</script>', '', content_html, flags=re.DOTALL | re.IGNORECASE)
+    cleaned = re.sub(r'<(?!/?(p|strong|em|code|br|ul|li|span)\b)[^>]*>', '', cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r'javascript:', '', cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r'on\w+=".*?"', '', cleaned, flags=re.IGNORECASE)
+    return cleaned.strip()
+
+
+def validate_slug(slug: str) -> str:
+    if not slug:
+        return "default-project"
+    clean_slug = slug.lower().replace(" ", "-")
+    clean_slug = re.sub(r'[^a-zA-Z0-9_-]', '', clean_slug)
+    clean_slug = re.sub(r'-+', '-', clean_slug).strip('-')
+    if not clean_slug:
+        return "default-project"
+    return clean_slug[:64]
+
+
+class DatabaseManager:
+    """Embedded SQLite WAL Database Manager."""
+
+    def __init__(self, db_path: Optional[str] = None):
+        self.db_path = db_path or config.db_path
+        self._init_db()
+
+    def get_connection(self) -> sqlite3.Connection:
+        conn = sqlite3.connect(self.db_path)
+        conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA foreign_keys = ON;")
+        conn.execute("PRAGMA journal_mode = WAL;")
+        return conn
+
+    def _init_db(self) -> None:
+        with self.get_connection() as conn:
+            conn.executescript("""
+                CREATE TABLE IF NOT EXISTS projects (
+                    id TEXT PRIMARY KEY,
+                    name TEXT NOT NULL,
+                    slug TEXT UNIQUE NOT NULL,
+                    created_at TEXT NOT NULL
+                );
+
+                CREATE TABLE IF NOT EXISTS work_items (
+                    id TEXT PRIMARY KEY,
+                    project_id TEXT NOT NULL,
+                    title TEXT NOT NULL,
+                    description_html TEXT NOT NULL DEFAULT '',
+                    state TEXT NOT NULL DEFAULT 'Backlog',
+                    start_date TEXT,
+                    target_date TEXT,
+                    release_tag TEXT,
+                    test_status TEXT,
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL,
+                    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
+                );
+
+                CREATE TABLE IF NOT EXISTS comments (
+                    id TEXT PRIMARY KEY,
+                    work_item_id TEXT NOT NULL,
+                    content_html TEXT NOT NULL,
+                    created_at TEXT NOT NULL,
+                    FOREIGN KEY (work_item_id) REFERENCES work_items(id) ON DELETE CASCADE
+                );
+
+                CREATE TABLE IF NOT EXISTS rag_documents (
+                    id TEXT PRIMARY KEY,
+                    project_id TEXT NOT NULL,
+                    topic_key TEXT NOT NULL,
+                    content TEXT NOT NULL,
+                    created_at TEXT NOT NULL,
+                    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
+                );
+            """)
+
     def get_or_create_project(self, name: str) -> Dict[str, Any]:
         """Get or create project by name."""
-        slug = name.lower().replace(" ", "-")
+        slug = validate_slug(name.lower().replace(" ", "-"))
+        clean_name = sanitize_text(name)
         with self.get_connection() as conn:
             row = conn.execute("SELECT * FROM projects WHERE slug = ?", (slug,)).fetchone()
             if row:
@@ -83,7 +174,7 @@ class DatabaseManager:
             now = datetime.now().isoformat()
             conn.execute(
                 "INSERT INTO projects (id, name, slug, created_at) VALUES (?, ?, ?, ?)",
-                (project_id, name, slug, now),
+                (project_id, clean_name, slug, now),
             )
             proj = {"id": project_id, "name": name, "slug": slug, "created_at": now}
 
@@ -150,15 +241,17 @@ class DatabaseManager:
             })
 
     def create_work_item(self, project_id: str, title: str, description_html: str = "") -> Dict[str, Any]:
-        """Create new work item in SQLite."""
+        """Create new work item in SQLite with sanitized fields."""
         item_id = str(uuid.uuid4())
         now = datetime.now().isoformat()
+        clean_title = sanitize_text(title)
+        clean_desc = sanitize_html_content(description_html or f"<p>{clean_title}</p>")
         with self.get_connection() as conn:
             conn.execute(
                 """INSERT INTO work_items 
                    (id, project_id, title, description_html, state, created_at, updated_at) 
                    VALUES (?, ?, ?, ?, 'Backlog', ?, ?)""",
-                (item_id, project_id, title, description_html or f"<p>{title}</p>", now, now),
+                (item_id, project_id, clean_title, clean_desc, now, now),
             )
         return self.get_work_item(item_id)  # type: ignore
 

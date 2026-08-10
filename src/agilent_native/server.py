@@ -4,7 +4,7 @@ import logging
 import re
 from datetime import datetime
 from typing import Optional, Dict, Any, List
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
@@ -12,7 +12,7 @@ from fastmcp import FastMCP
 from pydantic import BaseModel
 
 from agilent_native.config import config
-from agilent_native.db import db
+from agilent_native.db import db, validate_slug
 from agilent_native.ollama_enricher import enrich_card_async
 from agilent_native.rag import rag_engine
 
@@ -53,6 +53,19 @@ mcp = FastMCP("AgilentNativeGateway")
 
 # FastAPI App Instance
 app = FastAPI(title="Agilent Native Suite", version="0.1.0")
+
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com; "
+        "img-src 'self' data:; font-src 'self' https://unpkg.com;"
+    )
+    return response
 
 app.add_middleware(
     CORSMiddleware,

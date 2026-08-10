@@ -90,6 +90,27 @@ Define the requirements for **Agilent Native Suite**, providing an embedded Fast
 - **When** Kanban columns, Gantt timeline, or telemetry badges are loading,
 - **Then** animated skeleton loading card placeholders MUST render to prevent layout shifts.
 
+### Scenario 17: Strict Input Sanitization & Anti-XSS Defense
+- **Given** task titles, descriptions, comments, or RAG inputs containing malicious HTML script tags (`<script>`, `onerror=`, `javascript:`),
+- **When** processed by backend or rendered by frontend,
+- **Then** the application MUST sanitize and escape all inputs, preventing execution of unauthorized scripts.
+
+### Scenario 18: SQL Injection & Path Traversal Immunity
+- **Given** malicious user requests containing SQL injection vectors (`UNION SELECT`, `' OR 1=1`) or path traversal sequences (`../`, `..\`, `%2e%2e`),
+- **When** received by FastAPI endpoints or FastMCP tools,
+- **Then** parameterized SQLite queries and sanitized slug validation MUST neutralize the attack without leaking internal error tracebacks.
+
+### Scenario 19: OWASP HTTP Security Headers & Hardened CORS
+- **Given** client connections to the FastAPI application,
+- **When** HTTP responses are returned,
+- **Then** OWASP security headers (`Content-Security-Policy`, `X-Content-Type-Options`, `X-Frame-Options`, `X-XSS-Protection`, `Referrer-Policy`) MUST be injected in all responses.
+
+### Scenario 20: LLM Prompt Injection & Jailbreak Defense Guardrails
+- **Given** user chat queries containing prompt injection attempts ("Ignore system prompt", "Reveal instructions", "Do anything now"),
+- **When** processed by the local RAG engine,
+- **Then** system guardrails MUST isolate instructions from user inputs, sanitize context snippets, and prevent system instruction exfiltration.
+
+
 
 
 
