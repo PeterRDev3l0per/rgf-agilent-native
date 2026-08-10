@@ -372,26 +372,39 @@
 
     <!-- MODAL 1: TASK DETAILS VIEW -->
     <div id="modal-task-detail" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
-        <div class="modal-box glass-panel bg-slate-900/95 border border-slate-700 max-w-2xl w-full rounded-2xl p-6 space-y-5 shadow-2xl relative border-beam-active">
+        <div class="modal-box glass-panel bg-slate-900/95 border border-slate-700 max-w-2xl w-full rounded-2xl p-6 space-y-4 shadow-2xl relative border-beam-active max-h-[90vh] overflow-y-auto">
             <button onclick="closeDetailModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 transition">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
-            <div class="space-y-1">
-                <span id="detail-stage" class="text-xs px-2.5 py-1 rounded-full font-semibold uppercase bg-sky-950 text-sky-400 border border-sky-800">Stage</span>
-                <h3 id="detail-title" class="text-xl font-bold pt-2">Task Title</h3>
+            <div class="flex items-center gap-2">
+                <span id="detail-stage" class="text-xs px-3 py-1 rounded-full font-bold uppercase bg-sky-950 text-sky-400 border border-sky-800 tracking-wider">Stage</span>
+                <span id="detail-release" class="text-xs px-2.5 py-0.5 rounded-md font-semibold bg-indigo-950 text-indigo-300 border border-indigo-800"></span>
             </div>
-            <div class="flex items-center gap-3 border-y border-slate-800/80 dark:border-slate-800/80 py-3 text-xs text-slate-300">
-                <span id="detail-start">📅 Start: N/A</span>
+            <h3 id="detail-title" class="text-xl font-bold pt-1 text-slate-100">Task Title</h3>
+            
+            <div class="flex items-center gap-4 border-y border-slate-800/80 py-3 text-xs text-slate-300">
+                <span id="detail-start">📅 Inicio: N/A</span>
                 <span>➔</span>
-                <span id="detail-target">🏁 Target: N/A</span>
-                <span id="detail-release" class="ml-auto text-indigo-400 font-semibold"></span>
+                <span id="detail-target">🏁 Término: N/A</span>
             </div>
-            <div class="space-y-2">
+            
+            <div class="space-y-1.5">
                 <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Descripción del Trabajo</h4>
-                <div id="detail-description" class="input-box bg-slate-950 p-4 rounded-xl border border-slate-800 text-sm leading-relaxed overflow-y-auto max-h-60"></div>
+                <div id="detail-description" class="input-box bg-slate-950 p-4 rounded-xl border border-slate-800 text-sm leading-relaxed overflow-y-auto max-h-40"></div>
             </div>
-            <div class="flex justify-end">
-                <button onclick="closeDetailModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-xs font-medium text-slate-200">Cerrar Detalle</button>
+
+            <!-- ACTIVITY AUDIT LOG FEED -->
+            <div class="space-y-2 pt-2 border-t border-slate-800/80">
+                <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <i data-lucide="history" class="w-3.5 h-3.5 text-sky-400"></i> Historial & Audit Log de Eventos
+                </h4>
+                <div id="detail-audit-log" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                    <p class="text-xs text-slate-500 italic">Cargando eventos de auditoría...</p>
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-2">
+                <button onclick="closeDetailModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-xs font-medium text-slate-200 shadow hover:shadow-sky-500/20 transition-all">Cerrar Detalle</button>
             </div>
         </div>
     </div>
@@ -642,7 +655,7 @@
         }
 
         // Modal Handlers
-        function openDetailModal(itemId) {
+        async function openDetailModal(itemId) {
             let found = null;
             Object.values(boardStateData).forEach(col => {
                 col.forEach(item => {
@@ -654,13 +667,40 @@
 
             document.getElementById('detail-stage').innerText = found.state;
             document.getElementById('detail-title').innerText = found.title;
-            document.getElementById('detail-start').innerText = `📅 Start: ${found.start_date || 'N/A'}`;
-            document.getElementById('detail-target').innerText = `🏁 Target: ${found.target_date || 'N/A'}`;
+            document.getElementById('detail-start').innerText = `📅 Inicio: ${found.start_date || 'N/A'}`;
+            document.getElementById('detail-target').innerText = `🏁 Término: ${found.target_date || 'N/A'}`;
             document.getElementById('detail-release').innerText = found.release_tag ? `🚀 Tag: ${found.release_tag}` : '';
             document.getElementById('detail-description').innerHTML = found.description_html || '<p>Sin descripción.</p>';
 
+            const auditContainer = document.getElementById('detail-audit-log');
+            auditContainer.innerHTML = `<p class="text-xs text-slate-500 italic">Cargando eventos de auditoría...</p>`;
+
             document.getElementById('modal-task-detail').classList.remove('hidden');
             lucide.createIcons();
+
+            try {
+                const res = await fetch(`${API_BASE}/work_items/${itemId}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    const comments = data.comments || [];
+                    if (comments.length === 0) {
+                        auditContainer.innerHTML = `<p class="text-xs text-slate-500 italic">Sin eventos registrados aún.</p>`;
+                    } else {
+                        auditContainer.innerHTML = comments.map(c => `
+                            <div class="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800 text-xs flex flex-col gap-1 shadow-sm">
+                                <div class="flex items-center justify-between text-[11px] text-slate-400">
+                                    <span class="font-semibold text-sky-400">⚡ Auditoría FastMCP</span>
+                                    <span>${c.created_at ? new Date(c.created_at).toLocaleString() : 'Reciente'}</span>
+                                </div>
+                                <div class="text-slate-300 font-medium">${c.content_html || c.content}</div>
+                            </div>
+                        `).join('');
+                    }
+                }
+            } catch (err) {
+                console.error("Failed to load audit log:", err);
+                auditContainer.innerHTML = `<p class="text-xs text-slate-400">No se pudieron cargar los eventos de auditoría.</p>`;
+            }
         }
 
         function closeDetailModal() { document.getElementById('modal-task-detail').classList.add('hidden'); }

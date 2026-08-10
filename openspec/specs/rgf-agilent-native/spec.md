@@ -140,6 +140,17 @@ Define the requirements for **Agilent Native Suite**, providing an embedded Fast
 - **When** executed,
 - **Then** Scope, Harden, Inspect, Exercise, Log, and Defend controls MUST operate continuously in production.
 
+### Scenario 27: Enriched Task Detail Modal with Activity Audit Feed
+- **Given** a user opening a task detail modal via eye button or double-click,
+- **When** the modal renders,
+- **Then** complete task metadata, priority badge, category tags, and an append-only activity audit log feed MUST be displayed cleanly with high contrast.
+
+### Scenario 28: Glassmorphism Card Hover Effects & Micro-Interactions
+- **Given** user interactions with Kanban cards, modal buttons, and nav tabs,
+- **When** hovered or active,
+- **Then** smooth glassmorphism scale transitions, border beam glowing highlights, and micro-interactions MUST render responsively.
+
+
 
 
 

@@ -297,6 +297,15 @@ async def chat_with_project_rag(req: ChatRequest):
     return result
 
 
+@app.get("/api/work_items/{item_id}")
+def get_work_item_detail(item_id: str):
+    item = db.get_work_item(item_id)
+    if not item:
+        raise HTTPException(status_code=404, detail=f"Work item '{item_id}' not found")
+    comments = db.list_comments(item_id)
+    return {"status": "success", "work_item": item, "comments": comments}
+
+
 @app.patch("/api/work_items/{item_id}/state")
 def update_work_item_state(item_id: str, req: StateUpdateRequest):
     valid_states = {"Backlog", "In Progress", "Verification", "Done"}

@@ -81,6 +81,13 @@
 - [x] 13.2 Update `docs/SECURITY_AUDIT_AND_HARDENING.md` with SHIELD methodology and compliance matrix.
 - [x] 13.3 Run Pytest suite & QA verification via `sdd-qa-docs`.
 
+## Phase 14: Vanguard UI/UX Micro-Interactions, Glassmorphism & Activity Audit Log
+- [ ] 14.1 Enhance task detail API endpoint in `src/agilent_native/server.py` to return activity audit log events.
+- [ ] 14.2 Refactor task detail modal in `src/agilent_native/static/index.html` to render glassmorphism panels, tags, priority badges, and activity audit feed.
+- [ ] 14.3 Add CSS micro-interactions, card hover scale effects, and drop-zone visual indicators in `src/agilent_native/static/index.html`.
+- [ ] 14.4 Run Pytest suite, Playwright E2E browser tests, and QA verification via `sdd-qa-docs`.
+
+
 
 
 
