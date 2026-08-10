@@ -81,19 +81,20 @@ This document defines the 4 core E2E user testing stages and use cases executed 
 
 ---
 
-## 🎯 Use Case 10: Dark / Light Mode Toggle & LocalStorage Persistence
-- **Goal**: Verify that clicking `#btn-dark-toggle` toggles between dark and light themes and updates `localStorage.agilent_mode`.
+## 🎯 Use Case 10: 100% Comprehensive Dark / Light Mode Toggle & LocalStorage Persistence
+- **Goal**: Verify that clicking `#btn-dark-toggle` toggles 100% of UI elements (cards, text, header, modals, gantt chart) between dark and light themes and updates `localStorage.agilent_mode`.
 - **Playwright Assertion**:
   - Click `#btn-dark-toggle`.
   - Assert `html` root class list toggles `dark`.
 
 ---
 
-## 🎯 Use Case 11: 2026 Trend Color Palette Switcher
-- **Goal**: Verify that clicking a theme color pill (`theme-emerald`, `theme-nebula`, `theme-aurora`, `theme-cyber`) updates the body theme class and triggers a Dynamic Island notification.
+## 🎯 Use Case 11: Animated Skeleton Loading Placeholders
+- **Goal**: Verify that skeleton loading cards (`.skeleton`) render shimmers during initial Kanban and Gantt data fetching states to prevent layout shifts.
 - **Playwright Assertion**:
-  - Click color pill button.
-  - Assert body contains chosen theme class.
+  - Load workspace.
+  - Assert skeleton loader elements render during initial load.
+
 
 
 ---

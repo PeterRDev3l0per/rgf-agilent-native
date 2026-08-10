@@ -49,11 +49,19 @@
 - [x] 8.5 Update Playwright E2E test suite in `tests/e2e/test_ui_playwright.py` and run QA verification via `sdd-qa-docs`.
 
 ## Phase 9: Dark / Light Mode Toggle & 2026 Trend Color Palette Theme Switcher
-- [ ] 9.1 Implement Dark/Light mode toggle button and `localStorage` persistence in `src/agilent_native/static/index.html`.
-- [ ] 9.2 Implement 2026 Trend Color Palette Switcher (Cyber Blue, Neo Emerald, Sunset Nebula, Nordic Aurora) in `src/agilent_native/static/index.html`.
-- [ ] 9.3 Update `docs/E2E_USE_CASES.md` with Use Cases 10 & 11.
-- [ ] 9.4 Update Playwright E2E browser test suite in `tests/e2e/test_ui_playwright.py`.
-- [ ] 9.5 Run Pytest suite & QA verification via `sdd-qa-docs`.
+- [x] 9.1 Implement Dark/Light mode toggle button and `localStorage` persistence in `src/agilent_native/static/index.html`.
+- [x] 9.2 Implement 2026 Trend Color Palette Switcher (Cyber Blue, Neo Emerald, Sunset Nebula, Nordic Aurora) in `src/agilent_native/static/index.html`.
+- [x] 9.3 Update `docs/E2E_USE_CASES.md` with Use Cases 10 & 11.
+- [x] 9.4 Update Playwright E2E browser test suite in `tests/e2e/test_ui_playwright.py`.
+- [x] 9.5 Run Pytest suite & QA verification via `sdd-qa-docs`.
+
+## Phase 10: 100% Comprehensive Light Mode, Skeleton Loaders & Palette Cleanup
+- [ ] 10.1 Remove color palette switcher buttons completely from `src/agilent_native/static/index.html`.
+- [ ] 10.2 Implement 100% comprehensive Light Mode CSS & Tailwind classes across all headers, panels, cards, text, inputs, modals, and Gantt charts.
+- [ ] 10.3 Implement animated Skeleton Loaders for Kanban columns, Gantt timeline, and header telemetry in `src/agilent_native/static/index.html`.
+- [ ] 10.4 Update `docs/E2E_USE_CASES.md` and Playwright E2E browser test suite in `tests/e2e/test_ui_playwright.py`.
+- [ ] 10.5 Run Pytest suite & QA verification via `sdd-qa-docs`.
+
 
 
 

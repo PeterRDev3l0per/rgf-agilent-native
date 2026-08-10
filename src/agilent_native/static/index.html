@@ -27,31 +27,20 @@
     </script>
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #38bdf8, #818cf8, #f43f5e, #38bdf8);
-            --orb-conic: conic-gradient(from 0deg, #38bdf8, #818cf8, #c084fc, #f43f5e, #38bdf8);
-            --orb-core: radial-gradient(circle at 35% 35%, #ffffff 0%, #38bdf8 40%, #0369a1 100%);
+            --primary-gradient: linear-gradient(135deg, #0284c7, #6366f1, #ec4899, #0284c7);
+            --orb-conic: conic-gradient(from 0deg, #0284c7, #6366f1, #c084fc, #f43f5e, #0284c7);
+            --orb-core: radial-gradient(circle at 35% 35%, #ffffff 0%, #0284c7 40%, #0369a1 100%);
         }
 
-        /* 2026 TREND COLOR PALETTES */
-        .theme-cyber {
-            --primary-gradient: linear-gradient(135deg, #38bdf8, #818cf8, #f43f5e, #38bdf8);
-            --orb-conic: conic-gradient(from 0deg, #38bdf8, #818cf8, #c084fc, #f43f5e, #38bdf8);
-            --orb-core: radial-gradient(circle at 35% 35%, #ffffff 0%, #38bdf8 40%, #0369a1 100%);
+        /* COMPREHENSIVE LIGHT / DARK STYLING */
+        body {
+            background-color: #090d16;
+            color: #f8fafc;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
-        .theme-emerald {
-            --primary-gradient: linear-gradient(135deg, #34d399, #14b8a6, #a3e635, #34d399);
-            --orb-conic: conic-gradient(from 0deg, #34d399, #14b8a6, #a3e635, #059669, #34d399);
-            --orb-core: radial-gradient(circle at 35% 35%, #ffffff 0%, #34d399 40%, #047857 100%);
-        }
-        .theme-nebula {
-            --primary-gradient: linear-gradient(135deg, #c084fc, #a855f7, #f43f5e, #c084fc);
-            --orb-conic: conic-gradient(from 0deg, #c084fc, #a855f7, #ec4899, #f43f5e, #c084fc);
-            --orb-core: radial-gradient(circle at 35% 35%, #ffffff 0%, #c084fc 40%, #7e22ce 100%);
-        }
-        .theme-aurora {
-            --primary-gradient: linear-gradient(135deg, #fbbf24, #f97316, #fb7185, #fbbf24);
-            --orb-conic: conic-gradient(from 0deg, #fbbf24, #f97316, #fb7185, #ea580c, #fbbf24);
-            --orb-core: radial-gradient(circle at 35% 35%, #ffffff 0%, #fbbf24 40%, #c2410c 100%);
+        html:not(.dark) body {
+            background-color: #f8fafc;
+            color: #0f172a;
         }
 
         .glass-panel {
@@ -62,7 +51,47 @@
         html:not(.dark) .glass-panel {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(16px);
-            border: 1px solid rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Light Mode Explicit Component Overrides */
+        html:not(.dark) .card-item {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            color: #0f172a !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+        }
+        html:not(.dark) .card-item h4 {
+            color: #0f172a !important;
+        }
+        html:not(.dark) .card-item .card-desc {
+            color: #475569 !important;
+        }
+        html:not(.dark) .modal-box {
+            background-color: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
+        }
+        html:not(.dark) .input-box {
+            background-color: #f1f5f9 !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
+        }
+        html:not(.dark) .nav-btn-inactive {
+            color: #64748b !important;
+        }
+        html:not(.dark) .nav-btn-inactive:hover {
+            background-color: #f1f5f9 !important;
+            color: #0f172a !important;
+        }
+        html:not(.dark) .gantt-row {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+        html:not(.dark) .gantt-row h4 {
+            color: #0f172a !important;
         }
 
         .kanban-col { min-height: 520px; }
@@ -135,13 +164,31 @@
         @keyframes orb-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes orb-pulse { 0% { transform: scale(0.9); opacity: 0.7; } 100% { transform: scale(1.15); opacity: 1; } }
 
+        /* Skeleton Shimmer Animation */
+        .skeleton {
+            background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+            background-size: 200% 100%;
+            animation: skeleton-shimmer 1.5s infinite;
+        }
+        html:not(.dark) .skeleton {
+            background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-shimmer 1.5s infinite;
+        }
+        @keyframes skeleton-shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
         /* Custom scrollbars */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        html:not(.dark) ::-webkit-scrollbar-track { background: #f1f5f9; }
+        html:not(.dark) ::-webkit-scrollbar-thumb { background: #cbd5e1; }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 dark:bg-slate-950 dark:text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white transition-colors duration-300 relative theme-cyber" id="body-root">
+<body class="font-sans min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white transition-colors duration-300 relative" id="body-root">
 
     <!-- DYNAMIC ISLAND NOTIFICATION NOTCH (iPhone Style) -->
     <div class="fixed top-3 inset-x-0 z-50 flex justify-center pointer-events-none">
@@ -164,7 +211,7 @@
                     <i data-lucide="rocket" class="w-5 h-5 text-white"></i>
                 </div>
                 <div>
-                    <h1 class="font-extrabold text-lg leading-tight bg-gradient-to-r from-sky-400 via-indigo-300 to-pink-400 bg-clip-text text-transparent">Agilent Native Suite</h1>
+                    <h1 class="font-extrabold text-lg leading-tight bg-gradient-to-r from-sky-500 via-indigo-500 to-pink-500 bg-clip-text text-transparent">Agilent Native Suite</h1>
                     <p class="text-xs text-slate-400 dark:text-slate-400 font-medium">Zero-Overhead SDLC Workspace & Local RAG</p>
                 </div>
             </div>
@@ -174,43 +221,35 @@
                 <button onclick="switchTab('kanban')" id="tab-kanban" class="px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center gap-2 bg-sky-600 text-white shadow">
                     <i data-lucide="kanban" class="w-4 h-4"></i> Kanban Board
                 </button>
-                <button onclick="switchTab('gantt')" id="tab-gantt" class="px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
+                <button onclick="switchTab('gantt')" id="tab-gantt" class="px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center gap-2 nav-btn-inactive text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
                     <i data-lucide="gantt-chart" class="w-4 h-4"></i> Timeline / Gantt
                 </button>
-                <button onclick="switchTab('chat')" id="tab-chat" class="px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
+                <button onclick="switchTab('chat')" id="tab-chat" class="px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center gap-2 nav-btn-inactive text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
                     <i data-lucide="bot" class="w-4 h-4"></i> Local RAG Chat
                 </button>
             </nav>
 
-            <!-- Theme Switcher & Dark/Light Toggle Controls -->
-            <div class="flex items-center gap-2">
-                <!-- 2026 Trend Color Palette Switcher -->
-                <div class="flex items-center gap-1 bg-slate-900/90 dark:bg-slate-900/90 p-1 rounded-xl border border-slate-800">
-                    <button onclick="changeTheme('theme-cyber')" title="Cyber Blue" class="w-5 h-5 rounded-full bg-gradient-to-tr from-sky-400 to-indigo-500 border border-white/20 hover:scale-110 transition shadow"></button>
-                    <button onclick="changeTheme('theme-emerald')" title="Neo Emerald (BioTech)" class="w-5 h-5 rounded-full bg-gradient-to-tr from-emerald-400 to-teal-500 border border-white/20 hover:scale-110 transition shadow"></button>
-                    <button onclick="changeTheme('theme-nebula')" title="Sunset Nebula (Amethyst)" class="w-5 h-5 rounded-full bg-gradient-to-tr from-purple-400 to-pink-500 border border-white/20 hover:scale-110 transition shadow"></button>
-                    <button onclick="changeTheme('theme-aurora')" title="Nordic Aurora (Amber)" class="w-5 h-5 rounded-full bg-gradient-to-tr from-amber-400 to-rose-500 border border-white/20 hover:scale-110 transition shadow"></button>
-                </div>
-
+            <!-- Header Controls: Dark/Light Mode Toggle Button & Telemetry -->
+            <div class="flex items-center gap-3">
                 <!-- Dark / Light Mode Toggle Button -->
-                <button onclick="toggleDarkMode()" id="btn-dark-toggle" title="Cambiar Modo Claro/Oscuro" class="p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition flex items-center justify-center">
+                <button onclick="toggleDarkMode()" id="btn-dark-toggle" title="Cambiar Modo Claro/Oscuro" class="p-2.5 rounded-xl bg-slate-900 dark:bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition flex items-center justify-center shadow-sm">
                     <i id="icon-dark" data-lucide="moon" class="w-4 h-4 text-sky-400"></i>
                 </button>
-            </div>
 
-            <!-- Live Telemetry Header Badges -->
-            <div class="hidden xl:flex items-center gap-2 font-medium text-xs">
-                <div id="badge-ollama" class="flex items-center gap-1.5 bg-emerald-950/60 text-emerald-400 border border-emerald-800/60 px-3 py-1.5 rounded-full shadow-sm">
-                    <span id="dot-ollama" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span id="text-ollama">Ollama Online (qwen3:14b)</span>
-                </div>
-                <div class="flex items-center gap-1 bg-slate-900 text-slate-300 border border-slate-800 px-3 py-1.5 rounded-full">
-                    <i data-lucide="cpu" class="w-3.5 h-3.5 text-sky-400"></i>
-                    <span>FastMCP: ~300 tokens</span>
-                </div>
-                <div class="flex items-center gap-1 bg-slate-900 text-slate-300 border border-slate-800 px-3 py-1.5 rounded-full">
-                    <i data-lucide="hard-drive" class="w-3.5 h-3.5 text-indigo-400"></i>
-                    <span id="text-ram">RAM: &lt; 150 MB</span>
+                <!-- Live Telemetry Badges -->
+                <div class="hidden lg:flex items-center gap-2 font-medium text-xs">
+                    <div id="badge-ollama" class="flex items-center gap-1.5 bg-emerald-950/60 dark:bg-emerald-950/60 text-emerald-400 border border-emerald-800/60 px-3 py-1.5 rounded-full shadow-sm">
+                        <span id="dot-ollama" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span id="text-ollama">Ollama Online (qwen3:14b)</span>
+                    </div>
+                    <div class="flex items-center gap-1 bg-slate-900 dark:bg-slate-900 text-slate-300 dark:text-slate-300 border border-slate-800 px-3 py-1.5 rounded-full">
+                        <i data-lucide="cpu" class="w-3.5 h-3.5 text-sky-400"></i>
+                        <span>FastMCP: ~300 tokens</span>
+                    </div>
+                    <div class="flex items-center gap-1 bg-slate-900 dark:bg-slate-900 text-slate-300 dark:text-slate-300 border border-slate-800 px-3 py-1.5 rounded-full">
+                        <i data-lucide="hard-drive" class="w-3.5 h-3.5 text-indigo-400"></i>
+                        <span id="text-ram">RAM: &lt; 150 MB</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -223,7 +262,7 @@
         <section id="view-kanban" class="space-y-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <h2 class="text-xl font-bold text-slate-100 dark:text-slate-100 flex items-center gap-2">
+                    <h2 class="text-xl font-bold flex items-center gap-2">
                         Project Backlog & SDD Lifecycle
                         <span class="w-2 h-2 rounded-full bg-sky-400 animate-ping"></span>
                     </h2>
@@ -233,7 +272,7 @@
                     <button onclick="openCreateModal()" class="px-3.5 py-2 text-xs font-semibold bg-gradient-to-r from-sky-500 via-indigo-500 to-pink-500 hover:from-sky-400 hover:to-pink-400 text-white rounded-xl flex items-center gap-1.5 shadow-lg shadow-sky-500/20 transition">
                         <i data-lucide="plus" class="w-4 h-4"></i> + Nueva Tarea
                     </button>
-                    <button onclick="loadBoard()" class="px-3 py-2 text-xs font-medium bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl text-slate-300 flex items-center gap-2 transition">
+                    <button onclick="loadBoard()" class="px-3 py-2 text-xs font-medium bg-slate-900 dark:bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl text-slate-300 flex items-center gap-2 transition">
                         <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Actualizar
                     </button>
                 </div>
@@ -243,7 +282,7 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <!-- Column 1: Backlog -->
                 <div class="glass-panel p-4 rounded-2xl flex flex-col gap-3" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'Backlog')">
-                    <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+                    <div class="flex items-center justify-between pb-2 border-b border-slate-800 dark:border-slate-800">
                         <div class="flex items-center gap-2 font-semibold text-xs text-slate-400 uppercase tracking-wider">
                             <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span> Backlog
                         </div>
@@ -254,7 +293,7 @@
 
                 <!-- Column 2: In Progress -->
                 <div class="glass-panel p-4 rounded-2xl flex flex-col gap-3" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'In Progress')">
-                    <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+                    <div class="flex items-center justify-between pb-2 border-b border-slate-800 dark:border-slate-800">
                         <div class="flex items-center gap-2 font-semibold text-xs text-sky-400 uppercase tracking-wider">
                             <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span> In Progress
                         </div>
@@ -265,7 +304,7 @@
 
                 <!-- Column 3: Verification -->
                 <div class="glass-panel p-4 rounded-2xl flex flex-col gap-3" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'Verification')">
-                    <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+                    <div class="flex items-center justify-between pb-2 border-b border-slate-800 dark:border-slate-800">
                         <div class="flex items-center gap-2 font-semibold text-xs text-amber-400 uppercase tracking-wider">
                             <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Verification (QA)
                         </div>
@@ -276,7 +315,7 @@
 
                 <!-- Column 4: Done -->
                 <div class="glass-panel p-4 rounded-2xl flex flex-col gap-3" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'Done')">
-                    <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+                    <div class="flex items-center justify-between pb-2 border-b border-slate-800 dark:border-slate-800">
                         <div class="flex items-center gap-2 font-semibold text-xs text-emerald-400 uppercase tracking-wider">
                             <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span> Done / Archived
                         </div>
@@ -290,11 +329,11 @@
         <!-- VIEW 2: GANTT TIMELINE CHART -->
         <section id="view-gantt" class="space-y-6 hidden">
             <div>
-                <h2 class="text-xl font-bold text-slate-100">Project Gantt Timeline</h2>
+                <h2 class="text-xl font-bold">Project Gantt Timeline</h2>
                 <p class="text-sm text-slate-400">Automated task start dates, completion milestones & release tags</p>
             </div>
             <div class="glass-panel p-6 rounded-2xl space-y-4">
-                <div id="gantt-container" class="space-y-4 divide-y divide-slate-800/60">
+                <div id="gantt-container" class="space-y-4 divide-y divide-slate-800/60 dark:divide-slate-800/60">
                     <p class="text-xs text-slate-400">Cargando datos del cronograma...</p>
                 </div>
             </div>
@@ -303,7 +342,7 @@
         <!-- VIEW 3: LOCAL RAG CHAT WITH 3D ORB LOADER -->
         <section id="view-chat" class="space-y-6 hidden">
             <div>
-                <h2 class="text-xl font-bold text-slate-100">Local RAG Project Assistant</h2>
+                <h2 class="text-xl font-bold">Local RAG Project Assistant</h2>
                 <p class="text-sm text-slate-400">Query project context, task history & specs via local GPU Ollama ($0 cost)</p>
             </div>
 
@@ -313,14 +352,14 @@
                         <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold shrink-0 shadow">
                             <i data-lucide="bot" class="w-4 h-4"></i>
                         </div>
-                        <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800 max-w-2xl text-sm leading-relaxed">
+                        <div class="bg-slate-900/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-800 max-w-2xl text-sm leading-relaxed">
                             ¡Hola! Soy tu asistente RAG local de <strong>Agilent Native Suite</strong>. Puedo responder preguntas sobre el avance de tus tareas, resultados de pruebas, fechas y arquitectura de tu proyecto sin consumir un solo token de pago. ¿En qué te puedo ayudar hoy?
                         </div>
                     </div>
                 </div>
 
-                <div class="p-4 bg-slate-950/90 border-t border-slate-800 flex items-center gap-3">
-                    <input type="text" id="chat-input" placeholder="Haz una pregunta sobre el estado del proyecto..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-sky-500 text-slate-100" onkeydown="if(event.key === 'Enter') sendChatMessage()">
+                <div class="p-4 bg-slate-950/90 dark:bg-slate-950/90 border-t border-slate-800 flex items-center gap-3">
+                    <input type="text" id="chat-input" placeholder="Haz una pregunta sobre el estado del proyecto..." class="input-box flex-1 bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-sky-500 text-slate-100" onkeydown="if(event.key === 'Enter') sendChatMessage()">
                     <button onclick="sendChatMessage()" class="px-5 py-3 bg-gradient-to-r from-sky-500 via-indigo-500 to-pink-500 hover:from-sky-400 hover:to-pink-400 text-white rounded-xl text-sm font-semibold flex items-center gap-2 shadow-lg shadow-sky-500/20 transition">
                         <span>Enviar</span> <i data-lucide="send" class="w-4 h-4"></i>
                     </button>
@@ -332,15 +371,15 @@
 
     <!-- MODAL 1: TASK DETAILS VIEW -->
     <div id="modal-task-detail" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
-        <div class="glass-panel bg-slate-900/95 border border-slate-700 max-w-2xl w-full rounded-2xl p-6 space-y-5 shadow-2xl relative border-beam-active">
+        <div class="modal-box glass-panel bg-slate-900/95 border border-slate-700 max-w-2xl w-full rounded-2xl p-6 space-y-5 shadow-2xl relative border-beam-active">
             <button onclick="closeDetailModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 transition">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
             <div class="space-y-1">
                 <span id="detail-stage" class="text-xs px-2.5 py-1 rounded-full font-semibold uppercase bg-sky-950 text-sky-400 border border-sky-800">Stage</span>
-                <h3 id="detail-title" class="text-xl font-bold text-slate-100 pt-2">Task Title</h3>
+                <h3 id="detail-title" class="text-xl font-bold pt-2">Task Title</h3>
             </div>
-            <div class="flex items-center gap-3 border-y border-slate-800/80 py-3 text-xs text-slate-300">
+            <div class="flex items-center gap-3 border-y border-slate-800/80 dark:border-slate-800/80 py-3 text-xs text-slate-300">
                 <span id="detail-start">📅 Start: N/A</span>
                 <span>➔</span>
                 <span id="detail-target">🏁 Target: N/A</span>
@@ -348,7 +387,7 @@
             </div>
             <div class="space-y-2">
                 <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Descripción del Trabajo</h4>
-                <div id="detail-description" class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-sm text-slate-200 leading-relaxed overflow-y-auto max-h-60"></div>
+                <div id="detail-description" class="input-box bg-slate-950 p-4 rounded-xl border border-slate-800 text-sm leading-relaxed overflow-y-auto max-h-60"></div>
             </div>
             <div class="flex justify-end">
                 <button onclick="closeDetailModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-xs font-medium text-slate-200">Cerrar Detalle</button>
@@ -358,22 +397,22 @@
 
     <!-- MODAL 2: MANUAL TASK CREATION -->
     <div id="modal-create-task" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
-        <div class="glass-panel bg-slate-900/95 border border-slate-700 max-w-lg w-full rounded-2xl p-6 space-y-4 shadow-2xl relative border-beam-active">
+        <div class="modal-box glass-panel bg-slate-900/95 border border-slate-700 max-w-lg w-full rounded-2xl p-6 space-y-4 shadow-2xl relative border-beam-active">
             <button onclick="closeCreateModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 transition">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
-            <h3 class="text-lg font-bold text-slate-100 flex items-center gap-2">
+            <h3 class="text-lg font-bold flex items-center gap-2">
                 <i data-lucide="plus-circle" class="w-5 h-5 text-sky-400"></i> Agregar Nueva Tarea
             </h3>
             <div class="space-y-3 text-xs">
                 <div>
-                    <label class="block font-semibold text-slate-300 mb-1">Título de la Tarea</label>
-                    <input type="text" id="create-title" placeholder="Ej: Implementar Autenticación OAuth2" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-sky-500">
+                    <label class="block font-semibold mb-1">Título de la Tarea</label>
+                    <input type="text" id="create-title" placeholder="Ej: Implementar Autenticación OAuth2" class="input-box w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-sky-500">
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Etapa Inicial</label>
-                        <select id="create-state" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none">
+                        <label class="block font-semibold mb-1">Etapa Inicial</label>
+                        <select id="create-state" class="input-box w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none">
                             <option value="Backlog">Backlog</option>
                             <option value="In Progress">In Progress</option>
                             <option value="Verification">Verification</option>
@@ -381,23 +420,23 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Release Tag (Opcional)</label>
-                        <input type="text" id="create-release" placeholder="v1.1.0" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none">
+                        <label class="block font-semibold mb-1">Release Tag (Opcional)</label>
+                        <input type="text" id="create-release" placeholder="v1.1.0" class="input-box w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none">
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Fecha Inicio</label>
-                        <input type="date" id="create-start" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none">
+                        <label class="block font-semibold mb-1">Fecha Inicio</label>
+                        <input type="date" id="create-start" class="input-box w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none">
                     </div>
                     <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Fecha Término</label>
-                        <input type="date" id="create-target" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none">
+                        <label class="block font-semibold mb-1">Fecha Término</label>
+                        <input type="date" id="create-target" class="input-box w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none">
                     </div>
                 </div>
                 <div>
-                    <label class="block font-semibold text-slate-300 mb-1">Descripción / Objetivos</label>
-                    <textarea id="create-description" rows="3" placeholder="Detalles de la implementación..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none"></textarea>
+                    <label class="block font-semibold mb-1">Descripción / Objetivos</label>
+                    <textarea id="create-description" rows="3" placeholder="Detalles de la implementación..." class="input-box w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none"></textarea>
                 </div>
             </div>
             <div class="flex justify-end gap-2 pt-2">
@@ -414,7 +453,28 @@
         let boardStateData = {};
         let boardStateHash = "";
 
-        // DARK MODE TOGGLE CONTROLLER
+        // SKELETON LOADERS CONTROLLER
+        function renderKanbanSkeletons() {
+            ['backlog', 'in-progress', 'verification', 'done'].forEach(col => {
+                const container = document.getElementById(`col-${col}`);
+                if (!container) return;
+                container.innerHTML = `
+                    <div class="card-item skeleton p-4 rounded-xl h-28 space-y-2 opacity-60"></div>
+                    <div class="card-item skeleton p-4 rounded-xl h-24 space-y-2 opacity-40"></div>
+                `;
+            });
+        }
+
+        function renderGanttSkeletons() {
+            const container = document.getElementById('gantt-container');
+            if (!container) return;
+            container.innerHTML = `
+                <div class="skeleton p-4 rounded-xl h-16 w-full opacity-60"></div>
+                <div class="skeleton p-4 rounded-xl h-16 w-full opacity-40"></div>
+            `;
+        }
+
+        // COMPREHENSIVE DARK MODE TOGGLE CONTROLLER
         function toggleDarkMode() {
             const html = document.getElementById('html-root');
             const icon = document.getElementById('icon-dark');
@@ -423,23 +483,19 @@
             if (isDark) {
                 html.classList.remove('dark');
                 localStorage.setItem('agilent_mode', 'light');
-                icon.setAttribute('data-lucide', 'sun');
-                icon.className = "w-4 h-4 text-amber-400";
+                if (icon) {
+                    icon.setAttribute('data-lucide', 'sun');
+                    icon.className = "w-4 h-4 text-amber-500";
+                }
             } else {
                 html.classList.add('dark');
                 localStorage.setItem('agilent_mode', 'dark');
-                icon.setAttribute('data-lucide', 'moon');
-                icon.className = "w-4 h-4 text-sky-400";
+                if (icon) {
+                    icon.setAttribute('data-lucide', 'moon');
+                    icon.className = "w-4 h-4 text-sky-400";
+                }
             }
             lucide.createIcons();
-        }
-
-        // 2026 TREND COLOR PALETTE SWITCHER
-        function changeTheme(themeClass) {
-            const body = document.getElementById('body-root');
-            body.className = body.className.replace(/theme-\w+/g, '').trim() + " " + themeClass;
-            localStorage.setItem('agilent_theme', themeClass);
-            triggerDynamicIsland("🎨 Tema Actualizado", `Paleta aplicada: ${themeClass.replace('theme-', '')}`, "palette");
         }
 
         function loadSavedPreferences() {
@@ -451,14 +507,10 @@
                 html.classList.remove('dark');
                 if (icon) {
                     icon.setAttribute('data-lucide', 'sun');
-                    icon.className = "w-4 h-4 text-amber-400";
+                    icon.className = "w-4 h-4 text-amber-500";
                 }
-            }
-
-            const savedTheme = localStorage.getItem('agilent_theme');
-            if (savedTheme) {
-                const body = document.getElementById('body-root');
-                body.className = body.className.replace(/theme-\w+/g, '').trim() + " " + savedTheme;
+            } else {
+                html.classList.add('dark');
             }
         }
 
@@ -485,7 +537,7 @@
             ['kanban', 'gantt', 'chat'].forEach(t => {
                 document.getElementById(`view-${t}`).classList.add('hidden');
                 const btn = document.getElementById(`tab-${t}`);
-                btn.className = "px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50";
+                btn.className = "px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center gap-2 nav-btn-inactive text-slate-400 hover:text-slate-200 hover:bg-slate-800/50";
             });
 
             document.getElementById(`view-${tabName}`).classList.remove('hidden');
@@ -498,6 +550,10 @@
         }
 
         async function loadBoard(silent = false) {
+            if (!silent && Object.keys(boardStateData).length === 0) {
+                renderKanbanSkeletons();
+            }
+
             try {
                 const res = await fetch(`${API_BASE}/projects/${PROJECT_SLUG}/board`);
                 const data = await res.json();
@@ -532,19 +588,19 @@
 
                     items.forEach(item => {
                         const card = document.createElement('div');
-                        card.className = "bg-slate-900/90 dark:bg-slate-900/90 border border-slate-800 p-4 rounded-xl space-y-3 hover:border-sky-500/50 transition shadow-sm cursor-grab active:cursor-grabbing hover:scale-[1.01] transition-all";
+                        card.className = "card-item bg-slate-900/90 dark:bg-slate-900/90 border border-slate-800 p-4 rounded-xl space-y-3 hover:border-sky-500/50 transition shadow-sm cursor-grab active:cursor-grabbing hover:scale-[1.01] transition-all";
                         card.setAttribute('draggable', 'true');
                         card.setAttribute('ondragstart', `handleDragStart(event, '${item.id}')`);
                         card.setAttribute('ondblclick', `openDetailModal('${item.id}')`);
                         
                         card.innerHTML = `
                             <div class="flex items-start justify-between gap-2">
-                                <h4 class="font-bold text-sm text-slate-100 flex-1 leading-snug">${item.title}</h4>
+                                <h4 class="font-bold text-sm leading-snug">${item.title}</h4>
                                 <button onclick="openDetailModal('${item.id}')" title="Ver Detalle" class="p-1 text-slate-400 hover:text-sky-400 rounded-lg hover:bg-slate-800 transition shrink-0">
                                     <i data-lucide="eye" class="w-4 h-4"></i>
                                 </button>
                             </div>
-                            <div class="text-xs text-slate-300 leading-relaxed border-t border-slate-800/80 pt-2 line-clamp-2">
+                            <div class="card-desc text-xs text-slate-300 leading-relaxed border-t border-slate-800/80 pt-2 line-clamp-2">
                                 ${item.description_html || '<p class="text-slate-500 italic">No details available</p>'}
                             </div>
                             ${item.test_status ? `<div class="text-[11px] font-semibold text-emerald-400 bg-emerald-950/60 px-2.5 py-1 rounded-md border border-emerald-800/50 flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-3 h-3"></i> ${item.test_status}</div>` : ''}
@@ -652,6 +708,7 @@
         }
 
         async function loadGantt() {
+            renderGanttSkeletons();
             try {
                 const res = await fetch(`${API_BASE}/projects/${PROJECT_SLUG}/gantt`);
                 const data = await res.json();
@@ -666,13 +723,13 @@
 
                 items.forEach(item => {
                     const row = document.createElement('div');
-                    row.className = "pt-4 flex flex-col md:flex-row md:items-center justify-between gap-4";
+                    row.className = "gantt-row pt-4 flex flex-col md:flex-row md:items-center justify-between gap-4";
                     row.innerHTML = `
                         <div class="space-y-1">
-                            <h4 class="font-bold text-sm text-slate-200">${item.title}</h4>
-                            <p class="text-xs text-slate-400">Status: <span class="text-sky-400 font-semibold">${item.state}</span> ${item.release_tag ? `| Release: <code class="text-indigo-300">${item.release_tag}</code>` : ''}</p>
+                            <h4 class="font-bold text-sm">${item.title}</h4>
+                            <p class="text-xs text-slate-400">Status: <span class="text-sky-400 font-semibold">${item.state}</span> ${item.release_tag ? `| Release: <code class="text-indigo-400 font-semibold">${item.release_tag}</code>` : ''}</p>
                         </div>
-                        <div class="flex items-center gap-3 bg-slate-900 px-4 py-2 rounded-xl border border-slate-800 text-xs text-slate-300 font-medium">
+                        <div class="flex items-center gap-3 bg-slate-900 dark:bg-slate-900 px-4 py-2 rounded-xl border border-slate-800 text-xs text-slate-300 font-medium">
                             <span>📅 Start: <strong>${item.start_date || 'N/A'}</strong></span>
                             <span>➔</span>
                             <span>🏁 End: <strong>${item.target_date || 'N/A'}</strong></span>
@@ -732,7 +789,7 @@
                         <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold shrink-0 shadow">
                             <i data-lucide="bot" class="w-4 h-4"></i>
                         </div>
-                        <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800 max-w-2xl text-sm leading-relaxed text-slate-200 shadow-md">
+                        <div class="bg-slate-900/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-800 max-w-2xl text-sm leading-relaxed shadow-md">
                             ${data.answer.replace(/\n/g, '<br/>')}
                         </div>
                     </div>
@@ -762,11 +819,11 @@
                 }
 
                 if (o.online) {
-                    badge.className = "flex items-center gap-1.5 bg-emerald-950/60 text-emerald-400 border border-emerald-800/60 px-3 py-1.5 rounded-full shadow-sm";
+                    badge.className = "flex items-center gap-1.5 bg-emerald-950/60 dark:bg-emerald-950/60 text-emerald-400 border border-emerald-800/60 px-3 py-1.5 rounded-full shadow-sm";
                     dot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse";
                     txt.innerText = o.status_label || `Ollama Online (${o.model || 'qwen3:14b'})`;
                 } else {
-                    badge.className = "flex items-center gap-1.5 bg-amber-950/60 text-amber-400 border border-amber-800/60 px-3 py-1.5 rounded-full shadow-sm";
+                    badge.className = "flex items-center gap-1.5 bg-amber-950/60 dark:bg-amber-950/60 text-amber-400 border border-amber-800/60 px-3 py-1.5 rounded-full shadow-sm";
                     dot.className = "w-2 h-2 rounded-full bg-amber-400";
                     txt.innerText = "Ollama Offline (Modo Resumen)";
                 }
