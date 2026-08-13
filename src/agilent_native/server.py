@@ -455,6 +455,10 @@ def create_manual_work_item(req: CreateTaskRequest):
     updates = {"priority": computed_priority}
     if req.state:
         updates["state"] = req.state
+    if req.category:
+        updates["category"] = req.category
+    if req.assignee:
+        updates["assignee"] = req.assignee
     if req.start_date:
         updates["start_date"] = req.start_date
     if req.target_date:

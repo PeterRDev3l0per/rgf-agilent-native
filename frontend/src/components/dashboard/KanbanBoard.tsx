@@ -293,14 +293,14 @@ const KanbanBoard = ({
   }) => {
     const createdTask = await createTask(taskData);
     
-    if (currentProject?.id && taskData.assigneeIds.length > 0 && createdTask && createNotification) {
+    if (currentProject?.id && createNotification) {
       await createNotification(
         currentProject.id,
-        taskData.assigneeIds,
+        taskData.assigneeIds || [],
         "task_created",
-        "New task assigned",
-        `You have been assigned to "${taskData.title}"`,
-        createdTask.id
+        "Nueva Tarea Creada 📋",
+        `Se creó "${taskData.title}" en la columna ${taskData.status}`,
+        createdTask?.id || ""
       );
     }
   };
@@ -321,8 +321,20 @@ const KanbanBoard = ({
     updateTask(taskId, updates);
   };
 
-  const handleDeleteTask = (taskId: string) => {
+  const handleDeleteTask = async (taskId: string) => {
+    const targetTask = tasks.find((t) => t.id === taskId);
+    const taskTitle = targetTask?.title || "Tarea";
     deleteTask(taskId);
+    if (currentProject?.id && createNotification) {
+      await createNotification(
+        currentProject.id,
+        [],
+        "task_deleted",
+        "Tarea Eliminada 🗑️",
+        `"${taskTitle}" fue eliminada del tablero`,
+        taskId
+      );
+    }
   };
 
   if (projectLoading || tasksLoading) {
