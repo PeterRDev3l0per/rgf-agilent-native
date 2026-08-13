@@ -192,9 +192,6 @@ const KanbanBoard = ({
     originalStatusRef.current = null;
     setOriginalStatus(null);
 
-    // Block if preview mode
-    if (guardMutation?.()) return;
-
     // Safety checks
     if (!over) return;
     const activeId = String(active.id);

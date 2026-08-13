@@ -78,7 +78,7 @@ export const useTasks = (
 
   const fetchTasks = useCallback(async () => {
     if (!projectId) {
-      setTasks(DEFAULT_TASKS);
+      setTasks([]);
       setLoading(false);
       return;
     }
@@ -115,17 +115,15 @@ export const useTasks = (
           });
         });
 
-        if (apiTasks.length > 0) {
-          setTasks(apiTasks);
-          setLoading(false);
-          return;
-        }
+        setTasks(apiTasks);
+        setLoading(false);
+        return;
       }
     } catch (e) {
-      console.warn("Fetch tasks API failed, using fallback:", e);
+      console.warn("Fetch tasks API failed:", e);
     }
 
-    setTasks(DEFAULT_TASKS);
+    setTasks([]);
     setLoading(false);
   }, [projectId]);
 
