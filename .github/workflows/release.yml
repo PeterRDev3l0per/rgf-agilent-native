@@ -1,0 +1,81 @@
+name: Release & Publish Version
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version Tag (e.g. v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release:
+    name: Build, Verify & Publish GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Frontend Dependencies & Build Bundle
+        run: |
+          cd frontend
+          npm ci || npm install
+          npm run build
+          cd ..
+
+      - name: Install Python Package & Build Tools
+        run: |
+          python -m pip install --upgrade pip build setuptools wheel
+          pip install -e .[dev]
+
+      - name: Run Code Quality Checks (Ruff & Pytest)
+        run: |
+          ruff check src/ tests/
+          pytest --tb=short -v
+
+      - name: Build Python Distribution (Wheel & Source Tarball)
+        run: |
+          python -m build
+
+      - name: Determine Version Tag
+        id: vars
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "TAG_NAME=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+          else
+            echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          name: Agilent Native Suite ${{ env.TAG_NAME }}
+          body_path: RELEASE_NOTES.md
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

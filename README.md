@@ -1,96 +1,95 @@
-# Agilent Native Suite (`rgf-agilent-native`) 🚀
+# Agilent Native Suite ⚡
 
-> **Ultra-Lightweight Self-Hosted Visual Kanban, Gantt Timeline & Local RAG Chat Application for AI Coding Agents**
-
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
-[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-green.svg)](https://fastapi.tiangolo.com/)
-[![FastMCP](https://img.shields.io/badge/MCP-FastMCP-green.svg)](https://github.com/jlowin/fastmcp)
-[![SQLite](https://img.shields.io/badge/Database-SQLite-blue.svg)](https://www.sqlite.org/)
-[![Ollama](https://img.shields.io/badge/Local--LLM-Ollama--qwen3:14b-orange.svg)](https://ollama.com/)
-
-[![CI/CD Pipeline](https://github.com/PeterRDev3l0per/rgf-agilent-native/actions/workflows/ci.yml/badge.svg)](https://github.com/PeterRDev3l0per/rgf-agilent-native/actions)
+[![CI/CD Pipeline](https://github.com/PeterRDev3l0per/rgf-agilent-native/actions/workflows/ci.yml/badge.svg)](https://github.com/PeterRDev3l0per/rgf-agilent-native/actions/workflows/ci.yml)
+[![Release & Publish Version](https://github.com/PeterRDev3l0per/rgf-agilent-native/actions/workflows/release.yml/badge.svg)](https://github.com/PeterRDev3l0per/rgf-agilent-native/actions/workflows/release.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](pyproject.toml)
+[![React 18](https://img.shields.io/badge/React-18-cyan.svg)](frontend/package.json)
 
-**Agilent Native Suite** is a zero-overhead, self-hosted open-source web application and FastMCP server designed specifically for AI-assisted SDLC development. It replaces heavy third-party software (Plane) with a single-process application consuming **<150 MB RAM** and booting in **<1 second**.
-
----
-
-## 💡 Key Capabilities
-
-- ⚡ **Ultra-Low Token Footprint**: Exposes only 2 MCP tools (`track_event`, `sync_change`), keeping paid LLM prompt overhead at **~300 tokens**.
-- 📋 **Native SDD Kanban Board**: Interactive visual board with native columns (`Backlog`, `In Progress`, `Verification`, `Done`).
-- 📅 **Automatic Gantt Timeline**: Automatically plots task start dates, completion dates, and release milestones on a Gantt timeline chart.
-- 💬 **Built-in Local RAG Project Chat**: Ask questions about your project architecture, specs, and status directly in the UI using local Ollama (`qwen3:14b`) at **$0 paid token cost**.
-- 🗄️ **Embedded SQLite Database**: Single `.db` file for zero-configuration database storage (WAL mode).
-- 🔄 **Continuous Integration (CI/CD)**: Automated GitHub Actions pipeline verifying Python 3.10–3.13 compatibility, Ruff linting, and Pytest coverage on every push.
-- 🛠️ **1-Command CLI & Auto-Recovery**: Includes the `agilent` launcher with automatic retry-recovery health checks.
+**Agilent Native Suite** es una suite de productividad y gestión de proyectos nativa para desarrolladores e ingenieros de IA. Diseñada con una arquitectura **Zero-Paid-Token**, combina un tablero Kanban gráfico, timeline Gantt, un asistente de IA RAG local alimentado por GPU y una puerta de enlace FastMCP integrada directamente con tu IDE preferido.
 
 ---
 
-## 📐 Architecture Overview
+## 🌟 Características Principales
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│ AI Agent / IDE (Antigravity, OpenCode, Cursor, Claude)      │
-│  • Single terse tool call: track_event(event_type, payload) │
-│  • Token Cost: ~200 tokens / event                          │
-└──────────────────────────────┬──────────────────────────────┘
-                               │ (FastMCP JSON Event)
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│ Agilent Native Suite (FastAPI + FastMCP Server)             │
-│  • Embedded SQLite Storage + Local RAG Engine               │
-│  • Micro Process (<150 MB RAM, <1s startup)                 │
-└──────────────┬──────────────────────────────┬───────────────┘
-               │                              │
-               │ (Native Web UI)              │ (Asynchronous Local GPU)
-               ▼                              ▼
-┌──────────────────────────────┐ ┌────────────────────────────┐
-│ Agilent Web App UI           │ │ Ollama Local LLM           │
-│  • Kanban Board & Gantt Chart│ │ (qwen3:14b)                │
-│  • Interactive RAG Chat      │ │ • Card Narrative Generator │
-│                              │ │ • Project RAG QA Chatbot   │
-└──────────────────────────────┘ └────────────────────────────┘
-```
+- **Arquitectura Zero-Paid-Token**: Procesa búsquedas semánticas y resúmenes con GPU Ollama local (`qwen3:14b`) sin enviar datos fuera de tu máquina.
+- **Interfaz Glassmorphic Fluida**: Tablero Kanban, vista Gantt y notificaciones animadas en el Notch superior.
+- **FastMCP Protocol Gateway**: Permite a tu Agente de IA en Cursor, VS Code, Antigravity IDE, PyCharm o Neovim crear y consultar tareas con un consumo mínimo de contexto (~300 tokens).
+- **Inicio Limpio de Producción**: La aplicación y cada nuevo proyecto nacen en **0 proyectos y 0 tareas (`[]`)**, listos para producción.
+- **Asistente RAG Local**: Chat interactivo para consultar el estado del backlog, tarjetas y especificaciones en tiempo real.
 
 ---
 
-## 🚀 Quickstart & Installation
+## 🚀 Quickstart & Instalación Rápida
+
+### Opción 1: Asistente Interactivo de Setup (`agilent setup`)
 
 ```bash
-# 1. Clone the repository
+# 1. Clonar el repositorio
 git clone https://github.com/PeterRDev3l0per/rgf-agilent-native.git
 cd rgf-agilent-native
 
-# 2. Build the React/Vite Lovable Frontend Suite
+# 2. Crear entorno virtual e instalar en modo editable
+python -m venv .venv
+.venv\Scripts\activate  # Windows (o source .venv/bin/activate en Linux/macOS)
+pip install -e .[dev]
+
+# 3. Ejecutar el asistente interactivo de onboarding
+agilent setup
+```
+
+### Opción 2: Instalación Manual
+
+```bash
+# 1. Compilar el frontend React / Vite
 cd frontend
 npm install
 npm run build
 cd ..
 
-# 3. Create virtual environment & install dependencies
-python -m venv .venv
-.venv\Scripts\activate  # Windows (or source .venv/bin/activate on Linux/macOS)
-pip install -e .
-
-# 4. Launch Agilent Native Suite
-agilent
+# 2. Lanzar la aplicación Agilent
+agilent up
 ```
 
-### Run Health Checks
-
-```bash
-.\agilent.cmd status
-```
-
-### Run Pytest Suite
-
-```bash
-.venv/Scripts/pytest
-```
+Navegá a **`http://127.0.0.1:8000/app/`** en tu navegador.
 
 ---
 
-## 📄 Open Source License
+## 🛠️ Integración con IDEs de IA
 
-Distributed under the [MIT License](LICENSE). Open-source software built for the AI developer community.
+`agilent setup` te permite elegir tu entorno de desarrollo preferido:
+
+| IDE | Protocolo de Integración | Configuración |
+|-----|---------------------------|---------------|
+| **Cursor IDE** | FastMCP Server | `.cursor/rules/agilent.md` |
+| **VS Code** | FastMCP Client | `.vscode/settings.json` |
+| **Antigravity IDE (Gemini)** | Custom Skill / Sidecar | `.agents/rules/agilent.md` |
+| **PyCharm / JetBrains** | Tool Integration | `.idea/agilent.xml` |
+| **Neovim / Terminal AI** | Lua Plugin / CLI | `.nvim/agilent.lua` |
+
+---
+
+## 📦 CI/CD & Liberación de Versiones
+
+El repositorio incluye pipelines automatizados en GitHub Actions:
+
+- **CI Build & Test** (`.github/workflows/ci.yml`): Se ejecuta en cada Push y PR probando el código en Python 3.10, 3.11, 3.12 y 3.13.
+- **Release Pipeline** (`.github/workflows/release.yml`): Se activa al publicar una etiqueta de versión Git (ej. `git tag v1.0.0 && git push origin v1.0.0`) o mediante disparo manual en GitHub. Genera automáticamente las notas de versión y adjunta los binarios compilados en [GitHub Releases](https://github.com/PeterRDev3l0per/rgf-agilent-native/releases).
+
+---
+
+## 📑 Documentación Adicional
+
+- [Arquitectura del Sistema](docs/ARCHITECTURE.md)
+- [Modelo Entidad-Relación (ERD)](docs/ER_DIAGRAM.md)
+- [Guía de Referencia CLI](docs/CLI_REFERENCE.md)
+- [Casos de Uso E2E](docs/E2E_USE_CASES.md)
+- [Auditoría de Seguridad OWASP](docs/SECURITY_AUDIT_AND_HARDENING.md)
+- [Notas de Release v1.0.0](RELEASE_NOTES.md)
+- [Historial de Cambios (Changelog)](CHANGELOG.md)
+
+---
+
+## 📄 Licencia
+
+Publicado bajo la licencia [MIT](LICENSE).

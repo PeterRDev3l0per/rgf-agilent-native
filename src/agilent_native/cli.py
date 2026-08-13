@@ -100,10 +100,15 @@ def run_health_check(max_retries: int = 3) -> bool:
 
 def main():
     parser = argparse.ArgumentParser(prog="agilent", description="Agilent Native Suite CLI Launcher")
-    parser.add_argument("command", nargs="?", default="status", choices=["status", "up", "test"])
+    parser.add_argument("command", nargs="?", default="status", choices=["status", "up", "setup", "test"])
+    parser.add_argument("--check-only", action="store_true", help="Run setup check in validation mode without prompts")
     args = parser.parse_args()
 
-    if args.command in ("status", "up"):
+    if args.command == "setup":
+        from scripts.setup import run_setup
+        success = run_setup(check_only=args.check_only)
+        sys.exit(0 if success else 1)
+    elif args.command in ("status", "up"):
         run_health_check(max_retries=3)
     elif args.command == "test":
         print("\n[RUNNING AGILENT TEST SUITE]")
