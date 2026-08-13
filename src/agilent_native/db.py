@@ -238,8 +238,6 @@ class DatabaseManager:
             type="project_created",
             project_id=project_id,
         )
-        if slug == "rgf-agilent-native":
-            self.seed_initial_data(project_id)
         return proj
 
     def create_project(self, name: str) -> Dict[str, Any]:
@@ -278,63 +276,8 @@ class DatabaseManager:
         return proj
 
     def seed_initial_data(self, project_id: str) -> None:
-        """Seed initial SDLC tasks if project has no work items."""
-        items = self.list_work_items(project_id)
-        if items:
-            return
-
-        seed_tasks = [
-            {
-                "title": "Agilent Native Architecture & Spec Setup 🚀",
-                "description_html": "<p>Defined 3-layer architecture, OpenSpec contract, and low-token FastMCP schema.</p>",
-                "state": "Done",
-                "start_date": "2026-08-07",
-                "target_date": "2026-08-08",
-                "release_tag": "v0.1.0-alpha",
-                "test_status": "Passed",
-            },
-            {
-                "title": "FastMCP Gateway & SQLite DB Engine ⚡",
-                "description_html": "<p>Implemented FastMCP server with track_event and sync_change tools and SQLite WAL manager.</p>",
-                "state": "Done",
-                "start_date": "2026-08-08",
-                "target_date": "2026-08-09",
-                "test_status": "6/6 Passed",
-            },
-            {
-                "title": "Visual Kanban Board & Gantt Timeline UI 🎨",
-                "description_html": "<p>Built glassmorphism React/Vite SPA with visual Kanban columns, drag and drop, and Gantt charts.</p>",
-                "state": "In Progress",
-                "start_date": "2026-08-09",
-                "target_date": "2026-08-10",
-                "test_status": "Testing",
-            },
-            {
-                "title": "Interactive Local RAG Chatbot Integration 💬",
-                "description_html": "<p>Integrated GPU Ollama (qwen3:14b) for zero paid token project QA and Spanish summary fallback.</p>",
-                "state": "Verification",
-                "start_date": "2026-08-09",
-                "target_date": "2026-08-10",
-                "test_status": "QA Verification",
-            },
-            {
-                "title": "Playwright Automated E2E Regression Testing 🎭",
-                "description_html": "<p>Automated Chromium browser testing for Kanban, Gantt, and RAG chat workflows.</p>",
-                "state": "Backlog",
-                "start_date": "2026-08-10",
-                "target_date": "2026-08-11",
-            },
-        ]
-
-        for task in seed_tasks:
-            item = self.create_work_item(project_id, task["title"], task["description_html"])
-            self.update_work_item(item["id"], {
-                "state": task["state"],
-                "start_date": task.get("start_date"),
-                "target_date": task.get("target_date"),
-                "release_tag": task.get("release_tag"),
-                "test_status": task.get("test_status"),
-            })
+        """No-op: projects start clean with 0 tasks."""
+        pass
 
     def create_work_item(self, project_id: str, title: str, description_html: str = "") -> Dict[str, Any]:
         """Create new work item in SQLite with sanitized fields."""

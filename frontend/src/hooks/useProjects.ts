@@ -9,18 +9,10 @@ export interface Project {
   created_at: string;
 }
 
-const DEFAULT_NATIVE_PROJECT: Project = {
-  id: "rgf-agilent-native",
-  name: "Agilent Native Suite 🚀",
-  slug: "rgf-agilent-native",
-  status: "active",
-  created_at: new Date().toISOString(),
-};
-
 export const useProjects = () => {
   const { toast } = useToast();
-  const [projects, setProjects] = useState<Project[]>([DEFAULT_NATIVE_PROJECT]);
-  const [currentProject, setCurrentProject] = useState<Project | null>(DEFAULT_NATIVE_PROJECT);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(false);
 
   const fetchProjects = useCallback(async () => {
@@ -43,10 +35,14 @@ export const useProjects = () => {
             localStorage.setItem("agilent_active_project_id", projList[0].id);
           }
           return;
+        } else {
+          setProjects([]);
+          setCurrentProject(null);
+          localStorage.removeItem("agilent_active_project_id");
         }
       }
     } catch (err) {
-      console.warn("API projects fetch failed, using fallback:", err);
+      console.warn("API projects fetch failed:", err);
     } finally {
       setLoading(false);
     }
@@ -72,11 +68,11 @@ export const useProjects = () => {
       const result = await res.json();
       const newProj = result.project;
 
-      await fetchProjects();
-      setCurrentProject(newProj);
       if (newProj?.id) {
         localStorage.setItem("agilent_active_project_id", newProj.id);
       }
+      await fetchProjects();
+      setCurrentProject(newProj);
       return newProj;
     } catch (error: any) {
       console.error("Error creating project:", error);

@@ -101,8 +101,9 @@ export const useTasks = (
   }, [projectId]);
 
   useEffect(() => {
+    setTasks([]);
     fetchTasks();
-  }, [fetchTasks]);
+  }, [projectId, fetchTasks]);
 
   const updateTaskStatus = async (
     taskId: string,

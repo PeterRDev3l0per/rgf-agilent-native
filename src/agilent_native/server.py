@@ -394,10 +394,6 @@ class CreateNotificationRequest(BaseModel):
 @app.get("/api/projects")
 def list_all_projects():
     projects = db.list_projects()
-    if not projects:
-        # Ensure default project exists
-        default_proj = db.get_or_create_project("rgf-agilent-native")
-        projects = [default_proj]
     return {"projects": projects}
 
 
