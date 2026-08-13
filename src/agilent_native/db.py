@@ -238,7 +238,8 @@ class DatabaseManager:
             type="project_created",
             project_id=project_id,
         )
-        self.seed_initial_data(project_id)
+        if slug == "rgf-agilent-native":
+            self.seed_initial_data(project_id)
         return proj
 
     def create_project(self, name: str) -> Dict[str, Any]:

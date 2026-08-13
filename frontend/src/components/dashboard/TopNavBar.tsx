@@ -257,21 +257,33 @@ const TopNavBar = ({
     return () => clearInterval(timer);
   }, []);
 
-  // Dynamic Island gota expansion on new unread notification (5.5s fluid duration)
+  const islandTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Dynamic Island gota expansion on new unread notification (5s fluid duration)
   useEffect(() => {
-    if (notifications.length > 0) {
-      const latest = notifications[0];
-      if (!latest.is_read && latest.id !== lastNotifIdRef.current) {
-        lastNotifIdRef.current = latest.id;
-        setActiveIslandNotif(latest);
-        const timer = setTimeout(() => setActiveIslandNotif(null), 5500);
-        return () => clearTimeout(timer);
-      }
+    if (notifications.length === 0) {
+      if (islandTimerRef.current) clearTimeout(islandTimerRef.current);
+      setActiveIslandNotif(null);
+      lastNotifIdRef.current = null;
+      return;
+    }
+
+    const latest = notifications[0];
+    if (!latest.is_read && latest.id !== lastNotifIdRef.current) {
+      lastNotifIdRef.current = latest.id;
+      setActiveIslandNotif(latest);
+
+      if (islandTimerRef.current) clearTimeout(islandTimerRef.current);
+      islandTimerRef.current = setTimeout(() => {
+        setActiveIslandNotif(null);
+        islandTimerRef.current = null;
+      }, 5000);
     }
   }, [notifications]);
 
   const handleIslandNotifClick = () => {
     onNotificationsOpen();
+    if (islandTimerRef.current) clearTimeout(islandTimerRef.current);
     setActiveIslandNotif(null);
   };
 
