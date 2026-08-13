@@ -194,13 +194,16 @@ class DatabaseManager:
                     pass
 
     def get_or_create_project(self, name: str) -> Dict[str, Any]:
-        """Get or create project by name/slug (used by MCP tools — idempotent)."""
+        """Get or create project by name/slug/id (used by MCP tools — idempotent)."""
+        slug = validate_slug(name.strip()) if name else "nuevo-proyecto"
         clean_name = sanitize_text(name.strip()) if name else "Nuevo Proyecto"
         if not clean_name:
             clean_name = "Nuevo Proyecto"
-        slug = validate_slug(clean_name)
         with self.get_connection() as conn:
-            row = conn.execute("SELECT * FROM projects WHERE slug = ? OR name = ?", (slug, clean_name)).fetchone()
+            row = conn.execute(
+                "SELECT * FROM projects WHERE slug = ? OR LOWER(name) = LOWER(?) OR id = ?", 
+                (slug, clean_name, name.strip())
+            ).fetchone()
             if row:
                 return dict(row)
 
@@ -212,6 +215,9 @@ class DatabaseManager:
                     (project_id, clean_name, slug, now),
                 )
             except sqlite3.IntegrityError:
+                row = conn.execute("SELECT * FROM projects WHERE slug = ? OR LOWER(name) = LOWER(?)", (slug, clean_name)).fetchone()
+                if row:
+                    return dict(row)
                 unique_suffix = uuid.uuid4().hex[:4]
                 slug = f"{slug}-{unique_suffix}"
                 clean_name = f"{clean_name} ({unique_suffix})"

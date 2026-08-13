@@ -59,3 +59,34 @@ def test_add_comment(temp_db):
     comment = temp_db.add_comment(item["id"], "<p>DONE in_progress</p>")
     assert comment["work_item_id"] == item["id"]
     assert "DONE in_progress" in comment["content_html"]
+
+
+def test_agent_idempotency_multiple_calls(temp_db):
+    """Case 1: Agent sends multiple calls for the same project — must reuse exact project ID."""
+    p1 = temp_db.get_or_create_project("opencode-agent-project")
+    p2 = temp_db.get_or_create_project("opencode-agent-project")
+    p3 = temp_db.get_or_create_project("opencode-agent-project")
+
+    assert p1["id"] == p2["id"] == p3["id"]
+    projects = temp_db.list_projects()
+    assert len(projects) == 1
+    assert projects[0]["slug"] == "opencode-agent-project"
+
+
+def test_manual_project_creation_then_agent_task_routing(temp_db):
+    """Case 2: Manual project created first from UI — agent task must route to exact same project."""
+    manual_proj = temp_db.create_project("Proyecto Manual Cliente")
+    assert manual_proj["id"] is not None
+
+    # Agent sends first task targeting the manually created project by name or slug
+    agent_resolved_proj = temp_db.get_or_create_project("Proyecto Manual Cliente")
+    assert agent_resolved_proj["id"] == manual_proj["id"]
+
+    # Agent creates task in backlog
+    task = temp_db.create_work_item(agent_resolved_proj["id"], "Task 1 from Agent", "<p>Backlog task</p>")
+    assert task["project_id"] == manual_proj["id"]
+
+    # Verify project count stays at 1
+    projects = temp_db.list_projects()
+    assert len(projects) == 1
+
