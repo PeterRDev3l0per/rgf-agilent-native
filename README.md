@@ -58,10 +58,23 @@
 ## 🚀 Quickstart & Installation
 
 ```bash
+# 1. Clone the repository
 git clone https://github.com/PeterRDev3l0per/rgf-agilent-native.git
 cd rgf-agilent-native
+
+# 2. Build the React/Vite Lovable Frontend Suite
+cd frontend
+npm install
+npm run build
+cd ..
+
+# 3. Create virtual environment & install dependencies
 python -m venv .venv
-.venv/Scripts/pip install -e .[dev]
+.venv\Scripts\activate  # Windows (or source .venv/bin/activate on Linux/macOS)
+pip install -e .
+
+# 4. Launch Agilent Native Suite
+agilent
 ```
 
 ### Run Health Checks
