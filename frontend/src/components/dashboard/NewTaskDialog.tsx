@@ -8,6 +8,7 @@ import { Calendar } from "@/components/ui/calendar";
 import RichTextEditor, { RichTextEditorRef } from "@/components/editor/RichTextEditor";
 import { useProjectTags } from "@/hooks/useProjectTags";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getHomologatedTag } from "@/utils/tagColors";
 import { ChevronRight, CornerDownLeft, Circle, ChevronDown, Tag, Users, Eye, Plus, CalendarIcon, AlertCircle, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -63,7 +64,7 @@ const getPrioritySemaphoreStyle = (priority: string) => {
 };
 
 const NewTaskDialog = ({ open, onOpenChange, onSubmit, defaultStatus = "todo", project }: NewTaskDialogProps) => {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const [title, setTitle] = useState("");
   const [titleError, setTitleError] = useState(false);
   const [description, setDescription] = useState("");
@@ -429,52 +430,31 @@ const NewTaskDialog = ({ open, onOpenChange, onSubmit, defaultStatus = "todo", p
 
                 {/* Tags list */}
                 <div className="space-y-1 max-h-48 overflow-y-auto">
-                  {tags.map((tag) => (
-                    <div
-                      key={tag.id}
-                      className="flex items-center gap-2 px-1 py-1.5 rounded-md hover:bg-accent/10 transition-colors"
-                    >
-                      <Checkbox
-                        checked={selectedTagIds.includes(tag.id)}
-                        onCheckedChange={() => toggleTag(tag.id)}
-                      />
-                      {/* Color dot with picker */}
-                      <Popover open={editingTagId === tag.id} onOpenChange={(open) => setEditingTagId(open ? tag.id : null)}>
-                        <PopoverTrigger asChild>
-                          <button
-                            type="button"
-                            className="w-3 h-3 rounded-full shrink-0 hover:ring-2 ring-offset-1 ring-offset-background ring-foreground/20 transition-all"
-                            style={{ backgroundColor: tag.color }}
-                          />
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-2" align="start">
-                          <div className="grid grid-cols-4 gap-1">
-                            {colorPresets.map((color) => (
-                              <button
-                                key={color}
-                                type="button"
-                                onClick={() => {
-                                  updateTagColor(tag.id, color);
-                                  setEditingTagId(null);
-                                }}
-                                className={cn(
-                                  "w-6 h-6 rounded-full hover:scale-110 transition-transform",
-                                  tag.color === color && "ring-2 ring-offset-1 ring-foreground"
-                                )}
-                                style={{ backgroundColor: color }}
-                              />
-                            ))}
-                          </div>
-                        </PopoverContent>
-                      </Popover>
-                      <span
-                        className="text-sm cursor-pointer flex-1"
-                        onClick={() => toggleTag(tag.id)}
+                  {tags.map((tag) => {
+                    const hTag = getHomologatedTag(tag.name, language);
+                    return (
+                      <div
+                        key={tag.id}
+                        className="flex items-center gap-2 px-1 py-1.5 rounded-md hover:bg-accent/10 transition-colors"
                       >
-                        {tag.name}
-                      </span>
-                    </div>
-                  ))}
+                        <Checkbox
+                          checked={selectedTagIds.includes(tag.id)}
+                          onCheckedChange={() => toggleTag(tag.id)}
+                        />
+                        <div
+                          className="w-3 h-3 rounded-full shrink-0 border"
+                          style={{ backgroundColor: hTag.bgColor, borderColor: hTag.borderColor }}
+                        />
+                        <span
+                          className="text-sm cursor-pointer flex-1"
+                          style={{ color: hTag.textColor }}
+                          onClick={() => toggleTag(tag.id)}
+                        >
+                          {hTag.name}
+                        </span>
+                      </div>
+                    );
+                  })}
                   {tags.length === 0 && (
                     <div className="text-sm text-muted-foreground py-2">No tags yet. Create one above.</div>
                   )}

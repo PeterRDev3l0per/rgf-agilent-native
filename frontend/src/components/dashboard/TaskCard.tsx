@@ -52,59 +52,7 @@ const getInitials = (name: string): string => {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 };
 
-const formatTagDisplay = (rawName: string, userLang: string = "es") => {
-  const clean = (rawName || "").replace(/^tag-/, "").trim();
-  const lower = clean.toLowerCase();
-
-  if (lower === "core" || lower === "núcleo") {
-    return {
-      name: userLang === "es" ? "Core" : "Core",
-      bgColor: "rgba(168, 85, 247, 0.15)",
-      textColor: "#c084fc",
-      borderColor: "rgba(168, 85, 247, 0.3)",
-    };
-  }
-  if (lower === "database" || lower === "bd" || lower === "base de datos") {
-    return {
-      name: userLang === "es" ? "Base de Datos" : "Database",
-      bgColor: "rgba(16, 185, 129, 0.15)",
-      textColor: "#34d399",
-      borderColor: "rgba(16, 185, 129, 0.3)",
-    };
-  }
-  if (lower === "backend" || lower === "servidor" || lower === "api") {
-    return {
-      name: userLang === "es" ? "Servidor API" : "Backend",
-      bgColor: "rgba(6, 182, 212, 0.15)",
-      textColor: "#22d3ee",
-      borderColor: "rgba(6, 182, 212, 0.3)",
-    };
-  }
-  if (lower === "frontend" || lower === "ui" || lower === "ux") {
-    return {
-      name: userLang === "es" ? "Interfaz UI" : "Frontend",
-      bgColor: "rgba(236, 72, 153, 0.15)",
-      textColor: "#f472b6",
-      borderColor: "rgba(236, 72, 153, 0.3)",
-    };
-  }
-  if (lower === "funcionalidad" || lower === "feature") {
-    return {
-      name: userLang === "es" ? "Funcionalidad" : "Feature",
-      bgColor: "rgba(2, 132, 199, 0.15)",
-      textColor: "#38bdf8",
-      borderColor: "rgba(2, 132, 199, 0.3)",
-    };
-  }
-
-  const capitalized = clean ? clean.charAt(0).toUpperCase() + clean.slice(1) : "Tag";
-  return {
-    name: capitalized,
-    bgColor: "rgba(59, 130, 246, 0.15)",
-    textColor: "#60a5fa",
-    borderColor: "rgba(59, 130, 246, 0.3)",
-  };
-};
+import { getHomologatedTag } from "@/utils/tagColors";
 
 const TaskCard = ({ task, isDragOverlay = false }: TaskCardProps) => {
   const { language } = useLanguage();
@@ -151,7 +99,7 @@ const TaskCard = ({ task, isDragOverlay = false }: TaskCardProps) => {
         {/* Tags - with clean names, dynamic colors, glassmorphism */}
         <div className="flex flex-wrap gap-1.5">
           {task.tags.map((tag, index) => {
-            const formatted = formatTagDisplay(tag.name, language);
+            const formatted = getHomologatedTag(tag.name, language);
             return (
               <span
                 key={tag.id || index}

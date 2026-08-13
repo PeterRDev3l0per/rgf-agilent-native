@@ -259,18 +259,9 @@ export const useTasks = (
     try {
       const res = await fetch(`/api/work_items/${taskId}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Failed to delete task");
-
-      toast({
-        title: "Tarea eliminada",
-        description: "La tarea fue eliminada de SQLite",
-      });
     } catch (error: any) {
       fetchTasks();
-      toast({
-        title: "Error al eliminar tarea",
-        description: error.message,
-        variant: "destructive",
-      });
+      console.error("Error deleting task:", error);
     }
   };
 

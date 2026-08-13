@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { format, parseISO } from "date-fns";
 import { es, enUS } from "date-fns/locale";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getHomologatedTag } from "@/utils/tagColors";
 import defaultLogo from "@/assets/defaultLogo.png";
 
 interface TaskDetailsDialogProps {
@@ -378,15 +379,18 @@ const TaskDetailsDialog = ({
               selectedTags.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {selectedTags.map((tag) => {
-                    const rgb = hexToRgb(tag.color);
-                    const bgColor = rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.15)` : "rgba(2, 132, 199, 0.15)";
+                    const hTag = getHomologatedTag(tag.name, language);
                     return (
                       <span
                         key={tag.id}
-                        className="px-3 py-1.5 rounded-md text-xs font-semibold"
-                        style={{ backgroundColor: bgColor, color: tag.color }}
+                        className="px-2.5 py-0.5 rounded-full text-xs font-semibold border backdrop-blur-sm shadow-sm"
+                        style={{
+                          backgroundColor: hTag.bgColor,
+                          color: hTag.textColor,
+                          borderColor: hTag.borderColor,
+                        }}
                       >
-                        {tag.name}
+                        {hTag.name}
                       </span>
                     );
                   })}
@@ -436,51 +440,31 @@ const TaskDetailsDialog = ({
 
                   {/* Tags list */}
                   <div className="space-y-1 max-h-48 overflow-y-auto">
-                    {tags.map((tag) => (
-                      <div
-                        key={tag.id}
-                        className="flex items-center gap-2 px-1 py-1.5 rounded-md hover:bg-accent/10 transition-colors"
-                      >
-                        <Checkbox
-                          checked={selectedTagIds.includes(tag.id)}
-                          onCheckedChange={() => toggleTag(tag.id)}
-                        />
-                        <Popover open={editingTagId === tag.id} onOpenChange={(open) => setEditingTagId(open ? tag.id : null)}>
-                          <PopoverTrigger asChild>
-                            <button
-                              type="button"
-                              className="w-3 h-3 rounded-full shrink-0 hover:ring-2 ring-offset-1 ring-offset-background ring-foreground/20 transition-all"
-                              style={{ backgroundColor: tag.color }}
-                            />
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-2 bg-popover border border-border" align="start">
-                            <div className="grid grid-cols-4 gap-1">
-                              {colorPresets.map((color) => (
-                                <button
-                                  key={color}
-                                  type="button"
-                                  onClick={() => {
-                                    updateTagColor(tag.id, color);
-                                    setEditingTagId(null);
-                                  }}
-                                  className={cn(
-                                    "w-6 h-6 rounded-full hover:scale-110 transition-transform",
-                                    tag.color === color && "ring-2 ring-offset-1 ring-foreground"
-                                  )}
-                                  style={{ backgroundColor: color }}
-                                />
-                              ))}
-                            </div>
-                          </PopoverContent>
-                        </Popover>
-                        <span
-                          className="text-sm cursor-pointer flex-1"
-                          onClick={() => toggleTag(tag.id)}
+                    {tags.map((tag) => {
+                      const hTag = getHomologatedTag(tag.name, language);
+                      return (
+                        <div
+                          key={tag.id}
+                          className="flex items-center gap-2 px-1 py-1.5 rounded-md hover:bg-accent/10 transition-colors"
                         >
-                          {tag.name}
-                        </span>
-                      </div>
-                    ))}
+                          <Checkbox
+                            checked={selectedTagIds.includes(tag.id)}
+                            onCheckedChange={() => toggleTag(tag.id)}
+                          />
+                          <div
+                            className="w-3 h-3 rounded-full shrink-0 border"
+                            style={{ backgroundColor: hTag.bgColor, borderColor: hTag.borderColor }}
+                          />
+                          <span
+                            className="text-sm cursor-pointer flex-1"
+                            style={{ color: hTag.textColor }}
+                            onClick={() => toggleTag(tag.id)}
+                          >
+                            {hTag.name}
+                          </span>
+                        </div>
+                      );
+                    })}
                   </div>
                 </PopoverContent>
               </Popover>
@@ -491,15 +475,18 @@ const TaskDetailsDialog = ({
           {!isReadOnly && selectedTags.length > 0 && (
             <div className="px-6 pb-4 flex flex-wrap gap-2">
               {selectedTags.map((tag) => {
-                const rgb = hexToRgb(tag.color);
-                const bgColor = rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.15)` : "rgba(2, 132, 199, 0.15)";
+                const hTag = getHomologatedTag(tag.name, language);
                 return (
                   <span
                     key={tag.id}
-                    className="px-3 py-1.5 rounded-md text-xs font-semibold"
-                    style={{ backgroundColor: bgColor, color: tag.color }}
+                    className="px-3 py-1 rounded-full text-xs font-semibold border backdrop-blur-sm shadow-sm"
+                    style={{
+                      backgroundColor: hTag.bgColor,
+                      color: hTag.textColor,
+                      borderColor: hTag.borderColor,
+                    }}
                   >
-                    {tag.name}
+                    {hTag.name}
                   </span>
                 );
               })}

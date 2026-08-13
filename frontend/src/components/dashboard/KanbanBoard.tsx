@@ -255,14 +255,20 @@ const KanbanBoard = ({
       return updated.sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
     });
 
-    // Toast feedback
+    // Dynamic Island notch notification feedback
     const prettyStatus = columns.find((c) => c.status === overContainer)?.title ?? overContainer;
-    toast({
-      title: "Task moved",
-      description: `"${activeTaskItem.title}" moved to ${prettyStatus}`,
-    });
+    if (currentProject?.id && createNotification) {
+      void createNotification(
+        currentProject.id,
+        [],
+        "task_updated",
+        "Estado de Tarea Actualizado 🚀",
+        `"${activeTaskItem.title}" se movió a ${prettyStatus}`,
+        activeId
+      );
+    }
 
-    // === SINGLE DATABASE UPDATE - NO LOCAL REORDER FUNCTIONS ===
+    // === SINGLE DATABASE UPDATE ===
     void updateTaskStatus(activeId, overContainer, newPosition);
   };
 
