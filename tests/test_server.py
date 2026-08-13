@@ -45,3 +45,62 @@ def test_kanban_board_and_gantt_endpoints(client):
     assert gantt_resp.status_code == 200
     g_data = gantt_resp.json()
     assert "timeline" in g_data
+
+
+def test_project_crud_and_notifications_endpoints(client):
+    # Test list projects
+    res = client.get("/api/projects")
+    assert res.status_code == 200
+    assert "projects" in res.json()
+
+    # Test create new project via REST — use unique name to avoid collision
+    import time
+    unique_name = f"AutoTest Project {int(time.time())}"
+    create_res = client.post("/api/projects", json={"name": unique_name})
+    assert create_res.status_code == 200
+    proj = create_res.json()["project"]
+    assert proj["name"] == unique_name
+
+    # Test duplicate returns 409 Conflict
+    dup_res = client.post("/api/projects", json={"name": unique_name})
+    assert dup_res.status_code == 409
+    assert "already exists" in dup_res.json()["detail"]
+
+    # Test notifications
+    notif_res = client.get("/api/notifications")
+    assert notif_res.status_code == 200
+    notifs = notif_res.json()["notifications"]
+    assert len(notifs) >= 1
+
+
+@pytest.mark.asyncio
+async def test_mcp_auto_project_creation():
+    # Sync change for a brand new project name coming from OpenCode / Codex
+    new_project_name = "opencode-ai-backlog"
+    sync_res = await sync_change("opencode-feature-1", project_id=new_project_name)
+    assert "work_item_id" in sync_res
+    assert sync_res["change_name"] == "opencode-feature-1"
+
+
+def test_task_soft_delete(client):
+    # Create task
+    create_res = client.post("/api/work_items", json={
+        "project_slug": "rgf-agilent-native",
+        "title": "Task To Soft Delete",
+        "description": "Test soft delete with timestamp"
+    })
+    assert create_res.status_code == 200
+    item_id = create_res.json()["work_item"]["id"]
+
+    # Delete task (soft delete)
+    del_res = client.delete(f"/api/work_items/{item_id}")
+    assert del_res.status_code == 200
+
+    # Verify task is excluded from active board
+    board_res = client.get("/api/projects/rgf-agilent-native/board")
+    assert board_res.status_code == 200
+    board_items = board_res.json()["board"]
+    active_ids = [item["id"] for items in board_items.values() for item in items]
+    assert item_id not in active_ids
+
+

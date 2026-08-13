@@ -62,7 +62,7 @@ async def test_llm_prompt_injection_sanitization():
     sanitized = sanitize_user_prompt(jailbreak_query)
 
     assert "ignore all previous instructions" not in sanitized.lower()
-    assert "[FILTRADO POR SEGURIDAD]" in sanitized
+    assert "[FILTRADO]" in sanitized
 
     res = await rag_engine.chat_query("rgf-agilent-native", jailbreak_query)
     assert "ignore all previous instructions" not in res["question"].lower()

@@ -87,7 +87,7 @@ def sanitize_html_content(content_html: str) -> str:
     if not content_html:
         return ""
     cleaned = re.sub(r'<script.*?>.*?</script>', '', content_html, flags=re.DOTALL | re.IGNORECASE)
-    cleaned = re.sub(r'<(?!/?(p|strong|em|code|br|ul|li|span)\b)[^>]*>', '', cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r'<(?!/?(p|strong|b|em|i|u|code|br|ul|ol|li|h1|h2|h3|h4|span|blockquote|pre)\b)[^>]*>', '', cleaned, flags=re.IGNORECASE)
     cleaned = re.sub(r'javascript:', '', cleaned, flags=re.IGNORECASE)
     cleaned = re.sub(r'on\w+=".*?"', '', cleaned, flags=re.IGNORECASE)
     return cleaned.strip()
@@ -170,30 +170,99 @@ class DatabaseManager:
                     created_at TEXT NOT NULL,
                     FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
                 );
+
+                CREATE TABLE IF NOT EXISTS notifications (
+                    id TEXT PRIMARY KEY,
+                    project_id TEXT,
+                    title TEXT NOT NULL,
+                    message TEXT NOT NULL,
+                    type TEXT DEFAULT 'info',
+                    created_at TEXT NOT NULL
+                );
             """)
-            for col, col_def in [("priority", "TEXT DEFAULT 'Media'"), ("category", "TEXT DEFAULT 'Funcionalidad'"), ("assignee", "TEXT DEFAULT 'Pedro'")]:
+            # Work items column migrations (idempotent)
+            for col, col_def in [
+                ("priority", "TEXT DEFAULT 'Media'"), 
+                ("category", "TEXT DEFAULT 'Funcionalidad'"), 
+                ("assignee", "TEXT DEFAULT 'Pedro'"),
+                ("deleted_at", "TEXT DEFAULT NULL"),
+                ("is_deleted", "INTEGER DEFAULT 0")
+            ]:
                 try:
                     conn.execute(f"ALTER TABLE work_items ADD COLUMN {col} {col_def}")
                 except Exception:
                     pass
 
     def get_or_create_project(self, name: str) -> Dict[str, Any]:
-        """Get or create project by name."""
-        slug = validate_slug(name.lower().replace(" ", "-"))
-        clean_name = sanitize_text(name)
+        """Get or create project by name/slug (used by MCP tools — idempotent)."""
+        clean_name = sanitize_text(name.strip()) if name else "Nuevo Proyecto"
+        if not clean_name:
+            clean_name = "Nuevo Proyecto"
+        slug = validate_slug(clean_name)
         with self.get_connection() as conn:
-            row = conn.execute("SELECT * FROM projects WHERE slug = ?", (slug,)).fetchone()
+            row = conn.execute("SELECT * FROM projects WHERE slug = ? OR name = ?", (slug, clean_name)).fetchone()
             if row:
                 return dict(row)
 
             project_id = str(uuid.uuid4())
             now = datetime.now().isoformat()
-            conn.execute(
-                "INSERT INTO projects (id, name, slug, created_at) VALUES (?, ?, ?, ?)",
-                (project_id, clean_name, slug, now),
-            )
-            proj = {"id": project_id, "name": name, "slug": slug, "created_at": now}
+            try:
+                conn.execute(
+                    "INSERT INTO projects (id, name, slug, created_at) VALUES (?, ?, ?, ?)",
+                    (project_id, clean_name, slug, now),
+                )
+            except sqlite3.IntegrityError:
+                unique_suffix = uuid.uuid4().hex[:4]
+                slug = f"{slug}-{unique_suffix}"
+                clean_name = f"{clean_name} ({unique_suffix})"
+                conn.execute(
+                    "INSERT INTO projects (id, name, slug, created_at) VALUES (?, ?, ?, ?)",
+                    (project_id, clean_name, slug, now),
+                )
+            proj = {"id": project_id, "name": clean_name, "slug": slug, "created_at": now}
 
+        self.create_notification(
+            title="Nuevo Proyecto Configurado 🚀",
+            message=f"El proyecto '{clean_name}' ha sido registrado en el sistema.",
+            type="project_created",
+            project_id=project_id,
+        )
+        self.seed_initial_data(project_id)
+        return proj
+
+    def create_project(self, name: str) -> Dict[str, Any]:
+        """Create a new project from the UI (raises ValueError if duplicate name)."""
+        clean_name = sanitize_text(name.strip()) if name else ""
+        if not clean_name:
+            raise ValueError("Project name cannot be empty")
+        slug = validate_slug(clean_name)
+        with self.get_connection() as conn:
+            existing = conn.execute(
+                "SELECT id FROM projects WHERE slug = ? OR name = ?", (slug, clean_name)
+            ).fetchone()
+            if existing:
+                raise ValueError(f"A project named '{clean_name}' already exists")
+            project_id = str(uuid.uuid4())
+            now = datetime.now().isoformat()
+            try:
+                conn.execute(
+                    "INSERT INTO projects (id, name, slug, created_at) VALUES (?, ?, ?, ?)",
+                    (project_id, clean_name, slug, now),
+                )
+            except sqlite3.IntegrityError:
+                raise ValueError(f"A project with slug '{slug}' already exists")
+            proj = {
+                "id": project_id,
+                "name": clean_name,
+                "slug": slug,
+                "created_at": now,
+            }
+        self.create_notification(
+            title="Nuevo Proyecto Creado 🚀",
+            message=f"'{clean_name}' fue creado y guardado en SQLite.",
+            type="project_created",
+            project_id=project_id,
+        )
         self.seed_initial_data(project_id)
         return proj
 
@@ -337,10 +406,56 @@ class DatabaseManager:
         return {"id": comment_id, "work_item_id": item_id, "content_html": content_html, "created_at": now}
 
     def list_work_items(self, project_id: str) -> List[Dict[str, Any]]:
-        """List all work items for a project."""
+        """List active work items for a project (excluding soft-deleted ones)."""
         with self.get_connection() as conn:
-            rows = conn.execute("SELECT * FROM work_items WHERE project_id = ? ORDER BY updated_at DESC", (project_id,)).fetchall()
+            rows = conn.execute(
+                "SELECT * FROM work_items WHERE project_id = ? AND (state != 'deleted' AND state != 'Deleted') AND (is_deleted IS NULL OR is_deleted = 0) ORDER BY updated_at DESC", 
+                (project_id,)
+            ).fetchall()
+            return [dict(r) for r in rows]
+
+    def list_deleted_work_items(self, project_id: str) -> List[Dict[str, Any]]:
+        """List soft-deleted work items for audit or RAG queries."""
+        with self.get_connection() as conn:
+            rows = conn.execute(
+                "SELECT * FROM work_items WHERE project_id = ? AND (state = 'deleted' OR state = 'Deleted' OR is_deleted = 1) ORDER BY deleted_at DESC",
+                (project_id,)
+            ).fetchall()
+            return [dict(r) for r in rows]
+
+    def list_projects(self) -> List[Dict[str, Any]]:
+        """List all projects ordered by creation date."""
+        with self.get_connection() as conn:
+            rows = conn.execute("SELECT * FROM projects ORDER BY created_at DESC").fetchall()
+            return [dict(r) for r in rows]
+
+    def delete_work_item(self, item_id: str) -> bool:
+        """Soft delete a work item by ID (sets state='deleted', is_deleted=1, deleted_at timestamp)."""
+        now = datetime.now().isoformat()
+        with self.get_connection() as conn:
+            res = conn.execute(
+                "UPDATE work_items SET state = 'deleted', is_deleted = 1, deleted_at = ?, updated_at = ? WHERE id = ?",
+                (now, now, item_id)
+            )
+            return res.rowcount > 0
+
+    def create_notification(self, title: str, message: str, type: str = "info", project_id: Optional[str] = None) -> Dict[str, Any]:
+        """Record a notification event."""
+        notif_id = str(uuid.uuid4())
+        now = datetime.now().isoformat()
+        with self.get_connection() as conn:
+            conn.execute(
+                "INSERT INTO notifications (id, project_id, title, message, type, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+                (notif_id, project_id, title, message, type, now),
+            )
+        return {"id": notif_id, "project_id": project_id, "title": title, "message": message, "type": type, "created_at": now}
+
+    def list_notifications(self, limit: int = 20) -> List[Dict[str, Any]]:
+        """Fetch latest system notifications."""
+        with self.get_connection() as conn:
+            rows = conn.execute("SELECT * FROM notifications ORDER BY created_at DESC LIMIT ?", (limit,)).fetchall()
             return [dict(r) for r in rows]
 
 
 db = DatabaseManager()
+

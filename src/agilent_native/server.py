@@ -76,8 +76,8 @@ async def add_security_headers_and_limit_payload(request: Request, call_next):
     response.headers["X-XSS-Protection"] = "1; mode=block"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     response.headers["Content-Security-Policy"] = (
-        "default-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com; "
-        "img-src 'self' data:; font-src 'self' https://unpkg.com;"
+        "default-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://fonts.googleapis.com https://fonts.gstatic.com data:; "
+        "img-src 'self' data: https:; font-src 'self' https://unpkg.com https://fonts.gstatic.com data:;"
     )
     return response
 
@@ -103,12 +103,19 @@ app.add_middleware(
 
 STATIC_DIR = Path(__file__).parent / "static"
 if STATIC_DIR.exists():
+    app.mount("/assets", StaticFiles(directory=str(STATIC_DIR / "assets")), name="assets")
     app.mount("/app", StaticFiles(directory=str(STATIC_DIR), html=True), name="static")
 
 @app.get("/")
 def root_redirect():
+    from fastapi.responses import FileResponse
+    index_path = STATIC_DIR / "index.html"
+    if index_path.exists():
+        return FileResponse(str(index_path))
     from fastapi.responses import RedirectResponse
     return RedirectResponse(url="/app/")
+
+
 
 
 
@@ -207,11 +214,23 @@ class StateUpdateRequest(BaseModel):
     state: str
 
 
+def infer_priority_from_text(title: str, desc: str = "") -> str:
+    text = (title + " " + desc).lower()
+    if any(k in text for k in ["critico", "crítico", "urgente", "high", "alta", "blocker", "seguridad", "security", "bug", "error"]):
+        return "high"
+    if any(k in text for k in ["baja", "low", "menor", "opcional", "docs", "documentacion"]):
+        return "low"
+    return "medium"
+
+
 class CreateTaskRequest(BaseModel):
     project_slug: str = "rgf-agilent-native"
     title: str
     description: str = ""
     state: str = "Backlog"
+    priority: Optional[str] = None
+    category: Optional[str] = None
+    assignee: Optional[str] = None
     start_date: Optional[str] = None
     target_date: Optional[str] = None
     release_tag: Optional[str] = None
@@ -352,16 +371,88 @@ def update_work_item_state(item_id: str, req: StateUpdateRequest):
         raise HTTPException(status_code=404, detail=f"Work item '{item_id}' not found")
     
     db.add_comment(item_id, f"<p>State moved to <strong>{req.state}</strong> via UI drag and drop</p>")
+    db.create_notification(
+        title="Estado de Tarea Actualizado 🔄",
+        message=f"'{updated['title']}' se movió a {req.state}",
+        type="task_status_changed",
+        project_id=updated.get("project_id"),
+    )
     return {"status": "success", "work_item": updated}
+
+
+class CreateProjectRequest(BaseModel):
+    name: str
+
+
+class CreateNotificationRequest(BaseModel):
+    title: str
+    message: str
+    type: str = "info"
+    project_id: Optional[str] = None
+
+
+@app.get("/api/projects")
+def list_all_projects():
+    projects = db.list_projects()
+    if not projects:
+        # Ensure default project exists
+        default_proj = db.get_or_create_project("rgf-agilent-native")
+        projects = [default_proj]
+    return {"projects": projects}
+
+
+@app.post("/api/projects")
+def create_new_project(req: CreateProjectRequest):
+    try:
+        proj = db.create_project(req.name)
+        return {"status": "created", "project": proj}
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc))
+
+
+@app.delete("/api/work_items/{item_id}")
+def delete_work_item_endpoint(item_id: str):
+    success = db.delete_work_item(item_id)
+    if not success:
+        raise HTTPException(status_code=404, detail=f"Work item '{item_id}' not found")
+    return {"status": "deleted", "id": item_id}
+
+
+@app.get("/api/notifications")
+def list_system_notifications(limit: int = 50):
+    notifs = db.list_notifications(limit=limit)
+    return {"notifications": notifs}
+
+
+@app.post("/api/notifications")
+def create_system_notification(req: CreateNotificationRequest):
+    notif = db.create_notification(req.title, req.message, req.type, req.project_id)
+    return {"status": "created", "notification": notif}
+
+
+class PriorityAnalysisRequest(BaseModel):
+    title: str = ""
+    description: str = ""
+
+
+@app.post("/api/tasks/analyze_priority")
+def analyze_task_priority_endpoint(req: PriorityAnalysisRequest):
+    inferred = infer_priority_from_text(req.title, req.description)
+    return {"status": "success", "inferred_priority": inferred}
 
 
 @app.post("/api/work_items")
 def create_manual_work_item(req: CreateTaskRequest):
     proj = db.get_or_create_project(req.project_slug)
     desc_html = f"<p>{req.description or req.title}</p>"
+    
+    computed_priority = req.priority
+    if not computed_priority or computed_priority.lower() not in ["high", "medium", "low"]:
+        computed_priority = infer_priority_from_text(req.title, req.description)
+        
     item = db.create_work_item(proj["id"], req.title, desc_html)
     
-    updates = {}
+    updates = {"priority": computed_priority}
     if req.state:
         updates["state"] = req.state
     if req.start_date:
@@ -376,11 +467,29 @@ def create_manual_work_item(req: CreateTaskRequest):
     if updates:
         item = db.update_work_item(item["id"], updates)
         
-    db.add_comment(item["id"], f"<p>Task created manually in stage <strong>{req.state}</strong></p>")
+    db.add_comment(item["id"], f"<p>Task created manually in stage <strong>{req.state}</strong> with auto priority <strong>{computed_priority}</strong></p>")
+    db.create_notification(
+        title="Nueva Tarea Creada 📋",
+        message=f"Se creó '{req.title}' en la columna {req.state}",
+        type="task_created",
+        project_id=proj["id"]
+    )
     return {"status": "created", "work_item": item}
 
 
+@app.get("/{full_path:path}")
+def spa_fallback(full_path: str):
+    if full_path.startswith("api/") or full_path.startswith("mcp"):
+        raise HTTPException(status_code=404, detail="API route not found")
+    index_path = STATIC_DIR / "index.html"
+    if index_path.exists():
+        from fastapi.responses import FileResponse
+        return FileResponse(str(index_path))
+    raise HTTPException(status_code=404, detail="Static index.html not found")
+
+
 def main():
+
     import uvicorn
     uvicorn.run("agilent_native.server:app", host=config.server_host, port=config.server_port, reload=True)
 
