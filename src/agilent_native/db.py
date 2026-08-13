@@ -193,6 +193,11 @@ class DatabaseManager:
                 except Exception:
                     pass
 
+            try:
+                conn.execute("ALTER TABLE notifications ADD COLUMN is_read INTEGER DEFAULT 0")
+            except Exception:
+                pass
+
     def get_or_create_project(self, name: str) -> Dict[str, Any]:
         """Get or create project by name/slug/id (used by MCP tools — idempotent)."""
         slug = validate_slug(name.strip()) if name else "nuevo-proyecto"
@@ -465,6 +470,12 @@ class DatabaseManager:
         """Clear all notifications from SQLite."""
         with self.get_connection() as conn:
             conn.execute("DELETE FROM notifications")
+            return True
+
+    def mark_all_notifications_as_read(self) -> bool:
+        """Mark all system notifications as read in SQLite."""
+        with self.get_connection() as conn:
+            conn.execute("UPDATE notifications SET is_read = 1")
             return True
 
 

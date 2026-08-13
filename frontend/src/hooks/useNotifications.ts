@@ -25,7 +25,7 @@ export const useNotifications = () => {
         const data = await res.json();
         const list: Notification[] = (data.notifications || []).map((n: any) => ({
           ...n,
-          is_read: n.is_read ?? false,
+          is_read: Boolean(n.is_read),
         }));
         setNotifications(list);
         setUnreadCount(list.filter((n) => !n.is_read).length);
@@ -40,6 +40,11 @@ export const useNotifications = () => {
   const markAllAsRead = useCallback(async () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
     setUnreadCount(0);
+    try {
+      await fetch("/api/notifications/read_all", { method: "POST" });
+    } catch (error) {
+      console.warn("Error marking notifications read in backend:", error);
+    }
   }, []);
 
   const clearAll = useCallback(async () => {

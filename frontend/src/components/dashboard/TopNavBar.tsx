@@ -96,7 +96,7 @@ const DynamicIslandPill = ({
           ${isNotifActive ? "ring-1 ring-cyan-400/50 shadow-[0_0_30px_rgba(6,182,212,0.4)] border-cyan-500/40" : ""}
         `}
         style={{
-          transition: "all 500ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+          transition: "all 650ms cubic-bezier(0.16, 1, 0.3, 1)",
         }}
       >
         {/* Project Selector Box */}
@@ -105,7 +105,7 @@ const DynamicIslandPill = ({
             <button
               className={`
                 flex items-center gap-2.5 px-3 py-1.5 rounded-full
-                hover:bg-white/[0.08] transition-all duration-300 text-white font-medium text-xs
+                hover:bg-white/[0.08] transition-all duration-500 text-white font-medium text-xs
                 focus:outline-none focus:ring-1 focus:ring-cyan-500/40
                 ${isNotifActive ? "opacity-40 scale-95" : "opacity-100 scale-100"}
               `}
@@ -182,9 +182,9 @@ const DynamicIslandPill = ({
         {isNotifActive && activeNotif && (
           <div
             onClick={onNotifClick}
-            className="flex items-center gap-2.5 px-3.5 py-1.5 cursor-pointer text-xs font-medium animate-fade-in text-cyan-300 max-w-[280px]"
+            className="flex items-center gap-2.5 px-3.5 py-1.5 cursor-pointer text-xs font-medium text-cyan-300 max-w-[320px] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] animate-fade-in"
           >
-            <div className="w-2 h-2 rounded-full bg-cyan-400 animate-ping flex-shrink-0" />
+            <div className="w-2 h-2 rounded-full bg-cyan-400 flex-shrink-0 shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
             <div className="truncate">
               <span className="font-semibold text-white mr-1.5">{activeNotif.title}:</span>
               <span className="opacity-90">{activeNotif.message}</span>
@@ -257,14 +257,14 @@ const TopNavBar = ({
     return () => clearInterval(timer);
   }, []);
 
-  // Dynamic Island gota expansion on new unread notification (4s duration)
+  // Dynamic Island gota expansion on new unread notification (5.5s fluid duration)
   useEffect(() => {
     if (notifications.length > 0) {
       const latest = notifications[0];
       if (!latest.is_read && latest.id !== lastNotifIdRef.current) {
         lastNotifIdRef.current = latest.id;
         setActiveIslandNotif(latest);
-        const timer = setTimeout(() => setActiveIslandNotif(null), 4000);
+        const timer = setTimeout(() => setActiveIslandNotif(null), 5500);
         return () => clearTimeout(timer);
       }
     }
@@ -282,10 +282,9 @@ const TopNavBar = ({
         {/* ── Left: User Greeting + Clock + RAM badge ── */}
         <div className="flex items-center gap-3">
           {/* User Greeting & Clock Badge */}
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.1] backdrop-blur-md shadow-inner">
-            {/* User Greeting */}
+          <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.1] backdrop-blur-md shadow-inner">
+            {/* User Greeting - Clean & Premium without status dot */}
             <div className="flex items-center gap-1.5 text-xs font-semibold text-foreground/90">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
               <span className="text-cyan-400 font-medium">{t("header.welcome") || (language === "es" ? "Hola" : "Welcome")},</span>
               <span className="tracking-tight text-white font-bold">{sysUser}</span>
             </div>
@@ -293,7 +292,7 @@ const TopNavBar = ({
             <div className="w-px h-3.5 bg-white/15" />
 
             {/* Live Clock */}
-            <div className="flex items-center gap-1 text-xs font-mono text-muted-foreground/90">
+            <div className="flex items-center gap-1.5 text-xs font-mono text-muted-foreground/90">
               <Clock className="w-3.5 h-3.5 text-cyan-400/90" />
               <span className="tracking-wider">{timeStr || "12:00:00"}</span>
             </div>

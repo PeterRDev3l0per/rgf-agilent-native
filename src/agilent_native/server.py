@@ -436,6 +436,12 @@ def clear_system_notifications():
     return {"status": "cleared"}
 
 
+@app.post("/api/notifications/read_all")
+def mark_all_notifications_read_endpoint():
+    db.mark_all_notifications_as_read()
+    return {"status": "marked_read"}
+
+
 @app.get("/api/system_info")
 def get_system_info():
     import os
