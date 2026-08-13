@@ -29,10 +29,18 @@ export const useProjects = () => {
       const res = await fetch("/api/projects");
       if (res.ok) {
         const data = await res.json();
-        if (data.projects && data.projects.length > 0) {
-          setProjects(data.projects);
-          if (!currentProject || !data.projects.some((p: Project) => p.id === currentProject.id)) {
-            setCurrentProject(data.projects[0]);
+        const projList: Project[] = data.projects || [];
+        if (projList.length > 0) {
+          setProjects(projList);
+          const savedId = localStorage.getItem("agilent_active_project_id");
+          const matched = projList.find(
+            (p) => p.id === savedId || p.slug === savedId
+          );
+          if (matched) {
+            setCurrentProject(matched);
+          } else {
+            setCurrentProject(projList[0]);
+            localStorage.setItem("agilent_active_project_id", projList[0].id);
           }
           return;
         }
@@ -42,7 +50,7 @@ export const useProjects = () => {
     } finally {
       setLoading(false);
     }
-  }, [currentProject]);
+  }, []);
 
   useEffect(() => {
     fetchProjects();
@@ -77,6 +85,9 @@ export const useProjects = () => {
 
       await fetchProjects();
       setCurrentProject(newProj);
+      if (newProj?.id) {
+        localStorage.setItem("agilent_active_project_id", newProj.id);
+      }
       return newProj;
     } catch (error: any) {
       toast({
@@ -90,6 +101,9 @@ export const useProjects = () => {
 
   const selectProject = (project: Project) => {
     setCurrentProject(project);
+    if (project?.id) {
+      localStorage.setItem("agilent_active_project_id", project.id);
+    }
   };
 
   const updateProject = async (projectId: string, updates: { name?: string }) => {
