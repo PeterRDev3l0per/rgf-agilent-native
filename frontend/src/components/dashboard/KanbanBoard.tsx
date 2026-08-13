@@ -321,8 +321,22 @@ const KanbanBoard = ({
 
   if (projectLoading || tasksLoading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      <div className="flex flex-col items-center justify-center h-full w-full min-h-[400px] animate-fade-in px-4">
+        <div className="flex flex-col items-center gap-4 p-8 rounded-3xl border border-white/10 bg-black/40 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-300">
+          <div className="relative flex items-center justify-center">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500/20 via-cyan-500/20 to-blue-600/20 border border-cyan-500/30 flex items-center justify-center shadow-lg shadow-cyan-500/10 animate-pulse">
+              <Loader2 className="h-7 w-7 animate-spin text-cyan-400" />
+            </div>
+          </div>
+          <div className="text-center space-y-1">
+            <h3 className="text-sm font-medium text-foreground/90 tracking-tight">
+              Sincronizando {currentProject?.name || "Proyecto"}
+            </h3>
+            <p className="text-xs text-muted-foreground/70 font-mono">
+              Cargando tablero y estado de agentes...
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -344,7 +358,7 @@ const KanbanBoard = ({
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
       >
-        <div className={`grid ${isMobile ? "grid-cols-1" : isTablet ? "grid-cols-2" : "grid-cols-4"} gap-4 h-full pb-24 px-4 md:px-6 w-full ${isMobile || isTablet ? "overflow-y-auto" : ""}`}>
+        <div className={`grid ${isMobile ? "grid-cols-1" : isTablet ? "grid-cols-2" : "grid-cols-4"} gap-4 h-full pb-24 px-4 md:px-6 w-full animate-fade-in transition-all duration-300 ${isMobile || isTablet ? "overflow-y-auto" : ""}`}>
           {columns.map((column) => {
             const columnTasks = tasks.filter((task) => task.status === column.status);
             return (

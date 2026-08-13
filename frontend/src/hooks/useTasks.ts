@@ -34,41 +34,14 @@ const mapStatusToState = (status: Task["status"]): string => {
   }
 };
 
-const DEFAULT_TASKS: Task[] = [
-  {
-    id: "e2e-task-1",
-    title: "Agilent Native Architecture & Spec Setup 🚀",
-    description: "Defined 3-layer architecture, OpenSpec contract, and FastMCP schema.",
-    tags: [{ id: "t1", name: "Core", color: "#0284c7" }],
-    assignees: [],
-    dueDate: "Aug 12",
-    taskNumber: 1,
-    status: "done",
-    priority: "high",
-    position: 0,
-    project_id: "rgf-agilent-native",
-  },
-  {
-    id: "e2e-task-2",
-    title: "FastMCP Gateway & SQLite DB Engine ⚡",
-    description: "Implemented FastMCP server with track_event and sync_change tools.",
-    tags: [{ id: "t2", name: "Backend", color: "#22c55e" }],
-    assignees: [],
-    dueDate: "Aug 15",
-    taskNumber: 2,
-    status: "inprogress",
-    priority: "medium",
-    position: 1,
-    project_id: "rgf-agilent-native",
-  },
-];
+const DEFAULT_TASKS: Task[] = [];
 
 export const useTasks = (
   projectId: string | null,
   onTaskStatusChanged?: (task: Task, newStatus: Task["status"]) => void
 ) => {
   const { toast } = useToast();
-  const [tasks, setTasks] = useState<Task[]>(DEFAULT_TASKS);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(false);
 
   const tasksRef = useRef<Task[]>(tasks);
