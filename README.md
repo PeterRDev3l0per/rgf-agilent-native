@@ -10,6 +10,24 @@
 
 ---
 
+## 🚀 Quickstart & Instalación Instantánea (para Usuarios)
+
+Instalá Agilent Native Suite en tu sistema ejecutando un solo comando en la terminal:
+
+###  macOS & 🐧 Linux (Bash / Zsh)
+```bash
+curl -fsSL https://raw.githubusercontent.com/PeterRDev3l0per/rgf-agilent-native/main/scripts/install.sh | bash
+```
+
+### 🪟 Windows (PowerShell)
+```powershell
+iwr -useb https://raw.githubusercontent.com/PeterRDev3l0per/rgf-agilent-native/main/scripts/install.ps1 | iex
+```
+
+Una vez instalado, ejecutá `agilent setup` o `agilent up` y abrí tu navegador en **`http://127.0.0.1:8000/app/`**.
+
+---
+
 ## 🌟 Características Principales
 
 - **Arquitectura Zero-Paid-Token**: Procesa búsquedas semánticas y resúmenes con GPU Ollama local (`qwen3:14b`) sin enviar datos fuera de tu máquina.
@@ -21,8 +39,6 @@
 ---
 
 ## 💻 Matriz de Sistemas Operativos Soportados
-
-Agilent Native Suite ha sido probado y certificado con suites de pruebas automatizadas en los siguientes entornos:
 
 | Sistema Operativo | Arquitectura | Terminal / Shell | Estado |
 |-------------------|--------------|-------------------|--------|
@@ -51,47 +67,45 @@ Agilent Native Suite ha sido probado y certificado con suites de pruebas automat
 
 ---
 
-## 🚀 Quickstart & Instalación Rápida
+## 🤝 Contributing to RGF Agilent Native
 
-### Opción 1: Asistente Interactivo de Setup (`agilent setup`)
+¡Agradecemos todas las contribuciones de la comunidad! Si deseas contribuir al desarrollo del proyecto, corregir bugs o proponer nuevas características, seguí estas instrucciones:
+
+### 1. Clonar el Repositorio & Entorno Local
 
 ```bash
 # 1. Clonar el repositorio
 git clone https://github.com/PeterRDev3l0per/rgf-agilent-native.git
 cd rgf-agilent-native
 
-# 2. Crear entorno virtual e instalar en modo editable
+# 2. Crear entorno virtual e instalar dependencias de desarrollo
 python -m venv .venv
 .venv\Scripts\activate  # Windows (o source .venv/bin/activate en Linux/macOS)
 pip install -e .[dev]
-
-# 3. Ejecutar el asistente interactivo de onboarding
-agilent setup
 ```
 
-### Opción 2: Instalación Manual
+### 2. Desarrollo del Frontend (React + Vite)
 
 ```bash
-# 1. Compilar el frontend React / Vite
 cd frontend
 npm install
-npm run build
-cd ..
-
-# 2. Lanzar la aplicación Agilent
-agilent up
+npm run dev     # Servidor de desarrollo con HMR
+npm run build   # Compilación de bundle de producción hacia src/agilent_native/static/
 ```
 
-Navegá a **`http://127.0.0.1:8000/app/`** en tu navegador.
+### 3. Ejecución de Pruebas Automatizadas
 
----
+Antes de enviar un Pull Request, asegurate de que toda la suite de pruebas pase limpiamente:
 
-## 📦 CI/CD & Liberación de Versiones
+```bash
+# Ejecutar suite completa (Unidad, OWASP Seguridad, Sandbox e Integración)
+uv run pytest -v
+```
 
-El repositorio incluye pipelines automatizados en GitHub Actions:
+### 4. Flujo de Commits & Pull Requests
 
-- **CI Build & Test** (`.github/workflows/ci.yml`): Se ejecuta en cada Push y PR probando el código en Python 3.10, 3.11, 3.12 y 3.13.
-- **Release Pipeline** (`.github/workflows/release.yml`): Se activa al publicar una etiqueta de versión Git (ej. `git tag v1.0.0 && git push origin v1.0.0`) o mediante disparo manual en GitHub. Genera automáticamente las notas de versión y adjunta los binarios compilados en [GitHub Releases](https://github.com/PeterRDev3l0per/rgf-agilent-native/releases).
+- **Convención de Commits**: Usamos *Conventional Commits* (ej. `feat(scope): ...`, `fix(scope): ...`, `docs(scope): ...`).
+- **Pull Requests**: Abre un PR hacia la rama `main`. El pipeline de CI en GitHub Actions validará automáticamente el linteo (`ruff`) y la suite de pruebas en Python 3.10, 3.11, 3.12 y 3.13.
 
 ---
 

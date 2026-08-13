@@ -29,6 +29,14 @@ from scripts.setup import (
 )
 
 
+def test_installer_scripts_exist():
+    """Verify that install.sh and install.ps1 one-liner installer scripts exist."""
+    scripts_dir = ROOT_DIR / "scripts"
+    assert (scripts_dir / "install.sh").exists()
+    assert (scripts_dir / "install.ps1").exists()
+    assert (scripts_dir / "setup.py").exists()
+
+
 def test_python_version_check():
     """Verify that Python version check executes cleanly."""
     assert check_python_version() is True
