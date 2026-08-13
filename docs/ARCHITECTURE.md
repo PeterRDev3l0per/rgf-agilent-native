@@ -47,7 +47,7 @@ graph TD
 - **Migraciones Automáticas**: Detección e inicialización de esquemas al arrancar.
 
 ### 2. FastMCP Gateway (`server.py`)
-- **Protocolo**: Model Context Protocol (FastMCP) para integración directa desde IDEs de IA (Cursor, Antigravity IDE, VS Code, JetBrains, Neovim).
+- **Protocolo**: Model Context Protocol (FastMCP) para integración directa desde IDEs y Agentes de IA (**Opencode**, **Codex**, **Claude Code**, **Pi**, **Cursor**, **Antigravity IDE**, **VS Code**, **JetBrains**, **Neovim** y **Orquestadores de Agentes**).
 - **Consumo de Contexto**: Mínima huella de tokens (~300 tokens) para permitir que los agentes lean, editen y creen elementos del backlog.
 
 ### 3. Local RAG Engine (`rag.py` & `ollama_enricher.py`)
