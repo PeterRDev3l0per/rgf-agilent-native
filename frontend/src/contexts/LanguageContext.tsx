@@ -78,6 +78,9 @@ const translations: Record<Language, Record<string, string>> = {
     "common.save": "Guardar",
     "common.close": "Cerrar",
     "common.clear": "Borrar",
+    "notfound.title": "404 - Página No Encontrada",
+    "notfound.desc": "La sección que estás buscando no existe o cambio de ruta.",
+    "notfound.button": "Volver al Kanban",
   },
   en: {
     "nav.home": "Home",
@@ -148,6 +151,9 @@ const translations: Record<Language, Record<string, string>> = {
     "common.save": "Save",
     "common.close": "Close",
     "common.clear": "Clear",
+    "notfound.title": "404 - Page Not Found",
+    "notfound.desc": "The page you are trying to access does not exist or has moved.",
+    "notfound.button": "Return to Kanban",
   },
 };
 
