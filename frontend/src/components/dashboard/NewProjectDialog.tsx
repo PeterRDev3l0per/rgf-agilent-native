@@ -7,23 +7,31 @@ import { useLanguage } from "@/contexts/LanguageContext";
 interface NewProjectDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (name: string) => void;
+  onSubmit: (name: string) => Promise<boolean | void> | void;
 }
 
 const NewProjectDialog = ({ open, onOpenChange, onSubmit }: NewProjectDialogProps) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [name, setName] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || submitting) return;
     
     setSubmitting(true);
+    setErrorMsg("");
     try {
-      onSubmit(name.trim());
+      const res = await onSubmit(name.trim());
+      if (res === false) {
+        setErrorMsg(language === "es" ? "Un proyecto con este nombre ya existe." : "A project with this name already exists.");
+        return;
+      }
       setName("");
       onOpenChange(false);
+    } catch (err: any) {
+      setErrorMsg(err?.message || (language === "es" ? "Error al crear proyecto." : "Error creating project."));
     } finally {
       setSubmitting(false);
     }
@@ -31,6 +39,7 @@ const NewProjectDialog = ({ open, onOpenChange, onSubmit }: NewProjectDialogProp
 
   const handleClose = () => {
     setName("");
+    setErrorMsg("");
     onOpenChange(false);
   };
 
@@ -50,11 +59,15 @@ const NewProjectDialog = ({ open, onOpenChange, onSubmit }: NewProjectDialogProp
             <Input
               id="input-project-name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                if (errorMsg) setErrorMsg("");
+              }}
               placeholder="E.g. opencode-backlog-native"
               className="h-12 rounded-[8px] border border-border bg-background text-foreground placeholder:text-muted-foreground/50"
               autoFocus
             />
+            {errorMsg && <p className="text-xs text-destructive mt-1 font-medium">{errorMsg}</p>}
           </div>
           
           <div className="flex justify-end gap-3 pt-2">

@@ -269,7 +269,6 @@ class DatabaseManager:
             type="project_created",
             project_id=project_id,
         )
-        self.seed_initial_data(project_id)
         return proj
 
     def seed_initial_data(self, project_id: str) -> None:
@@ -461,6 +460,12 @@ class DatabaseManager:
         with self.get_connection() as conn:
             rows = conn.execute("SELECT * FROM notifications ORDER BY created_at DESC LIMIT ?", (limit,)).fetchall()
             return [dict(r) for r in rows]
+
+    def clear_all_notifications(self) -> bool:
+        """Clear all notifications from SQLite."""
+        with self.get_connection() as conn:
+            conn.execute("DELETE FROM notifications")
+            return True
 
 
 db = DatabaseManager()

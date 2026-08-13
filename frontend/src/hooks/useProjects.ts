@@ -65,23 +65,12 @@ export const useProjects = () => {
       });
 
       if (res.status === 409) {
-        const err = await res.json();
-        toast({
-          title: "Nombre en uso",
-          description: err.detail || "Ya existe un proyecto con ese nombre.",
-          variant: "destructive",
-        });
-        return null;
+        return false;
       }
 
       if (!res.ok) throw new Error("Failed to create project");
       const result = await res.json();
       const newProj = result.project;
-
-      toast({
-        title: "¡Proyecto creado!",
-        description: `"${newProj.name}" fue creado y guardado en SQLite`,
-      });
 
       await fetchProjects();
       setCurrentProject(newProj);
@@ -90,11 +79,7 @@ export const useProjects = () => {
       }
       return newProj;
     } catch (error: any) {
-      toast({
-        title: "Error al crear proyecto",
-        description: error.message || "Error de red",
-        variant: "destructive",
-      });
+      console.error("Error creating project:", error);
       return null;
     }
   };

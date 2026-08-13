@@ -45,6 +45,11 @@ export const useNotifications = () => {
   const clearAll = useCallback(async () => {
     setNotifications([]);
     setUnreadCount(0);
+    try {
+      await fetch("/api/notifications", { method: "DELETE" });
+    } catch (error) {
+      console.warn("Error clearing notifications from backend:", error);
+    }
   }, []);
 
   const createNotification = useCallback(

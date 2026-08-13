@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Sun, Moon, FolderPlus, Globe, Check, Bell, Menu, ChevronDown, X, Settings, Cpu } from "lucide-react";
+import { Sun, Moon, FolderPlus, Globe, Check, Bell, Menu, ChevronDown, X, Settings, Cpu, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { Project } from "@/hooks/useProjects";
@@ -99,89 +99,98 @@ const DynamicIslandPill = ({
           transition: "all 500ms cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}
       >
-        {/* Project Selector Segment — COMPACTS when notification is active */}
+        {/* Project Selector Box */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              className="flex items-center gap-2 px-2.5 py-1 rounded-full hover:bg-white/10 transition-all duration-500 focus:outline-none flex-shrink-0 group overflow-hidden"
-              style={{
-                maxWidth: isNotifActive ? "36px" : "210px",
-                transition: "max-width 500ms cubic-bezier(0.34, 1.56, 0.64, 1)",
-              }}
-              title={currentProject?.name}
+              className={`
+                flex items-center gap-2.5 px-3 py-1.5 rounded-full
+                hover:bg-white/[0.08] transition-all duration-300 text-white font-medium text-xs
+                focus:outline-none focus:ring-1 focus:ring-cyan-500/40
+                ${isNotifActive ? "opacity-40 scale-95" : "opacity-100 scale-100"}
+              `}
             >
-              <div
-                className="w-5 h-5 rounded-[5px] overflow-hidden flex-shrink-0 ring-1 ring-white/20"
-                onClick={(e) => {
-                  if (isOwner && onProjectSettings) {
-                    e.stopPropagation();
-                    onProjectSettings();
-                  }
-                }}
-              >
-                <img src={projectImage} alt="Project" className="w-full h-full object-cover" />
+              <div className="w-5 h-5 rounded-full overflow-hidden flex-shrink-0 border border-white/20 shadow-sm">
+                <img
+                  src={projectImage}
+                  alt={currentProject?.name || "Project"}
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <span
-                className={`text-[12px] font-semibold text-white/90 tracking-tight whitespace-nowrap overflow-hidden transition-all duration-300 ${
-                  isNotifActive ? "opacity-0 w-0" : "opacity-100"
-                }`}
-              >
+              <span className="truncate max-w-[140px] font-medium tracking-tight">
                 {currentProject?.name || t("nav.selectProject")}
               </span>
-              <ChevronDown className={`w-3 h-3 text-white/40 group-hover:text-white/70 transition-all duration-300 flex-shrink-0 ${
-                isNotifActive ? "opacity-0 w-0" : "opacity-100"
-              }`} />
+              <ChevronDown className="w-3.5 h-3.5 opacity-60 flex-shrink-0" />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="center" className="w-56 mt-2 bg-[#0d0d11] border border-white/10 backdrop-blur-xl">
-            {projects.map((project) => (
-              <DropdownMenuItem
-                key={project.id}
-                onClick={() => onSelectProject(project)}
-                className={currentProject?.id === project.id ? "bg-cyan-500/20 text-cyan-300 font-semibold" : ""}
-              >
-                <div className="w-5 h-5 rounded overflow-hidden mr-2 flex-shrink-0">
-                  <img src={project.cover_image_url || defaultLogo} alt={project.name} className="w-full h-full object-cover" />
-                </div>
-                <span className="truncate">{project.name}</span>
-              </DropdownMenuItem>
-            ))}
-            {projects.length > 0 && <DropdownMenuSeparator className="bg-white/10" />}
-            <DropdownMenuItem onClick={onNewProject}>
-              <FolderPlus className="w-4 h-4 mr-2 text-cyan-400" />
-              {t("nav.newProject")}
+          <DropdownMenuContent
+            align="center"
+            className="w-64 p-1.5 bg-[#09090b]/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] text-white z-[100]"
+          >
+            <div className="px-3 py-2 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+              {t("nav.selectProject")}
+            </div>
+            <div className="space-y-0.5 max-h-56 overflow-y-auto">
+              {projects.map((project) => (
+                <DropdownMenuItem
+                  key={project.id}
+                  onClick={() => onSelectProject(project)}
+                  className={`
+                    flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium cursor-pointer
+                    transition-colors duration-150
+                    ${currentProject?.id === project.id
+                      ? "bg-cyan-500/15 text-cyan-300 font-semibold"
+                      : "hover:bg-white/[0.08] text-white/80"
+                    }
+                  `}
+                >
+                  <div className="w-5 h-5 rounded-full overflow-hidden flex-shrink-0 border border-white/20">
+                    <img
+                      src={project.cover_image_url || defaultLogo}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="flex-1 truncate">{project.name}</span>
+                  {currentProject?.id === project.id && (
+                    <Check className="w-3.5 h-3.5 text-cyan-400" />
+                  )}
+                </DropdownMenuItem>
+              ))}
+            </div>
+            <DropdownMenuSeparator className="bg-white/10 my-1" />
+            <DropdownMenuItem
+              onClick={onNewProject}
+              className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium text-cyan-400 hover:bg-cyan-500/10 cursor-pointer"
+            >
+              <FolderPlus className="w-4 h-4" />
+              <span>{t("nav.newProject")}</span>
             </DropdownMenuItem>
+            {isOwner && onProjectSettings && (
+              <DropdownMenuItem
+                onClick={onProjectSettings}
+                className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium text-white/70 hover:bg-white/10 cursor-pointer"
+              >
+                <Settings className="w-4 h-4" />
+                <span>{t("nav.settings")}</span>
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Notification Segment — EXPANDS on active notification */}
-        <div
-          className={`flex items-center overflow-hidden transition-all duration-500 ${
-            isNotifActive ? "max-w-[280px] opacity-100 ml-1 pr-1" : "max-w-0 opacity-0 ml-0"
-          }`}
-          style={{
-            transition: "max-width 500ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 300ms ease",
-          }}
-        >
-          <div className="h-4 w-px bg-white/20 mr-2 flex-shrink-0" />
-          <button
+        {/* Dynamic Island Notification Banner */}
+        {isNotifActive && activeNotif && (
+          <div
             onClick={onNotifClick}
-            className="flex items-center gap-2 px-2 py-1 rounded-full hover:bg-white/10 transition-colors focus:outline-none min-w-0 text-left"
+            className="flex items-center gap-2.5 px-3.5 py-1.5 cursor-pointer text-xs font-medium animate-fade-in text-cyan-300 max-w-[280px]"
           >
-            <span className="relative flex-shrink-0">
-              <Bell className="w-3.5 h-3.5 text-cyan-400 animate-bounce" />
-              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-            </span>
-            <div className="flex flex-col min-w-0">
-              <span className="text-[11px] font-bold text-cyan-300 truncate leading-tight whitespace-nowrap">
-                {activeNotif?.title}
-              </span>
-              <span className="text-[10px] text-white/70 truncate leading-tight whitespace-nowrap">
-                {activeNotif?.message}
-              </span>
+            <div className="w-2 h-2 rounded-full bg-cyan-400 animate-ping flex-shrink-0" />
+            <div className="truncate">
+              <span className="font-semibold text-white mr-1.5">{activeNotif.title}:</span>
+              <span className="opacity-90">{activeNotif.message}</span>
             </div>
-          </button>
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -191,6 +200,7 @@ const DynamicIslandPill = ({
 // TopNavBar
 // ─────────────────────────────────────────────────────────────────
 const TopNavBar = ({
+  activeTab,
   onTabChange,
   onNewTask,
   onNewProject,
@@ -209,22 +219,23 @@ const TopNavBar = ({
   const isTablet = useIsTablet();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [ramUsage, setRamUsage] = useState("<150 MB RAM");
+  const [sysUser, setSysUser] = useState("Pedro");
+  const [timeStr, setTimeStr] = useState("");
   const [activeIslandNotif, setActiveIslandNotif] = useState<Notification | null>(null);
   const lastNotifIdRef = useRef<string | number | null>(null);
 
   // Native mode: always owner
   const isOwner = true;
 
-  // Real-time live RAM telemetry fetch
+  // Real-time system info & RAM telemetry
   useEffect(() => {
     const fetchHealth = async () => {
       try {
-        const res = await fetch("/api/health");
+        const res = await fetch("/api/system_info");
         if (res.ok) {
           const data = await res.json();
-          if (data.telemetry?.ram_usage) {
-            setRamUsage(data.telemetry.ram_usage);
-          }
+          if (data.username) setSysUser(data.username);
+          if (data.ram_usage) setRamUsage(data.ram_usage);
         }
       } catch {
         // Fallback
@@ -233,6 +244,17 @@ const TopNavBar = ({
     fetchHealth();
     const interval = setInterval(fetchHealth, 4000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Live clock ticking
+  useEffect(() => {
+    const updateClock = () => {
+      const now = new Date();
+      setTimeStr(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+    };
+    updateClock();
+    const timer = setInterval(updateClock, 1000);
+    return () => clearInterval(timer);
   }, []);
 
   // Dynamic Island gota expansion on new unread notification (4s duration)
@@ -257,11 +279,30 @@ const TopNavBar = ({
     <header className="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-2.5 bg-[#09090b]/85 backdrop-blur-xl border-b border-white/[0.08] shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
       <div className="relative flex justify-between items-center h-11 max-w-[1700px] mx-auto">
 
-        {/* ── Left: RAM badge ── */}
-        <div className="flex items-center gap-2">
+        {/* ── Left: User Greeting + Clock + RAM badge ── */}
+        <div className="flex items-center gap-3">
+          {/* User Greeting & Clock Badge */}
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.1] backdrop-blur-md shadow-inner">
+            {/* User Greeting */}
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-foreground/90">
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
+              <span className="text-cyan-400 font-medium">{t("header.welcome") || (language === "es" ? "Hola" : "Welcome")},</span>
+              <span className="tracking-tight text-white font-bold">{sysUser}</span>
+            </div>
+
+            <div className="w-px h-3.5 bg-white/15" />
+
+            {/* Live Clock */}
+            <div className="flex items-center gap-1 text-xs font-mono text-muted-foreground/90">
+              <Clock className="w-3.5 h-3.5 text-cyan-400/90" />
+              <span className="tracking-wider">{timeStr || "12:00:00"}</span>
+            </div>
+          </div>
+
+          {/* RAM Telemetry Badge */}
           <div
             id="badge-ollama"
-            className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-400 font-medium"
+            className="hidden lg:flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-400 font-medium"
           >
             <Cpu className="w-3.5 h-3.5" />
             <span id="text-ram">{ramUsage}</span>

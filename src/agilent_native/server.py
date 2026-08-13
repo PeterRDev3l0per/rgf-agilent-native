@@ -430,6 +430,24 @@ def create_system_notification(req: CreateNotificationRequest):
     return {"status": "created", "notification": notif}
 
 
+@app.delete("/api/notifications")
+def clear_system_notifications():
+    db.clear_all_notifications()
+    return {"status": "cleared"}
+
+
+@app.get("/api/system_info")
+def get_system_info():
+    import os
+    raw_user = os.environ.get("USERNAME") or os.environ.get("USER") or "Pedro"
+    clean_user = raw_user.strip().title() if raw_user else "Pedro"
+    return {
+        "status": "online",
+        "username": clean_user,
+        "ram_usage": get_realtime_ram_usage(),
+    }
+
+
 class PriorityAnalysisRequest(BaseModel):
     title: str = ""
     description: str = ""
@@ -452,11 +470,13 @@ def create_manual_work_item(req: CreateTaskRequest):
         
     item = db.create_work_item(proj["id"], req.title, desc_html)
     
-    updates = {"priority": computed_priority}
+    cat_clean = (req.category or "Funcionalidad").replace("tag-", "").strip().title()
+    if not cat_clean:
+        cat_clean = "Funcionalidad"
+
+    updates = {"priority": computed_priority, "category": cat_clean}
     if req.state:
         updates["state"] = req.state
-    if req.category:
-        updates["category"] = req.category
     if req.assignee:
         updates["assignee"] = req.assignee
     if req.start_date:

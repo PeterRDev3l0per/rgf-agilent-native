@@ -386,15 +386,15 @@ const NewTaskDialog = ({ open, onOpenChange, onSubmit, defaultStatus = "todo", p
               </PopoverContent>
             </Popover>
 
-            {/* Tags Chip */}
+            {/* Topic Chip */}
             <Popover>
               <PopoverTrigger asChild>
                 <button type="button" className={chipBaseClass}>
                   <Tag className="w-4 h-4 opacity-70" />
                   <span>
                     {selectedTagIds.length > 0
-                      ? `${selectedTagIds.length} Tag${selectedTagIds.length > 1 ? "s" : ""}`
-                      : "Tags"}
+                      ? `${selectedTagIds.length} ${t("task.topic")}`
+                      : t("task.topic")}
                   </span>
                   <ChevronDown className="w-3 h-3 opacity-50" />
                 </button>
@@ -412,7 +412,7 @@ const NewTaskDialog = ({ open, onOpenChange, onSubmit, defaultStatus = "todo", p
                         handleCreateTag();
                       }
                     }}
-                    placeholder="Add Labels…"
+                    placeholder={language === "es" ? "Agregar Tópico..." : "Add Topic..."}
                     className="flex-1 text-sm bg-transparent border-none outline-none placeholder:text-muted-foreground"
                   />
                   {newTagName.trim() && (
