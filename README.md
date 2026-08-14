@@ -10,7 +10,7 @@
 
 ---
 
-## 🚀 Quickstart & Instalación Instantánea (para Usuarios)
+## 🚀 Quickstart & Instalación Instantánea
 
 Instalá Agilent Native Suite en tu sistema ejecutando un solo comando en la terminal:
 
@@ -67,50 +67,15 @@ Una vez instalado, ejecutá `agilent setup` o `agilent up` y abrí tu navegador 
 
 ---
 
-## 🤝 Contributing to RGF Agilent Native
+## 🤝 Contributing
 
-¡Agradecemos todas las contribuciones de la comunidad! Si deseas contribuir al desarrollo del proyecto, corregir bugs o proponer nuevas características, seguí estas instrucciones:
-
-### 1. Clonar el Repositorio & Entorno Local
-
-```bash
-# 1. Clonar el repositorio
-git clone https://github.com/PeterRDev3l0per/rgf-agilent-native.git
-cd rgf-agilent-native
-
-# 2. Crear entorno virtual e instalar dependencias de desarrollo
-python -m venv .venv
-.venv\Scripts\activate  # Windows (o source .venv/bin/activate en Linux/macOS)
-pip install -e .[dev]
-```
-
-### 2. Desarrollo del Frontend (React + Vite)
-
-```bash
-cd frontend
-npm install
-npm run dev     # Servidor de desarrollo con HMR
-npm run build   # Compilación de bundle de producción hacia src/agilent_native/static/
-```
-
-### 3. Ejecución de Pruebas Automatizadas
-
-Antes de enviar un Pull Request, asegurate de que toda la suite de pruebas pase limpiamente:
-
-```bash
-# Ejecutar suite completa (Unidad, OWASP Seguridad, Sandbox e Integración)
-uv run pytest -v
-```
-
-### 4. Flujo de Commits & Pull Requests
-
-- **Convención de Commits**: Usamos *Conventional Commits* (ej. `feat(scope): ...`, `fix(scope): ...`, `docs(scope): ...`).
-- **Pull Requests**: Abre un PR hacia la rama `main`. El pipeline de CI en GitHub Actions validará automáticamente el linteo (`ruff`) y la suite de pruebas en Python 3.10, 3.11, 3.12 y 3.13.
+Las contribuciones son las que hacen que la comunidad open-source sea un lugar increíble para aprender, inspirar y crear. Por favor, lee nuestra **[Guía de Contribución (CONTRIBUTING.md)](CONTRIBUTING.md)** para comenzar con el entorno de desarrollo local, ejecución de pruebas y envío de Pull Requests.
 
 ---
 
 ## 📑 Documentación Adicional
 
+- [Guía de Contribución](CONTRIBUTING.md)
 - [Arquitectura del Sistema](docs/ARCHITECTURE.md)
 - [Modelo Entidad-Relación (ERD)](docs/ER_DIAGRAM.md)
 - [Guía de Referencia CLI](docs/CLI_REFERENCE.md)
@@ -123,4 +88,4 @@ uv run pytest -v
 
 ## 📄 Licencia
 
-Publicado bajo la licencia [MIT](LICENSE).
+Publicado bajo la licencia [MIT](LICENSE). Software de código abierto construido para la comunidad de desarrolladores de IA.
