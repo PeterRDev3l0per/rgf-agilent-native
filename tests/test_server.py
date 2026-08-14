@@ -18,6 +18,15 @@ def test_health_check_endpoint(client):
     assert data["service"] == "Agilent Native Suite"
 
 
+def test_system_info_telemetry_fields(client):
+    response = client.get("/api/system_info")
+    assert response.status_code == 200
+    data = response.json()
+    assert "ram_usage" in data
+    assert "rag_usage" in data
+    assert "db_usage" in data
+
+
 @pytest.mark.asyncio
 async def test_fastmcp_sync_and_track_event():
     sync_res = await sync_change("agilent-native-auth")

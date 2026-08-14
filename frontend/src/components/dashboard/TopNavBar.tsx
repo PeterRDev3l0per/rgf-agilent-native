@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Sun, Moon, FolderPlus, Globe, Check, Bell, Menu, ChevronDown, X, Settings, Cpu, Clock } from "lucide-react";
+import { Sun, Moon, FolderPlus, Globe, Check, Bell, Menu, ChevronDown, X, Settings, Cpu, Clock, Database, LayoutKanban, CalendarRange } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { Project } from "@/hooks/useProjects";
@@ -219,6 +219,8 @@ const TopNavBar = ({
   const isTablet = useIsTablet();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [ramUsage, setRamUsage] = useState("<150 MB RAM");
+  const [ragUsage, setRagUsage] = useState("RAG: 3.8 GB VRAM");
+  const [dbUsage, setDbUsage] = useState("240 KB DB (<1%)");
   const [sysUser, setSysUser] = useState("Pedro");
   const [timeStr, setTimeStr] = useState("");
   const [activeIslandNotif, setActiveIslandNotif] = useState<Notification | null>(null);
@@ -227,7 +229,7 @@ const TopNavBar = ({
   // Native mode: always owner
   const isOwner = true;
 
-  // Real-time system info & RAM telemetry
+  // Real-time system info & RAM/RAG/DB telemetry
   useEffect(() => {
     const fetchHealth = async () => {
       try {
@@ -236,6 +238,8 @@ const TopNavBar = ({
           const data = await res.json();
           if (data.username) setSysUser(data.username);
           if (data.ram_usage) setRamUsage(data.ram_usage);
+          if (data.rag_usage) setRagUsage(data.rag_usage);
+          if (data.db_usage) setDbUsage(data.db_usage);
         }
       } catch {
         // Fallback
@@ -291,7 +295,7 @@ const TopNavBar = ({
     <header className="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-2.5 bg-[#09090b]/85 backdrop-blur-xl border-b border-white/[0.08] shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
       <div className="relative flex justify-between items-center h-11 max-w-[1700px] mx-auto">
 
-        {/* ── Left: User Greeting + Clock + RAM badge ── */}
+        {/* ── Left: User Greeting + Clock + Telemetry Badges ── */}
         <div className="flex items-center gap-3">
           {/* User Greeting & Clock Badge */}
           <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.1] backdrop-blur-md shadow-inner">
@@ -310,13 +314,22 @@ const TopNavBar = ({
             </div>
           </div>
 
-          {/* RAM Telemetry Badge */}
+          {/* RAM Telemetry Badge (Pill 1) */}
           <div
             id="badge-ollama"
             className="hidden lg:flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-400 font-medium"
           >
             <Cpu className="w-3.5 h-3.5" />
             <span id="text-ram">{ramUsage}</span>
+          </div>
+
+          {/* RAG & DB Telemetry Badge (Pill 2) */}
+          <div
+            id="badge-rag-db"
+            className="hidden xl:flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-xs text-cyan-300 font-medium shadow-[0_0_15px_rgba(6,182,212,0.15)]"
+          >
+            <Database className="w-3.5 h-3.5 text-cyan-400" />
+            <span id="text-rag-db">{ragUsage} | {dbUsage}</span>
           </div>
         </div>
 

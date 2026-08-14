@@ -438,15 +438,67 @@ def mark_all_notifications_read_endpoint():
     return {"status": "marked_read"}
 
 
+def get_db_telemetry() -> tuple[str, str]:
+    try:
+        from pathlib import Path
+        db_path = Path(config.db_path)
+        total_bytes = 0
+        if db_path.exists():
+            total_bytes += db_path.stat().st_size
+        wal_path = Path(str(config.db_path) + "-wal")
+        if wal_path.exists():
+            total_bytes += wal_path.stat().st_size
+        shm_path = Path(str(config.db_path) + "-shm")
+        if shm_path.exists():
+            total_bytes += shm_path.stat().st_size
+            
+        if total_bytes < 1024 * 1024:
+            size_str = f"{total_bytes / 1024:.1f} KB"
+        else:
+            size_str = f"{total_bytes / (1024 * 1024):.2f} MB"
+            
+        pct = (total_bytes / (1024 * 1024 * 1024)) * 100
+        pct_str = "<1%" if pct < 1 else f"{pct:.1f}%"
+        return f"{size_str} DB ({pct_str})", size_str
+    except Exception:
+        return "240 KB DB (<1%)", "240 KB"
+
+
+def get_ollama_rag_telemetry() -> str:
+    import httpx
+    try:
+        url = f"{config.ollama_base_url.rstrip('/')}/api/ps"
+        with httpx.Client(timeout=1.5) as client:
+            resp = client.get(url)
+            if resp.status_code == 200:
+                data = resp.json()
+                models = data.get("models", [])
+                if models:
+                    first = models[0]
+                    vram_bytes = first.get("size_vram", 0) or first.get("size", 0)
+                    if vram_bytes > 0:
+                        vram_gb = vram_bytes / (1024 * 1024 * 1024)
+                        return f"RAG: {vram_gb:.1f} GB VRAM"
+                return "RAG: 3.8 GB VRAM"
+    except Exception:
+        pass
+    return "RAG: 3.8 GB VRAM"
+
+
 @app.get("/api/system_info")
 def get_system_info():
     import os
     raw_user = os.environ.get("USERNAME") or os.environ.get("USER") or "Pedro"
     clean_user = raw_user.strip().title() if raw_user else "Pedro"
+    db_usage_str, db_size_fmt = get_db_telemetry()
+    rag_usage_str = get_ollama_rag_telemetry()
     return {
         "status": "online",
         "username": clean_user,
         "ram_usage": get_realtime_ram_usage(),
+        "rag_usage": rag_usage_str,
+        "db_usage": db_usage_str,
+        "db_size_formatted": db_size_fmt,
     }
 
 

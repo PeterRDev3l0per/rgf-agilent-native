@@ -331,3 +331,52 @@
     display: none;
   }
 }
+
+@keyframes waveFlow1 {
+  0% {
+    transform: translateX(0) scaleY(1);
+  }
+  50% {
+    transform: translateX(-25%) scaleY(1.15);
+  }
+  100% {
+    transform: translateX(-50%) scaleY(1);
+  }
+}
+
+@keyframes waveFlow2 {
+  0% {
+    transform: translateX(0) scaleY(1.1);
+  }
+  50% {
+    transform: translateX(25%) scaleY(0.88);
+  }
+  100% {
+    transform: translateX(50%) scaleY(1.1);
+  }
+}
+
+@keyframes meshGradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-wave-1 {
+  animation: waveFlow1 18s ease-in-out infinite alternate;
+}
+
+.animate-wave-2 {
+  animation: waveFlow2 24s ease-in-out infinite alternate;
+}
+
+.animate-mesh-gradient {
+  background-size: 200% 200%;
+  animation: meshGradientShift 15s ease infinite;
+}

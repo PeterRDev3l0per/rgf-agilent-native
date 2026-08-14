@@ -3,6 +3,8 @@ import ChatRagView from "@/components/dashboard/ChatRagView";
 import FloatingRagChatBubble from "@/components/dashboard/FloatingRagChatBubble";
 import TopNavBar from "@/components/dashboard/TopNavBar";
 import KanbanBoard from "@/components/dashboard/KanbanBoard";
+import GanttView from "@/components/dashboard/GanttView";
+import AnimatedWaveBackground from "@/components/dashboard/AnimatedWaveBackground";
 import NewTaskDialog from "@/components/dashboard/NewTaskDialog";
 import NewProjectDialog from "@/components/dashboard/NewProjectDialog";
 import ProjectSettingsDialog from "@/components/dashboard/ProjectSettingsDialog";
@@ -13,11 +15,13 @@ import { useTasks } from "@/hooks/useTasks";
 import { useNotifications } from "@/hooks/useNotifications";
 import { Task } from "@/components/dashboard/TaskCard";
 import { useToast } from "@/hooks/use-toast";
+import { Kanban, Calendar } from "lucide-react";
 
 const Index = () => {
   const { toast } = useToast();
 
   const [activeTab, setActiveTab] = useState("Home");
+  const [viewMode, setViewMode] = useState<"kanban" | "gantt">("kanban");
   const [newTaskDialogOpen, setNewTaskDialogOpen] = useState(false);
   const [newProjectDialogOpen, setNewProjectDialogOpen] = useState(false);
   const [projectSettingsOpen, setProjectSettingsOpen] = useState(false);
@@ -138,9 +142,9 @@ const Index = () => {
   );
 
   return (
-    <div className="h-screen bg-[hsl(var(--site-bg))] relative flex flex-col overflow-hidden">
-      {/* Background dot pattern */}
-      <div className="absolute inset-0 bg-[radial-gradient(hsl(var(--site-bg-dots))_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
+    <div className="h-screen relative flex flex-col overflow-hidden bg-[#09090b]">
+      {/* Dynamic Animated Liquid Wave Glassmorphism Background */}
+      <AnimatedWaveBackground />
 
       <TopNavBar
         activeTab={activeTab}
@@ -157,10 +161,46 @@ const Index = () => {
         onClearNotifications={clearNotifications}
       />
 
-      <main className="pt-24 h-full flex-1">
-        <div className="h-full animate-fade-in">
+      <main className="pt-20 h-full flex-1 relative z-10 flex flex-col overflow-hidden">
+        {/* View Switcher Toggle Bar (Kanban vs Gantt) */}
+        {activeTab !== "Chat" && (
+          <div className="px-4 md:px-8 pt-3 pb-1 flex items-center justify-between">
+            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[#09090b]/80 border border-white/10 backdrop-blur-2xl shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+              <button
+                onClick={() => setViewMode("kanban")}
+                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-300 ${
+                  viewMode === "kanban"
+                    ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-[0_0_12px_rgba(6,182,212,0.3)]"
+                    : "text-white/60 hover:text-white hover:bg-white/5"
+                }`}
+              >
+                <Kanban className="w-3.5 h-3.5" />
+                Tablero Kanban
+              </button>
+              <button
+                onClick={() => setViewMode("gantt")}
+                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-300 ${
+                  viewMode === "gantt"
+                    ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-[0_0_12px_rgba(6,182,212,0.3)]"
+                    : "text-white/60 hover:text-white hover:bg-white/5"
+                }`}
+              >
+                <Calendar className="w-3.5 h-3.5" />
+                Timeline Gantt
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div className="h-full flex-1 overflow-hidden animate-fade-in">
           {activeTab === "Chat" ? (
             <ChatRagView currentProject={currentProject} />
+          ) : viewMode === "gantt" ? (
+            <GanttView
+              tasks={tasks}
+              currentProject={currentProject}
+              onTaskClick={handleCommandPaletteTaskClick}
+            />
           ) : (
             <KanbanBoard
               key={currentProject?.id ?? "no-project"}
